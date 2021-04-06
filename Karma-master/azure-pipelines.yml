@@ -1,0 +1,49 @@
+# ASP.NET Core
+# Build and test ASP.NET Core projects targeting .NET Core.
+# Add steps that run tests, create a NuGet package, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
+
+trigger:
+- Desarrollo
+
+pool:
+  vmImage: 'windows-latest'
+  demands: npm
+
+variables:
+  RestoreBuildProjects: '**/*.csproj'
+  ArtifactName: 'KarmaApp'
+
+steps:
+  - task: UseDotNet@2
+    displayName: Use .Net Core 3.1.x SDK
+    inputs:
+      packageType: 'sdk'
+      version: '3.1.x'
+
+  - task: DotNetCoreCLI@2
+    displayName: Restore
+    inputs:
+      command: 'restore'
+      projects: '$(RestoreBuildProjects)'
+      feedsToUse: 'select'
+
+  - task: DotNetCoreCLI@2
+    displayName: Build
+    inputs:
+      projects: '$(RestoreBuildProjects)'
+      arguments: '--configuration $(BuildConfiguration)'
+
+  - task: DotNetCoreCLI@2
+    displayName: "Publish"
+    inputs:
+      command: 'publish'
+      publishWebProjects: true
+      arguments: '-r linux-x64 --configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)'
+      zipAfterPublish: true
+
+  - task: PublishBuildArtifacts@1
+    displayName: 'Publish Artifact'
+    inputs:
+      PathtoPublish: '$(build.ArtifactStagingDirectory)'
+      ArtifactName: '$(ArtifactName)'

@@ -1,0 +1,25 @@
+{
+    "name": "dlabs-vscode-extensionpack",
+    "displayName": "DLabs-VSCode-ExtensionPack",
+    "publisher": "DLabs-VSCode-ExtensionPack",
+    "description": "",
+    "version": "0.0.1",
+    "engines": {
+        "vscode": "^1.52.0"
+    },
+    "categories": [
+        "Extension Packs"
+    ],
+    "extensionPack": [ 
+        "adrianwilczynski.add-reference", 
+        "christian-kohler.path-intellisense", 
+        "CoenraadS.bracket-pair-colorizer", 
+        "dbaeumer.jshint", 
+        "eamodio.gitlens", 
+        "esbenp.prettier-vscode", 
+        "jchannon.csharpextensions", 
+        "jmrog.vscode-nuget-package-manager", 
+        "ms-dotnettools.csharp", 
+        "vscode-icons-team.vscode-icons"
+    ]
+}
