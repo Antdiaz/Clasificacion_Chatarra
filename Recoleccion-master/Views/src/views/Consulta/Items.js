@@ -15,7 +15,7 @@ const Items= ({listas}) => {
       <div>
         {listas !==undefined && listas.map((lista) => (
           <div style={{marginTop: "20px"}}>
-            <Col md={{ size: 8, offset: 2 }}>
+            <Col className="column-items">
               <Row>
                 <Col md="12">
                   <div
@@ -61,7 +61,7 @@ const Items= ({listas}) => {
                         </div>
                         <div className="dx-field">
                           <div className="dx-field-label">Tipo :</div>
-                          <div className="dx-field-value-static">Entrada X traspaso</div>
+                          <div className="dx-field-value-static">{lista.NomMotivoEntrada}</div>
                         </div>
                         {lista.ClaveViajeOrigen ==null ? null : (
                           <div className="dx-field">
@@ -71,7 +71,7 @@ const Items= ({listas}) => {
                         )}
                         <div className="dx-field">
                           <div className="dx-field-label">Observaciones:</div>
-                          <div className="dx-field-value-static">{lista.Observaciones==null ?"Ninguna" : lista.Observaciones}</div>
+                          <div className="dx-field-value-static">{lista.Observaciones==null ||lista.Observaciones==="" ?"Ninguna" : lista.Observaciones}</div>
                         </div>
                       </div>
                     </div>

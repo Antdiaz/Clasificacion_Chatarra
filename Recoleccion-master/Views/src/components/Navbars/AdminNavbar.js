@@ -1,12 +1,10 @@
-import React,{useEffect,useState} from 'react';
+import React from 'react';
 import SelectBox from 'devextreme-react/select-box';
 // nodejs library that concatenates classes
 import classnames from 'classnames';
 // nodejs library to set properties for components
-import { config } from '../../utils/config';
-import { callApi, callKrakenApi, showSweetAlert, getCliente,getSessionItem,logOut} from '../../utils/utils';
+import { getSessionItem,logOut} from '../../utils/utils';
 import PropTypes from 'prop-types';
-import create from 'zustand'
 // import images
 import {
   Collapse,
@@ -38,33 +36,10 @@ AdminNavbar.defaultProps = {
     theme: PropTypes.oneOf(['dark', 'light']),
   }; 
 
-  function AdminNavbar({theme}) {
-    const [Patio, setPatio] = useState("")
-    const [editBoxValue, seteditBoxValue] = useState("")
-
-    console.log(editBoxValue)
-
-  useEffect(() => {
-    const urlKrakenPlanta = `${config.KrakenService}/${24}/${4}`;
-/* eslint-disable */
-    const data2 = {
-      parameters: "{\"ClaUsuarioMod\":100003350}",
-      tipoEstructura: 1
-    };
-
-
-/* eslint-enable */
-
-    callApi(urlKrakenPlanta, 'POST',data2,  (res) => {
-      setPatio(res.Result0)
-      seteditBoxValue(Patio[0].ClaUbicacionProveedor)
-  });
-  }, []);
-
+  function AdminNavbar({theme,Patio,editBoxValue,seteditBoxValue}) {
 
   const onValueChanged = (e) => {
     seteditBoxValue(e.value);
-
   };
 
 
@@ -80,10 +55,10 @@ AdminNavbar.defaultProps = {
           <Container fluid>
             <Collapse navbar isOpen>
               <Nav className="align-items-left" navbar>
-                <img src={logo} alt="deaceroLogo" style={{ width: '25%' }} />
+                <img src={logo} alt="deaceroLogo" style={{ width: '150px' }} />
               </Nav>
-              <Nav className="align-items-center ml-md-auto" navbar />
-              <Nav className="align-items-center ml-auto ml-md-0" navbar style={{ width: '35%' }}>
+              <Nav className="align-items-center ml-md-auto " navbar />
+              <Nav className="align-items-center ml-auto ml-md-0" navbar>
                 <SelectBox 
                   placeholder="Seleccionar Patio:"
                   dataSource={Patio}
@@ -95,7 +70,7 @@ AdminNavbar.defaultProps = {
                   <DropdownToggle className="nav-link pr-0" color="" tag="a">
                     <Media className="align-items-center">
                       <span className="avatar avatar-sm rounded-circle">
-                        <img alt="..." src={team4} />
+                        <img alt="avatar" src={team4} />
                       </span>
                       <Media className="ml-2 d-none d-lg-block">
                         <span className="mb-0 text-sm font-weight-bold">

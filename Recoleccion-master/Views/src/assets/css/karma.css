@@ -291,7 +291,7 @@ font-size:20px;
   vertical-align: middle;
   margin-top:5px;
   margin-bottom:5px;
-  width:30%;
+  width:33%;
 }
 
 .dx-fieldset{
@@ -331,7 +331,7 @@ font-size:18px;
 .fa-info-circle{
  position:absolute;
  right:7vw;
- bottom:1.5vw;
+ bottom:1vw;
  margin-top:30px;
 }
 
@@ -340,8 +340,14 @@ color:white;
 margin-left:25px;
  }
 
+ .column-items{
+   width: 900px;
+   margin-right: auto;
+   margin-left: auto;
+  }
+
 .dx-field-label{
-  font-size:1vw;
+  font-size:13px;
   padding:0;
   width:fit-content;
 }
@@ -350,7 +356,7 @@ margin-left:25px;
   text-align: right;
 }
 .dx-field-value-static{
-  font-size: .9vw;
+  font-size: 13px;
   padding:0;
   width:fit-content;
   font-weight:500;
@@ -456,4 +462,68 @@ margin-left:25px;
   color: #0556b7;
   font-weight: bold;
   font-size: 15px;
+}
+
+@media only screen and (max-width: 990px) {
+.dx-dropdowneditor.dx-dropdowneditor-field-clickable {
+  width: 42%;
+}
+}
+
+
+@media only screen and (max-width: 850px) {
+  .dx-field-value-static {
+    font-size:11px
+  }
+
+  .container-fluid{
+    padding-right:0px;
+  }
+
+  .dx-texteditor-input{
+  font-weight:600;
+  font-size:14px;
+  }
+  .dx-placeholder {
+    font-weight:600;
+  font-size:14px;
+    }
+
+
+  img[alt*="avatar"] {
+    width: 35px !important;
+}
+}
+
+@media only screen and (max-width: 750px) {
+  .input-bar{
+    width:70%
+  }
+
+  .input-search{
+    width:15%;
+  }
+
+  .dx-field-value-static {
+    font-size:10px
+  }
+
+  .dx-field-label {
+    font-size: 10px;
+  }
+
+
+  .dx-field{
+    width:50%;
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  .dx-fieldset-header {
+    font-size:20px
+}
+.kar-component {
+  padding: 5px 5px;
+}
+
 }

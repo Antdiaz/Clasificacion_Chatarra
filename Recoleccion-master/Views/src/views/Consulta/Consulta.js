@@ -8,46 +8,14 @@ import { callApi, callKrakenApi, showSweetAlert, getCliente,getSessionItem } fro
 import Items from './Items';
 import create from 'zustand'
 
-function Consulta() {
+function Consulta({Valores,Datos,setDatos,Patio,editBoxValue,seteditBoxValue}) {
 
         const [Filtro, setFiltro] = useState(null)
-        const [Valores, setValores] = useState(null)
-        const [Datos, setDatos] = useState(null)
-        const [Usuario, setUsuario] = useState(null)
-        const NumbUsuario = getSessionItem('NumUsuario')
-
-        console.log(NumbUsuario)
-        console.log(Usuario)
-
-        useEffect(() => {
-          const urlKrakenService = `${config.KrakenService}/${24}/${2}`;
-          const urlKrakenUsuario=`${config.KrakenService}/${24}/${3}`;
-/* eslint-disable */
-          const data = {
-            parameters: "{\"ClaUbicacion\":26,\"Valor\":\"%%%\"}",
-            tipoEstructura: 1
-          };
-
-          const data3 = {
-            parameters: "{\"Usuario\":" + NumbUsuario +"}",
-            tipoEstructura: 1
-          };
-/* eslint-enable */
-
-          callApi(urlKrakenUsuario, 'POST',data3,  (res) => {
-              setUsuario(res.Result0[0].IdUsuario)
-        });
-
-          callApi(urlKrakenService, 'POST',data,  (res) => {
-              setValores(res.Result0)
-          });
-        }, []);
-
+       
 
         const handleChange = event => {
             setFiltro(event.target.value)
         }
-
 
     const handleSubmit = e =>{
         e.preventDefault();
@@ -65,10 +33,10 @@ function Consulta() {
     return (
       <div>
         <Row className="align-items-start" style={{marginTop: "40px"}}>
-          <Col md={{ size: 1, offset: 3 }}>
+          <Col className="input-search" md={{ size: 1, offset: 3 }}>
             <h2>Filtrar: </h2>
           </Col>
-          <Col md={{ size: 4,offset:0 }}>
+          <Col className="input-bar" md={{ size: 4,offset:0 }}>
             <Input
               onChange={handleChange}
               type="text"
@@ -77,9 +45,9 @@ function Consulta() {
               // value=""
             />
           </Col>
-          <Col md={{ size: 1,offset: 0}}>
+          <Col className="input-search" md={{ size: 1,offset: 0}}>
             <div id="formularioTickets">
-              <Button
+              <Button 
                 onClick={handleSubmit}
                 className="animation-on-hover float-right"
                 color="success"
@@ -90,7 +58,7 @@ function Consulta() {
           </Col>
         </Row>
 
-        {Valores && <Items listas={Datos ? Valores.filter((lista) =>lista.ClaVehiculoPorClasificar.includes(Datos) || lista.NomTransporte.includes(Datos) || lista.NomTransportista.includes(Datos) || lista.NomMotivoEntrada.includes(Datos)) || lista.PesoEntrada.includes(Datos): Valores} />}
+        {Valores && <Items listas={Datos ? Valores.filter((lista) =>lista.ClaVehiculoPorClasificar.includes(Datos)  || lista.NomMotivoEntrada.includes(Datos)  || lista.IdBoleta.toString().includes(Datos) || lista.IdBoleta.toString().includes(Datos) || lista.PesoEntrada.toString().includes(Datos)  || lista.NomChofer.toString().includes(Datos)  || lista.NomTransporte.includes(Datos) || lista.NomTransportista.includes(Datos) || lista.NomMotivoEntrada.includes(Datos)) || lista.PesoEntrada.includes(Datos): Valores} />}
       </div>
     )
 }
