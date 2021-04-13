@@ -31,7 +31,7 @@ async function callApi(url, method, data = {}, callBack, multipart = false) {
     const response = await fetch(url, {
       method,
       headers,
-      body: method === 'GET' ? null : !multipart ? JSON.stringify(data) : data,
+      body: method === 'GET' ? null : !multipart ? JSON.stringify(data): data,
       dataType: !multipart ? 'json' : null,
     });
 

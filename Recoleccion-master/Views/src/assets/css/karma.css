@@ -228,6 +228,12 @@ thead th {
   background-color: rgb(29, 140, 248, 0.15);
 }
 
+.dx-texteditor-input{
+  color:White;
+font-weight:800;
+font-size:20px;
+}
+
 .main-panel > .navbar {
   /* border-top: solid 2px #1D8AF8; */
   background-color: #1e1e2d;
@@ -274,10 +280,81 @@ thead th {
 }
 
 .content {
-  margin: 10px;
+  margin: 50px;
   padding: 10px;
   background-color: transparent;
   height: 100%;
+}
+
+.dx-field{
+  display: inline-flex;
+  vertical-align: middle;
+  margin-top:5px;
+  margin-bottom:5px;
+  width:30%;
+}
+
+.dx-fieldset{
+  margin: 10px 20px;
+  text-align: justify;
+}
+
+.dx-fieldset-header{
+  width:400px;
+  font-weight:600;
+  font-size:25px;
+  margin-bottom:10px;
+}
+
+.dx-placeholder {
+
+color:White;
+font-weight:800;
+font-size:18px;
+}
+
+.dx-widget {
+  color: white;
+}
+
+.dx-dropdowneditor-icon{
+  color:White;
+}
+
+
+
+.dx-dropdowneditor.dx-dropdowneditor-field-clickable {
+  cursor: pointer;
+  width: 30%;
+}
+
+.fa-info-circle{
+ position:absolute;
+ right:7vw;
+ bottom:1.5vw;
+ margin-top:30px;
+}
+
+.fa-home{
+color:white;
+margin-left:25px;
+ }
+
+.dx-field-label{
+  font-size:1vw;
+  padding:0;
+  width:fit-content;
+}
+
+.dx-field-label p {
+  text-align: right;
+}
+.dx-field-value-static{
+  font-size: .9vw;
+  padding:0;
+  width:fit-content;
+  font-weight:500;
+  margin-left:5px;
 }
 
 .card .card-header:not([data-background-color]) {
@@ -311,6 +388,9 @@ thead th {
   background-color: #fff;
   border-radius: 10px;
   padding: 15px 30px;
+  -webkit-box-shadow:0px 1px 1px rgb(175, 173, 173);
+ -moz-box-shadow:0px 1px 1px rgb(175, 173, 173);
+ box-shadow:0px 1px 1px rgb(175, 173, 173);
 }
 
 .kar-icon-color {
@@ -323,6 +403,18 @@ thead th {
   font-weight: bold;
   font-size: 15px;
   margin: 0px;
+}
+
+.dx-fieldset:first-child > h4:first-child {
+  margin-top: 0;
+}
+
+#notes-container > .dx-field > .dx-field-label {
+  width: 20%;
+}
+
+#notes-container > .dx-field > .dx-field-value {
+  width: 80%;
 }
 
 .dx-field-item-label-location-top {

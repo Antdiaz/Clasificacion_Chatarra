@@ -47,7 +47,7 @@ class Login extends React.Component {
 
   handleSubmit(e) {
     e.preventDefault();
-    const urlWebService = `${config.UrlLoginServer}Login/authenticate`;
+    const urlWebService = `${config.UrlLoginServer}`;
 
     const data = {
       username: this.state.usuario,

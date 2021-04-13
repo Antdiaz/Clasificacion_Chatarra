@@ -29,7 +29,7 @@ export default class Responsables extends React.Component {
       });
     });
 
-    callApi(urlWebService, 'GET', null, (res) => {
+    callApi(urlWebService, 'POST', null, (res) => {
       this.setState({
         response: res.data,
       });

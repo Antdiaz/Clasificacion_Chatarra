@@ -1,8 +1,12 @@
-import React from 'react';
+import React,{useEffect,useState} from 'react';
+import SelectBox from 'devextreme-react/select-box';
 // nodejs library that concatenates classes
 import classnames from 'classnames';
 // nodejs library to set properties for components
+import { config } from '../../utils/config';
+import { callApi, callKrakenApi, showSweetAlert, getCliente,getSessionItem,logOut} from '../../utils/utils';
 import PropTypes from 'prop-types';
+import create from 'zustand'
 // import images
 import {
   Collapse,
@@ -14,30 +18,79 @@ import {
   Navbar,
   Nav,
   Container,
+  Col,
+  Row
 } from 'reactstrap';
 import team4 from '../../assets/img/default-avatar.png';
 import logo from '../../assets/img/deaceroLogo.PNG';
 // reactstrap components
-import { logOut, getSessionItem } from '../../utils/utils';
 
-class AdminNavbar extends React.Component {
-  render() {
+
+AdminNavbar.defaultProps = {
+  toggleSidenav: () => {},
+  sidenavOpen: false,
+  theme: 'dark',
+};
+
+  AdminNavbar.propTypes = {
+    toggleSidenav: PropTypes.func,
+    sidenavOpen: PropTypes.bool,
+    theme: PropTypes.oneOf(['dark', 'light']),
+  }; 
+
+  function AdminNavbar({theme}) {
+    const [Patio, setPatio] = useState("")
+    const [editBoxValue, seteditBoxValue] = useState("")
+
+    console.log(editBoxValue)
+
+  useEffect(() => {
+    const urlKrakenPlanta = `${config.KrakenService}/${24}/${4}`;
+/* eslint-disable */
+    const data2 = {
+      parameters: "{\"ClaUsuarioMod\":100003350}",
+      tipoEstructura: 1
+    };
+
+
+/* eslint-enable */
+
+    callApi(urlKrakenPlanta, 'POST',data2,  (res) => {
+      setPatio(res.Result0)
+      seteditBoxValue(Patio[0].ClaUbicacionProveedor)
+  });
+  }, []);
+
+
+  const onValueChanged = (e) => {
+    seteditBoxValue(e.value);
+
+  };
+
+
     return (
+      
       <>
         <Navbar
           className={classnames(
             'navbar-top navbar-expand border-bottom',
-            { 'navbar-dark bg-info': this.props.theme === 'dark' },
-            { 'navbar-light bg-secondary': this.props.theme === 'light' }
+            { 'navbar-dark bg-info': theme === 'dark' },
           )}
         >
           <Container fluid>
             <Collapse navbar isOpen>
               <Nav className="align-items-left" navbar>
-                <img src={logo} alt="deaceroLogo" style={{ width: '18%' }} />
+                <img src={logo} alt="deaceroLogo" style={{ width: '25%' }} />
               </Nav>
               <Nav className="align-items-center ml-md-auto" navbar />
               <Nav className="align-items-center ml-auto ml-md-0" navbar style={{ width: '35%' }}>
+                <SelectBox 
+                  placeholder="Seleccionar Patio:"
+                  dataSource={Patio}
+                  displayExpr="NombreCorto"
+                  valueExpr="ClaUbicacion"
+                  onValueChanged={onValueChanged}
+                />
                 <UncontrolledDropdown nav style={{ cursor: 'pointer' }}>
                   <DropdownToggle className="nav-link pr-0" color="" tag="a">
                     <Media className="align-items-center">
@@ -62,6 +115,7 @@ class AdminNavbar extends React.Component {
                     </DropdownItem>
                   </DropdownMenu>
                 </UncontrolledDropdown>
+                <i className="fa fa-home fa-lg" aria-hidden="true"></i>
               </Nav>
             </Collapse>
           </Container>
@@ -69,16 +123,7 @@ class AdminNavbar extends React.Component {
       </>
     );
   }
-}
-AdminNavbar.defaultProps = {
-  toggleSidenav: () => {},
-  sidenavOpen: false,
-  theme: 'dark',
-};
-AdminNavbar.propTypes = {
-  toggleSidenav: PropTypes.func,
-  sidenavOpen: PropTypes.bool,
-  theme: PropTypes.oneOf(['dark', 'light']),
-};
+
+
 
 export default AdminNavbar;

@@ -1,14 +1,14 @@
 const config = {
-  LoginMensaje: 'Powered by DLabs',
+  LoginMensaje: 'Powered by Deacero',
   LoginLogoTamanio: '48px',
-  ApiKey: '9E50EEF7-531F-4425-A803-25FEAE88057D',
+  ApiKey: 'A70F5BA0-3541-492C-802F-087FE810184A',
 
   // ** Desarrollo
-  UrlLoginServer: 'http://dlabsdbdev:2622/',
+  UrlLoginServer: 'https://sweetsrv.azurewebsites.net/LoginSandbox/authenticate',
   UrlApiProject: 'http://localhost:5000/',
 
   // ** Kraken Desarrollo
-  KrakenService: 'http://dlabsdbdev:2022/KrakenServices',
+  KrakenService: 'https://krakenapi.deacero.com/SandboxServices',
 
   // Debugging mode
   DebuggingMode: true,
