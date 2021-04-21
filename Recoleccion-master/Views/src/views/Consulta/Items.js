@@ -1,12 +1,7 @@
-import React, {useState, useEffect} from 'react'
-import Form, { Item } from 'devextreme-react/form';
-import SelectBox from 'devextreme-react/select-box';
-import FileUploader from 'devextreme-react/file-uploader';
-import { Autocomplete } from 'devextreme-react/autocomplete';
-import Header from '../../components/Headers/Header';
+import React from 'react'
 import 'devextreme-react/text-area';
-import { Row, Col, Card, CardText, CardHeader, CardBody, CardTitle, Button, Input } from 'reactstrap';
-import GraficaPie from '../Grafica/Grafica';
+import { Row, Col} from 'reactstrap';
+import { Link } from 'react-router-dom';
 
 
 
@@ -14,7 +9,7 @@ const Items= ({listas}) => {
     return (
       <div>
         {listas !==undefined && listas.map((lista) => (
-          <div style={{marginTop: "20px"}}>
+          <div key={lista.IdBoleta} style={{marginTop: "20px"}}>
             <Col className="column-items">
               <Row>
                 <Col md="12">
@@ -29,7 +24,9 @@ const Items= ({listas}) => {
                     overflowX: 'auto',
                     }}
                   >
-                    <i className="fa fa-info-circle fa-2x" aria-hidden="true"></i>
+                    <Link style={{color:"rgb(41, 41, 41)"}} to={`/Informacion/${lista.ClaVehiculoPorClasificar}`}>
+                      <i className="fa fa-info-circle fa-2x" aria-hidden="true"></i>
+                    </Link>
                     <div className="form" style={{width: "100%"}}>
                       <div className="dx-fieldset">
                         <div className="dx-fieldset-header"><span style={{marginRight: "30px"}}>{lista.ClaVehiculoPorClasificar}</span> <span>{lista.NomTransporte}</span> </div>
@@ -48,12 +45,12 @@ const Items= ({listas}) => {
                         {lista.ClaProveedor ==null ? null : (
                           <div className="dx-field">
                             <div className="dx-field-label">Proveedor:</div>
-                            <div className="dx-field-value-static">{lista.ClaProveedor}</div>
+                            <div className="dx-field-value-static">{lista.NomProveedor.split(/\s+/).slice(0,1) + [" "] + lista.NomProveedor.split(/\s+/).slice(2,3)}</div>
                           </div>
                         )}
                         <div className="dx-field">
                           <div className="dx-field-label">Peso :</div>
-                          <div className="dx-field-value-static">{lista.PesoEntrada} Kg</div>
+                          <div className="dx-field-value-static">{lista.PesoEntrada}{lista.NomCortoUnidadEntrada}</div>
                         </div>
                         <div className="dx-field">
                           <div className="dx-field-label">Documentado :</div>

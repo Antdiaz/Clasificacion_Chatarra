@@ -60,8 +60,10 @@ AdminNavbar.defaultProps = {
               <Nav className="align-items-center ml-md-auto " navbar />
               <Nav className="align-items-center ml-auto ml-md-0" navbar>
                 <SelectBox 
+                  className="placa-style"
                   placeholder="Seleccionar Patio:"
                   dataSource={Patio}
+                  defaultValue=""
                   displayExpr="NombreCorto"
                   valueExpr="ClaUbicacion"
                   onValueChanged={onValueChanged}

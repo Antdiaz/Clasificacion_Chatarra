@@ -118,6 +118,23 @@ thead th {
   max-height: 600px;
 }
 
+.table-header{
+  width:fit-content !important;
+  color: #002c6f  !important;
+  font-size:1vw !important;
+}
+
+.table-content{
+  color: #002c6f !important;
+  padding-left:auto!important;
+  padding-right:auto !important;
+  font-size:1vw !important;
+}
+
+.table td{
+  font-size:.8rem;
+}
+
 .modal.show .modal-dialog {
   transform: none;
 }
@@ -228,10 +245,20 @@ thead th {
   background-color: rgb(29, 140, 248, 0.15);
 }
 
+.dx-dropdowneditor-input-wrapper{
+  color:white
+}
+
+.placa-style  .dx-texteditor-input{
+  color:white !important;
+  font-weight:800;
+  font-size:20px;
+}
+
 .dx-texteditor-input{
-  color:White;
-font-weight:800;
-font-size:20px;
+  color:rgb(66, 66, 66);
+  font-weight:400;
+  font-size:186x;
 }
 
 .main-panel > .navbar {
@@ -279,9 +306,15 @@ font-size:20px;
   margin-top: 12%;
 }
 
+.block{
+  font-weight:700;
+  color:#474242 !important
+}
+
 .content {
   margin: 50px;
-  padding: 10px;
+  margin-left:1vw;
+  margin-right:1vw;
   background-color: transparent;
   height: 100%;
 }
@@ -341,7 +374,7 @@ margin-left:25px;
  }
 
  .column-items{
-   width: 900px;
+   width: 1100px;
    margin-right: auto;
    margin-left: auto;
   }
@@ -363,6 +396,18 @@ margin-left:25px;
   margin-left:5px;
 }
 
+.placa-imagenes{
+  margin:10px;
+  width:23%;
+  min-width:200px;
+}
+
+
+
+.p-2{
+  padding: 0px !important;
+}
+
 .card .card-header:not([data-background-color]) {
   background-color: #ff6a00;
   border-radius: 10px 10px 0px 0px;
@@ -370,6 +415,7 @@ margin-left:25px;
 
 .card-body {
   border-radius: 0px 0px 10px 10px;
+  padding:0px;
 }
 
 .card {
@@ -403,12 +449,21 @@ margin-left:25px;
   color: #ff6a00;
 }
 
+.dx-item-content{
+  color:rgb(63, 62, 62)
+}
+
+
 .dx-field-item-label-text,
 .kar-label {
   color: #0556b7;
   font-weight: bold;
   font-size: 15px;
   margin: 0px;
+}
+
+.dx-texteditor-input-container{
+  height:25px;
 }
 
 .dx-fieldset:first-child > h4:first-child {
@@ -435,6 +490,7 @@ margin-left:25px;
 
 .card-header {
   padding: 10px 20px;
+  font-size:27px
 }
 
 .card-title {
@@ -444,8 +500,138 @@ margin-left:25px;
   margin: 0px;
 }
 
+/* Popup style */
+.popup-box {
+  position: absolute;
+  background: #00000050;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+}
+ 
+.box {
+  z-index:1;
+  position: relative;
+  width: 60%;
+  margin: 0 auto;
+  height: auto;
+  margin-top: calc(95vh - 85vh - 20px);
+  background: #fff;
+  border-radius: 4px;
+  padding: 0px;
+  border: 1px solid #999;
+  overflow: auto;
+  margin-bottom:20px;
+}
+ 
+.close-icon {
+  content: 'x';
+  cursor: pointer;
+  position: absolute;
+  right: calc(5%);
+  top: calc(89vh - 85vh );
+  width: 30px;
+  height: 30px;
+  line-height: 50px;
+  text-align: center;
+  font-size: 30px;
+  color: #002c6f
+}
+
+.bote-elect{
+  margin-left:22%;
+   font-size:18px;
+}
+
+.popup-bote{
+  color:#ebaf0a;
+}
+
+.popup-adder{
+  border-width:1px;
+  border-style:outset;
+  border-color:rgb(231, 228, 228) !important;
+  font-size:16px;
+  width:30px;
+  height:25px;
+  background-color:white;
+  box-shadow:2px 2px 2px rgb(175, 174, 174) !important;
+}
+
+.popups-kgs{
+  position:absolute;
+  margin-top:40px;
+  padding-left:1%;
+}
+
+.popup-column{
+  display:flex;
+  flex-direction: column;
+  text-align:center;
+  margin-top:20px;
+  margin-bottom:20px;
+}
+.popup-number{
+text-align:center;
+margin-left:10px;
+width:25px;
+border-radius: 5px;
+border-width:1px;
+border-style:outset;
+border-color:rgb(231, 228, 228) !important;
+box-shadow:2px 2px 2px rgb(196, 195, 195) !important;
+}
+
+.sum{
+  border-radius: 5px 0px 0px 5px;
+}
+
+.rest{
+  border-radius: 0px 5px 5px 0px;
+}
+
+.popup-row{
+  position:relative;
+  margin-right:auto;
+  margin-left:auto;
+  margin-top:15px;
+  margin-bottom:15px;
+}
+
+.popup-button{
+  color:#ff6a00;
+  margin:15px;
+  font-size:20px;
+  background-color: transparent;
+  box-shadow: none;
+  float:right;
+  border:0px;
+  text-decoration: none;
+}
+.popup-title{
+  font-size: 18px;
+  color:#1e519e;
+  font-weight:500;
+}
+
+.popup-input {
+  width: 300px;
+  background: 
+  linear-gradient(rgba(0, 0, 0, 0.363), rgba(0, 0, 0, 0.527)) center bottom 5px /calc(100% - 10px) 2px no-repeat;
+  background-color: #fcfcfc;
+  border: 0px solid;
+  padding: 0px;
+}
+
+
+.white{
+  background-color:white
+}
+
 .dx-datagrid {
   border-radius: 10px;
+  background-color: transparent !important;
 }
 
 .dx-datagrid-headers,
@@ -469,7 +655,6 @@ margin-left:25px;
   width: 42%;
 }
 }
-
 
 @media only screen and (max-width: 850px) {
   .dx-field-value-static {

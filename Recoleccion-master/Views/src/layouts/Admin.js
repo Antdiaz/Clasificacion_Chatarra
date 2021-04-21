@@ -8,6 +8,7 @@ import Sidebar from 'components/Sidebar/Sidebar.js';
 import routes from 'routes.js';
 import { config } from '../utils/config';
 import { callApi,getSessionItem } from '../utils/utils';
+import Usuarios from 'views/Usuarios/Usuarios';
 
 class Admin extends React.Component {
   constructor(props) {
@@ -19,7 +20,7 @@ class Admin extends React.Component {
       Usuario: null,
       NumbUsuario: getSessionItem('NumUsuario'),
       Patio: null,
-      editBoxValue: 26,
+      editBoxValue: 0,
     };
   }
 
@@ -148,7 +149,11 @@ class Admin extends React.Component {
           <AdminNavbar {...this.props} Patio={this.state.Patio} editBoxValue={this.state.editBoxValue} seteditBoxValue={this.seteditBoxValue} />
           <Switch>
             {this.getRoutes(routes)}
-            <Redirect from="*" to="/layout/Pedidos" />
+          </Switch>
+          <Switch>
+            <Route path="/Informacion/:id">
+              <Usuarios Valores={this.state.Valores} />
+            </Route>
           </Switch>
           <AdminFooter />
         </div>

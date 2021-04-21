@@ -7,6 +7,7 @@ import { config } from '../../utils/config';
 import { callApi, callKrakenApi, showSweetAlert, getCliente,getSessionItem } from '../../utils/utils';
 import Items from './Items';
 import create from 'zustand'
+import { Link } from 'react-router-dom';
 
 function Consulta({Valores,Datos,setDatos,Patio,editBoxValue,seteditBoxValue}) {
 
@@ -58,7 +59,7 @@ function Consulta({Valores,Datos,setDatos,Patio,editBoxValue,seteditBoxValue}) {
           </Col>
         </Row>
 
-        {Valores && <Items listas={Datos ? Valores.filter((lista) =>lista.ClaVehiculoPorClasificar.includes(Datos)  || lista.NomMotivoEntrada.includes(Datos)  || lista.IdBoleta.toString().includes(Datos) || lista.IdBoleta.toString().includes(Datos) || lista.PesoEntrada.toString().includes(Datos)  || lista.NomChofer.toString().includes(Datos)  || lista.NomTransporte.includes(Datos) || lista.NomTransportista.includes(Datos) || lista.NomMotivoEntrada.includes(Datos)) || lista.PesoEntrada.includes(Datos): Valores} />}
+        {Valores && <Items listas={Datos ? Valores.filter((lista) =>lista.ClaVehiculoPorClasificar.includes(Datos)  || lista.NomMotivoEntrada.includes(Datos)  || lista.IdBoleta.toString().includes(Datos) || lista.IdBoleta.toString().includes(Datos) || lista.PesoEntrada.toString().includes(Datos)  || lista.NomTransporte.includes(Datos) || lista.NomTransportista.includes(Datos) || lista.NomMotivoEntrada.includes(Datos)) || lista.PesoEntrada.includes(Datos): Valores} />}
       </div>
     )
 }
