@@ -28,6 +28,7 @@ import {
   callApi,
   getSessionItem,
 } from '../../utils/utils';
+import Patio from 'views/Patio/Patio';
 
 const REACT_APP_VAR = env('VAR');
 const REACT_APP_OTRO = env('OTRO');
@@ -100,13 +101,10 @@ class Login extends React.Component {
     console.log('REACT_APP_VAR', REACT_APP_VAR);
     console.log('REACT_APP_OTRO', REACT_APP_OTRO);
     if (sessionAlive()) {
-      const url = getSessionItem('url', '/layout/Pedidos');
-      document.body.classList.remove('bg-default');
       // Primer componente al que se va a redirigir después de iniciar sesión
       return (
         <Router history={this.props.history}>
-          <Route path="/" render={(props) => <AdminLayout {...props} />} />
-          <Redirect from="/" to={url} />
+          <Route path="/" render={(props) => <Patio {...props} />} />
         </Router>
       );
     }

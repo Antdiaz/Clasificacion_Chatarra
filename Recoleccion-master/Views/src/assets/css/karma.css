@@ -24,6 +24,18 @@
   }
 }
 
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
 .h-75 {
   height: 75vh;
 }
@@ -47,6 +59,7 @@ table.scroll input {
 table.scroll tbody,
 table.scroll thead {
   display: block;
+
 }
 
 table.scroll tbody {
@@ -118,6 +131,10 @@ thead th {
   max-height: 600px;
 }
 
+.MuiPaper-root {
+min-height:120px !important;
+}
+
 .table-header{
   width:fit-content !important;
   color: #002c6f  !important;
@@ -133,6 +150,11 @@ thead th {
 
 .table td{
   font-size:.8rem;
+}
+
+.card .table td{
+  padding-left: 1rem;
+  padding-right: 1rem;
 }
 
 .modal.show .modal-dialog {
@@ -181,7 +203,7 @@ thead th {
 /* width */
 
 ::-webkit-scrollbar {
-  width: 10px;
+  width: 15px;
 }
 
 /* Track */
@@ -197,6 +219,18 @@ thead th {
   background: transparent;
   border-radius: 10px;
 }
+
+table::-webkit-scrollbar-thumb {
+  background: yellow !important;
+  border-radius: 10px;
+}
+
+.MuiTableContainer-root::-webkit-scrollbar-thumb{
+  border-radius: 10px;
+  background: grey;
+}
+
+
 
 /* Handle on hover */
 
@@ -264,6 +298,13 @@ thead th {
 .main-panel > .navbar {
   /* border-top: solid 2px #1D8AF8; */
   background-color: #1e1e2d;
+}
+
+.options{
+  font-size: 16px;
+    margin-left: 5vw;
+    margin-bottom: 5px;
+    font-weight: 500;
 }
 
 .row {
@@ -346,6 +387,23 @@ font-weight:800;
 font-size:18px;
 }
 
+.selector .dx-placeholder {
+
+  color:rgb(141, 140, 140);
+  font-weight:400;
+  font-size:18px;
+  line-height:1rem;
+  }
+
+  .input-group-text{
+    padding: 0px;
+    border:0px;
+  }
+
+  .selector .dx-dropdowneditor-icon{
+    color:rgb(94, 93, 93)
+  }
+
 .dx-widget {
   color: white;
 }
@@ -420,6 +478,15 @@ margin-left:25px;
 
 .card {
   background-color: #eeeeee;
+}
+
+.ReactModal__Overlay .ReactModal__Overlay--after-open{
+
+  overflow:scroll !important
+}
+
+body.ReactModal__Body--open{
+  overflow:hidden;
 }
 
 .card-login {
@@ -501,13 +568,9 @@ margin-left:25px;
 }
 
 /* Popup style */
-.popup-box {
-  position: absolute;
-  background: #00000050;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
+
+.selector .dx-dropdowneditor.dx-dropdowneditor-field-clickable {
+  width: 100% !important;
 }
  
 .box {
@@ -615,13 +678,38 @@ box-shadow:2px 2px 2px rgb(196, 195, 195) !important;
   font-weight:500;
 }
 
-.popup-input {
+.popup-recibidos{
+  width: 107%;
+  background-color: #fcfcfc;
+  color:black;
+  border: 0px solid;
+  padding: 0px;
+  background: 
+  linear-gradient(rgba(51, 51, 51, 0.363), rgba(80, 80, 80, 0.527)) center bottom 2px /calc(100% - 20px) 1px no-repeat;
+  margin-left:-10px !important;
+  padding-left:10px;
+  height: calc(1.8em);
+}
+
+.popup-input{
   width: 300px;
   background: 
-  linear-gradient(rgba(0, 0, 0, 0.363), rgba(0, 0, 0, 0.527)) center bottom 5px /calc(100% - 10px) 2px no-repeat;
+  linear-gradient(rgba(0, 0, 0, 0.363), rgba(0, 0, 0, 0.527)) center bottom 5px /calc(100% - 20px) 2px no-repeat;
   background-color: #fcfcfc;
   border: 0px solid;
   padding: 0px;
+}
+
+
+.popup-elem{
+  margin: 0;
+    font-family: Open Sans, sans-serif;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #525f7f !important;
+    text-align: left;
+    background-color: white;
 }
 
 
@@ -654,6 +742,14 @@ box-shadow:2px 2px 2px rgb(196, 195, 195) !important;
 .dx-dropdowneditor.dx-dropdowneditor-field-clickable {
   width: 42%;
 }
+
+.table-content{
+  font-size:10px !important;
+}
+
+.table-header {
+  font-size: 10px !important;
+}
 }
 
 @media only screen and (max-width: 850px) {
@@ -673,7 +769,6 @@ box-shadow:2px 2px 2px rgb(196, 195, 195) !important;
     font-weight:600;
   font-size:14px;
     }
-
 
   img[alt*="avatar"] {
     width: 35px !important;

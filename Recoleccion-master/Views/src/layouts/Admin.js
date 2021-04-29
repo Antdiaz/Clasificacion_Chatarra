@@ -7,8 +7,10 @@ import AdminFooter from 'components/Footers/AdminFooter.js';
 import Sidebar from 'components/Sidebar/Sidebar.js';
 import routes from 'routes.js';
 import { config } from '../utils/config';
-import { callApi,getSessionItem } from '../utils/utils';
+import { callApi, getSessionItem } from '../utils/utils';
 import Usuarios from 'views/Usuarios/Usuarios';
+import Material from 'views/Usuarios/Material';
+import Patio from 'views/Patio/Patio';
 
 class Admin extends React.Component {
   constructor(props) {
@@ -20,91 +22,133 @@ class Admin extends React.Component {
       Usuario: null,
       NumbUsuario: getSessionItem('NumUsuario'),
       Patio: null,
-      editBoxValue: 0,
+      editBoxValue: getSessionItem('PatioEscogido'),
+      row: null,
+      material: null,
+      materialr: 0,
+      cantidadr: 0,
+      kilosr: 0,
+      observaciones: 'Ninguna',
+      almacen: 'x',
+      subalmacen: 0,
     };
   }
 
+  setValores = (Val) => this.setState(() => ({ Valores: Val }));
 
-    setValores = (Val) => this.setState(() => ({Valores: Val}))
+  setPatio = (Val) => this.setState(() => ({ Patio: Val }));
 
-     setPatio = (Val) => this.setState(() => ({Patio: Val}))
+  seteditBoxValue = (Val) => this.setState(() => ({ editBoxValue: Val }));
 
-     seteditBoxValue = (Val) => this.setState(() => ({editBoxValue: Val}))
+  setDatos = (Val) => this.setState(() => ({ Datos: Val }));
 
-     setDatos = (Val) => this.setState(() => ({Datos: Val}))
+  setUsuario = (Val) => this.setState(() => ({ Usuario: Val }));
 
-     setUsuario = (Val) => this.setState(() => ({Usuario: Val}))
+  setrow = (Val) => this.setState(() => ({ row: Val }));
 
-   async componentDidMount() {
+  setmaterial = (Val) => this.setState(() => ({ material: Val }));
 
+  setmaterialr = (Val) => this.setState(() => ({ materialr: Val }));
+
+  setcantidadr = (Val) => this.setState(() => ({ cantidadr: Val }));
+
+  setkilosr = (Val) => this.setState(() => ({ kilosr: Val }));
+
+  setobservaciones = (Val) => this.setState(() => ({ observaciones: Val }));
+
+  setalmacen = (Val) => this.setState(() => ({ almacen: Val }));
+
+  setsubalmacen = (Val) => this.setState(() => ({ subalmacen: Val }));
+
+  async componentDidMount() {
     const urlKrakenService = `${config.KrakenService}/${24}/${2}`;
     const urlKrakenPlanta = `${config.KrakenService}/${24}/${4}`;
-    const urlKrakenUsuario=`${config.KrakenService}/${24}/${3}`;
-    
-/* eslint-disable */
+    const urlKrakenUsuario = `${config.KrakenService}/${24}/${3}`;
+
+    /* eslint-disable */
     const data = {
-      parameters: "{\"ClaUbicacion\":"+ this.state.editBoxValue +",\"Valor\":\"%%%\"}",
-      tipoEstructura: 1
+      parameters: '{"ClaUbicacion":' + this.state.editBoxValue + ',"Valor":"%%%"}',
+      tipoEstructura: 1,
     };
 
     const data3 = {
-      parameters: "{\"Usuario\":" + this.state.NumbUsuario +"}",
-      tipoEstructura: 1
+      parameters: '{"Usuario":' + this.state.NumbUsuario + '}',
+      tipoEstructura: 1,
     };
-/* eslint-enable */
+    /* eslint-enable */
 
-    await callApi(urlKrakenUsuario, 'POST',data3,  (res) => {
-      this.setUsuario(res.Result0[0].IdUsuario)
+    await callApi(urlKrakenUsuario, 'POST', data3, (res) => {
+      this.setUsuario(res.Result0[0].IdUsuario);
     });
     /* eslint-disable */
     const data2 = {
-      parameters: "{\"ClaUsuarioMod\":"+this.state.Usuario+"}",
-      tipoEstructura: 1
+      parameters: '{"ClaUsuarioMod":' + this.state.Usuario + '}',
+      tipoEstructura: 1,
     };
     /* eslint-enable */
-    await callApi(urlKrakenPlanta, 'POST',data2,  (res) => {
-      this.setPatio(res.Result0)
+    await callApi(urlKrakenPlanta, 'POST', data2, (res) => {
+      this.setPatio(res.Result0);
     });
 
-   await  callApi(urlKrakenService, 'POST',data,  (res) => {
-        this.setValores(res.Result0)
+    await callApi(urlKrakenService, 'POST', data, (res) => {
+      this.setValores(res.Result0);
     });
-  };
+  }
 
-
-  componentDidUpdate(e,prevState) {
+  componentDidUpdate(e, prevState) {
     if (e.history.pathname !== e.location.pathname) {
       document.documentElement.scrollTop = 0;
       document.scrollingElement.scrollTop = 0;
       this.refs.mainContent.scrollTop = 0;
     }
-    
+
     if (prevState.editBoxValue !== this.state.editBoxValue) {
       const urlKrakenService = `${config.KrakenService}/${24}/${2}`;
       /* eslint-disable */
       const data = {
-        parameters: "{\"ClaUbicacion\":"+ this.state.editBoxValue +",\"Valor\":\"%%%\"}",
-        tipoEstructura: 1
+        parameters: '{"ClaUbicacion":' + this.state.editBoxValue + ',"Valor":"%%%"}',
+        tipoEstructura: 1,
       };
       /* eslint-enable */
-      callApi(urlKrakenService, 'POST',data,  (res) => {
-        this.setValores(res.Result0)
-    });
+      callApi(urlKrakenService, 'POST', data, (res) => {
+        this.setValores(res.Result0);
+      });
     }
   }
-  
+
   getRoutes = (routes) =>
     routes.map((prop, key) => {
       if (prop.collapse) {
         return this.getRoutes(prop.views);
       }
       if (prop.layout === '/layout') {
-        if(prop.path === '/Placas'){
-        return <Route path={prop.layout + prop.path} component={() => <prop.component Valores={this.state.Valores} Datos={this.state.Datos} setDatos={this.setDatos} Usuario={this.state.Usuario} editBoxValue={this.state.editBoxValue} />} key={key} />
-
+        if (prop.path === '/Placas') {
+          return (
+            <Route
+              path={prop.layout + prop.path}
+              component={() => (
+                <prop.component
+                  Valores={this.state.Valores}
+                  Datos={this.state.Datos}
+                  setDatos={this.setDatos}
+                  Usuario={this.state.Usuario}
+                  editBoxValue={this.state.editBoxValue}
+                  row={this.state.row}
+                  setrow={this.setrow}
+                  material={this.state.material}
+                  setmaterial={this.setmaterial}
+                  Patio={this.state.Patio}
+                />
+              )}
+              key={key}
+            />
+          );
         }
-        return <Route path={prop.layout + prop.path} component={prop.component} key={key} />;
-
+        return (
+          <Route path={prop.layout + prop.path} component={prop.component} key={key}>
+            {' '}
+          </Route>
+        );
       }
 
       return null;
@@ -146,13 +190,44 @@ class Admin extends React.Component {
           sidenavOpen={this.state.sidenavOpen}
         />
         <div className="main-content" ref="mainContent" onClick={this.closeSidenav}>
-          <AdminNavbar {...this.props} Patio={this.state.Patio} editBoxValue={this.state.editBoxValue} seteditBoxValue={this.seteditBoxValue} />
+          <AdminNavbar
+            {...this.props}
+            Patio={this.state.Patio}
+            editBoxValue={this.state.editBoxValue}
+            seteditBoxValue={this.seteditBoxValue}
+            row={this.state.row}
+            setrow={this.setrow}
+          />
+          <Switch>{this.getRoutes(routes)}</Switch>
           <Switch>
-            {this.getRoutes(routes)}
-          </Switch>
-          <Switch>
-            <Route path="/Informacion/:id">
-              <Usuarios Valores={this.state.Valores} />
+            <Route path="/Informacion/:placa/:id">
+              <Sidebar
+                {...this.props}
+                routes={routes}
+                toggleSidenav={this.toggleSidenav}
+                sidenavOpen={this.state.sidenavOpen}
+              />
+              <Usuarios
+                Valores={this.state.Valores}
+                editBoxValue={this.state.editBoxValue}
+                row={this.state.row}
+                setrow={this.setrow}
+                material={this.state.material}
+                setmaterial={this.setmaterial}
+                materialr={this.state.materialr}
+                cantidadr={this.state.cantidadr}
+                kilosr={this.state.kilosr}
+                observaciones={this.state.observaciones}
+                almacen={this.state.almacen}
+                subalmacen={this.state.subalmacen}
+                setmaterialr={this.setmaterialr}
+                setcantidadr={this.setcantidadr}
+                setkilosr={this.setkilosr}
+                setobservaciones={this.setobservaciones}
+                setalmacen={this.setalmacen}
+                setsubalmacen={this.setsubalmacen}
+                Patio={this.state.Patio}
+              />
             </Route>
           </Switch>
           <AdminFooter />

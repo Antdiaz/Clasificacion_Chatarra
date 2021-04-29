@@ -24,7 +24,7 @@ const Items= ({listas}) => {
                     overflowX: 'auto',
                     }}
                   >
-                    <Link style={{color:"rgb(41, 41, 41)"}} to={`/Informacion/${lista.ClaVehiculoPorClasificar}`}>
+                    <Link style={{color:"rgb(41, 41, 41)"}} to={`/Informacion/${lista.ClaVehiculoPorClasificar}/${lista.IdBoleta}`}>
                       <i className="fa fa-info-circle fa-2x" aria-hidden="true"></i>
                     </Link>
                     <div className="form" style={{width: "100%"}}>
