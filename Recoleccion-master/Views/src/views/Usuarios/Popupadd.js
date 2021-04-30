@@ -1,6 +1,11 @@
 import React, { useState } from 'react';
 import {
+  Card,
+  CardText,
   CardHeader,
+  CardBody,
+  CardTitle,
+  Button,
   Row,
   Col,
   Container,
@@ -10,6 +15,9 @@ import {
   InputGroupText,
 } from 'reactstrap';
 import SelectBox from 'devextreme-react/select-box';
+import Form, { Item } from 'devextreme-react/form';
+import KitchenIcon from '@material-ui/icons/Kitchen';
+import LocalLaundryServiceIcon from '@material-ui/icons/LocalLaundryService';
 import dryer from '../../assets/img/dryer.png';
 import freezer from '../../assets/img/freezer.png';
 import heater from '../../assets/img/heater.png';
@@ -23,7 +31,7 @@ import smbag from '../../assets/img/little-bag.png';
 import bag from '../../assets/img/bag.png';
 import contenedors from '../../assets/img/contenedor.png';
 
-const Popup = (props) => {
+const Popupadd = (props) => {
   const [isNext, setIsNext] = useState(false);
   const [srefri, setsrefri] = useState(0);
   const [mrefri, setmrefri] = useState(0);
@@ -37,16 +45,28 @@ const Popup = (props) => {
   const [costal, setcostal] = useState(0);
   const [saco, setsaco] = useState(0);
   const [contenedor, setcontenedor] = useState(0);
-  const [cantidad, setcantidad] = useState(0);
-  const [kilos, setkilos] = useState(0);
-  const [observaciones, setobservaciones] = useState(null);
-  const [idmaterial, setidmaterial] = useState(0);
-  const [nombrematerial, setnombrematerial] = useState(0)
-  const [kiloscont, setkiloscont] = useState(0);
+  const [cantidade, setcantidade] = useState(0);
+  const [cantidadr, setcantidadr] = useState(0);
+  const [kilose, setkilose] = useState(0);
+  const [kilosr, setkilosr] = useState(0);
+  const [porcentajer, setporcentajer] = useState(0);
+  const [observaciones, setobservaciones] = useState("Ninguna");
+  const [idmateriale, setidmateriale] = useState(0);
+  const [idmaterialr, setidmaterialr] = useState(0);
+  const [nombrematerialr, setnombrematerialr] = useState(0)
+  const [nombremateriale, setnombremateriale] = useState(0)
+  const [error, seterror] = useState(null)
 
-  const onValueChanged = (e) => {
-    setidmaterial(e.value);
-    setnombrematerial(e.component.option("text").split("-").pop())
+
+  const onValueChangede = (e) => {
+    setidmateriale(e.value);
+    setnombremateriale(e.component.option("text").split("-").pop())
+  };
+
+
+  const onValueChangedr = (e) => {
+    setidmaterialr(e.value);
+    setnombrematerialr(e.component.option("text").split("-").pop())
   };
 
   const electrodomestico =
@@ -63,20 +83,40 @@ const Popup = (props) => {
 
   const kilosbotes = botes + electrodomestico;
 
-  const handlecantidad = (event) => {
-    setcantidad(event.target.value);
+  const handlecantidade = (event) => {
+    setcantidade(event.target.value);
   };
 
-  const handlekilos = (event) => {
-    setkilos(event.target.value);
+  const handlecantidadr = (event) => {
+    setcantidadr(event.target.value);
   };
 
-  const handlecont = (event) => {
-    setkiloscont(event.target.value)
+  const handlekilose = (event) => {
+    setkilose(event.target.value);
+  };
+
+  const handlekilosr = (event) => {
+    setkilosr(event.target.value);
   };
 
   const handleobservaciones = (event) => {
     setobservaciones(event.target.value);
+  };
+
+  const handleporcentaje = (event) => {
+    // const val = event.target.value
+    // const max = 100
+    // const maxLength = max.toString().length-1
+    // const newVal = val < max ? val : parseInt(val.toString().substring(0, maxLength))
+    setporcentajer(event.target.value);
+
+    if(porcentajer > 100){
+      seterror("Valor máximo es 100");
+    }
+
+    else{
+      seterror()
+    }
   };
 
   const handlealmacen = (event) => {
@@ -215,23 +255,30 @@ const Popup = (props) => {
   };
 
   const closebote = () => {
-    setidmaterial(0);
+    setidmaterialr(0);
   };
 
   const safebote = () => {
-    setkilos(kilosbotes);
-    setcantidad(kilosbotes);
-    setidmaterial(0);
+    setkilosr(kilosbotes);
+    setcantidadr(kilosbotes);
+    setidmaterialr(0);
     setIsNext(!isNext);
   };
 
-  const handleClose = () => {
-    props.setobservaciones(observaciones);
-    props.setkilosr(kilos);
-    props.setcantidadr(kilos);
-    props.setkiloscont(kiloscont)
-    props.setmaterialr(nombrematerial)
+  const handleBack = () => {
+    props.setmodaladdOpen(false)
   };
+
+  const handleSubmit = () =>{
+    props.setaddarreglo({
+      Result0:[
+        {NomArticuloCompra: nombremateriale, NomArticuloRecibido: nombrematerialr,PorcentajeMaterial: porcentajer,CantidadEnviado: cantidade, CantidadRecibido: cantidadr,Observaciones: observaciones,Kilose: kilose, Kilosr:kilosr }
+      ]
+    })
+
+    console.log(props.addarreglo)
+    props.setmodaladdOpen(false)
+  }
 
   function Botes() {
     return (
@@ -569,21 +616,29 @@ const Popup = (props) => {
   return (
     <div>
       {!isNext ? (
-        idmaterial === 301476 ? (
+        idmaterialr === 301476 ? (
           <Botes />
         ) : (
           <div className="box">
-            <span className="close-icon" onClick={handleClose}>
+            <span className="close-icon" onClick={handleBack}>
               x
             </span>
             <CardHeader style={{ paddingTop: '25px', color: '#002c6f' }}>
-              [1] Clasificación Material
+              [1] Clasificación Material 
             </CardHeader>
             <Container fluid={true}>
               <Row className="popup-row" style={{ marginTop: '10px' }}>
-                <Col>
+                <Col className="selector">
                   <Row className="popup-title">Material Enviado</Row>
-                  <Row>{props.ro.NomArticuloCompra}</Row>
+                  <SelectBox
+                    dataSource={props.material}
+                    defaultValue=""
+                    displayExpr="NomArticuloCompra"
+                    valueExpr="ClaArticuloCompra"
+                    placeholder="Seleccionar Material.."
+                    onValueChanged={onValueChangede}
+                    style={{ marginLeft: '-15px' }}
+                  />
                 </Col>
                 <Col className="selector">
                   <Row className="popup-title" style={{ marginLeft: '0px' }}>
@@ -595,21 +650,28 @@ const Popup = (props) => {
                     displayExpr="NomArticuloCompra"
                     valueExpr="ClaArticuloCompra"
                     placeholder="Seleccionar Material.."
-                    onValueChanged={onValueChanged}
+                    onValueChanged={onValueChangedr}
                   />
                 </Col>
               </Row>
               <Row className="popup-row">
                 <Col>
                   <Row className="popup-title">Cantidad Enviada</Row>
-                  <Row>{props.ro.KilosDocumentados}</Row>
+                  <Row>
+                    <InputGroup>
+                      <Input className="popup-recibidos" onChange={handlecantidade} type="number" />
+                      <InputGroupAddon addonType="append">
+                        <InputGroupText>lbs</InputGroupText>
+                      </InputGroupAddon>
+                    </InputGroup>
+                  </Row>
                 </Col>
                 <Col>
                   <Row className="popup-title" style={{ marginLeft: '0px' }}>
                     Cantidad Recibida
                   </Row>
                   <InputGroup>
-                    <Input className="popup-recibidos" onChange={handlecantidad} type="number" />
+                    <Input className="popup-recibidos" onChange={handlecantidadr} type="number" />
                     <InputGroupAddon addonType="append">
                       <InputGroupText>lbs</InputGroupText>
                     </InputGroupAddon>
@@ -620,14 +682,21 @@ const Popup = (props) => {
               <Row className="popup-row">
                 <Col>
                   <Row className="popup-title">Kilos Enviados</Row>
-                  <Row>{props.ro.KilosDocumentados}</Row>
+                  <Row>
+                    <InputGroup>
+                      <Input className="popup-recibidos" onChange={handlekilose} type="number" />
+                      <InputGroupAddon addonType="append">
+                        <InputGroupText>kgs</InputGroupText>
+                      </InputGroupAddon>
+                    </InputGroup>
+                  </Row>
                 </Col>
                 <Col>
                   <Row className="popup-title" style={{ marginLeft: '0px' }}>
                     Kilos Recibidos
                   </Row>
                   <InputGroup>
-                    <Input className="popup-recibidos" onChange={handlekilos} type="number" />
+                    <Input className="popup-recibidos" onChange={handlekilosr} type="number" />
                     <InputGroupAddon addonType="append">
                       <InputGroupText>kgs</InputGroupText>
                     </InputGroupAddon>
@@ -638,7 +707,14 @@ const Popup = (props) => {
               <Row className="popup-row">
                 <Col>
                   <Row className="popup-title">Porcentaje Recibido</Row>
-                  <Row>{props.ro.PorcentajeMaterial}&nbsp;%</Row>
+                  <Row>
+                    <InputGroup>
+                      <Input className="popup-recibidos" onChange={handleporcentaje} type="number" min={0} max={100} />
+                      <InputGroupAddon addonType="append">
+                        <InputGroupText>&nbsp;%&nbsp;</InputGroupText>
+                      </InputGroupAddon>
+                    </InputGroup>
+                  </Row>
                 </Col>
                 <Col>
                   <Row className="popup-title" style={{ marginLeft: '0px' }}>
@@ -647,6 +723,7 @@ const Popup = (props) => {
                   <Input className="popup-recibidos" type="text" />
                 </Col>
               </Row>
+              <Row style={{color:"red",fontSize:"12px",position:"absolute",marginTop:"-19px",marginLeft:"0px"}}>{error && <span style={{color:"red !important"}}>{error}</span>}</Row>
               <Row className="popup-row">
                 <Col>
                   <Row className="popup-title">Observaciones</Row>
@@ -668,7 +745,7 @@ const Popup = (props) => {
                   <Row className="popup-title">
                     <Col>Subalmacén</Col>
                     <Col>
-                      <Row>{props.ro.ClaSubAlmacenCompra}</Row>
+                      <Row>HOLA</Row>
                     </Col>
                   </Row>
                 </Col>
@@ -679,11 +756,11 @@ const Popup = (props) => {
                 style={{ marginRight: '30px' }}
                 type="button"
                 className="popup-button"
-                onClick={togglePopup2}
+                onClick={porcentajer < 101 && togglePopup2}
               >
                 Siguiente &gt;
               </button>
-              <button type="button" className="popup-button" onClick={handleClose}>
+              <button type="button" className="popup-button" onClick={handleBack}>
                 &#9447; Cancelar
               </button>
             </div>
@@ -691,7 +768,7 @@ const Popup = (props) => {
         )
       ) : (
         <div className="box">
-          <span className="close-icon" onClick={handleClose}>
+          <span className="close-icon" onClick={handleBack}>
             x
           </span>
           <CardHeader style={{ paddingTop: '25px', color: '#002c6f' }}>
@@ -701,14 +778,14 @@ const Popup = (props) => {
             <Row className="popup-row" style={{ marginTop: '40px' }}>
               <Col>
                 <Row className="popup-title">Material Recibido</Row>
-                <Row>{nombrematerial}</Row>
+                <Row>{nombrematerialr}</Row>
               </Col>
               <Col>
                 <Row className="popup-title" style={{ marginLeft: '0px' }}>
                   Cantidad Recibida
                 </Row>
                 <Row className="popup-elem" style={{ marginLeft: '0px' }}>
-                  {cantidad}&nbsp; lbs
+                  {cantidadr}&nbsp; lbs
                 </Row>
               </Col>
               <Col>
@@ -716,7 +793,7 @@ const Popup = (props) => {
                   Kilos Recibidos
                 </Row>
                 <Row className="popup-elem" style={{ marginLeft: '0px' }}>
-                  {kilos}&nbsp; kgs
+                  {kilosr}&nbsp; kgs
                 </Row>
               </Col>
               <Col>
@@ -724,7 +801,7 @@ const Popup = (props) => {
                   Porcentaje
                 </Row>
                 <Row className="popup-elem" style={{ marginLeft: '0px' }}>
-                  {props.ro.PorcentajeMaterial}&nbsp;%
+                  {porcentajer} &nbsp;%
                 </Row>
               </Col>
             </Row>
@@ -734,7 +811,7 @@ const Popup = (props) => {
                   Kilos Contaminados
                 </Row>
                 <InputGroup style={{ width: '35%' }}>
-                  <Input className="popup-recibidos" type="number" onChange={handlecont} />
+                  <Input className="popup-recibidos" type="number" />
                   <InputGroupAddon addonType="append">
                     <InputGroupText>kgs</InputGroupText>
                   </InputGroupAddon>
@@ -762,7 +839,7 @@ const Popup = (props) => {
               style={{ marginRight: '30px' }}
               type="button"
               className="popup-button"
-              onClick={handleClose}
+              onClick={handleSubmit}
             >
               Guardar &#43;
             </button>
@@ -776,4 +853,4 @@ const Popup = (props) => {
   );
 };
 
-export default Popup;
+export default Popupadd;

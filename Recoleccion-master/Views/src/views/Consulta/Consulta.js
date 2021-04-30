@@ -79,6 +79,8 @@ function Consulta({ Valores, Datos, setDatos, Patio, editBoxValue, seteditBoxVal
               ? Valores.filter(
                   (lista) =>
                     lista.ClaVehiculoPorClasificar.includes(Datos) ||
+                    [lista.NomChofer].includes(Datos) ||
+                    [lista.NomProveedor].includes([Datos]) ||
                     lista.NomMotivoEntrada.includes(Datos) ||
                     lista.IdBoleta.toString().includes(Datos) ||
                     lista.IdBoleta.toString().includes(Datos) ||

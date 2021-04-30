@@ -31,6 +31,7 @@ class Admin extends React.Component {
       observaciones: 'Ninguna',
       almacen: 'x',
       subalmacen: 0,
+      kiloscont: 0,
     };
   }
 
@@ -59,6 +60,8 @@ class Admin extends React.Component {
   setalmacen = (Val) => this.setState(() => ({ almacen: Val }));
 
   setsubalmacen = (Val) => this.setState(() => ({ subalmacen: Val }));
+
+  setkiloscont = (Val) => this.setState(() => ({ kiloscont: Val }));
 
   async componentDidMount() {
     const urlKrakenService = `${config.KrakenService}/${24}/${2}`;
@@ -227,6 +230,8 @@ class Admin extends React.Component {
                 setalmacen={this.setalmacen}
                 setsubalmacen={this.setsubalmacen}
                 Patio={this.state.Patio}
+                kiloscont={this.state.kiloscont}
+                setkiloscont={this.setkiloscont}
               />
             </Route>
           </Switch>

@@ -24,7 +24,7 @@ const Items= ({listas}) => {
                     overflowX: 'auto',
                     }}
                   >
-                    <Link style={{color:"rgb(41, 41, 41)"}} to={`/Informacion/${lista.ClaVehiculoPorClasificar}/${lista.IdBoleta}`}>
+                    <Link style={{color:"rgb(41, 41, 41)"}} to={`/Informacion/${lista.ClaVehiculoPorClasificar ? lista.ClaVehiculoPorClasificar : "Sin dato" }/${lista.IdBoleta}`}>
                       <i className="fa fa-info-circle fa-2x" aria-hidden="true"></i>
                     </Link>
                     <div className="form" style={{width: "100%"}}>
@@ -50,7 +50,7 @@ const Items= ({listas}) => {
                         )}
                         <div className="dx-field">
                           <div className="dx-field-label">Peso :</div>
-                          <div className="dx-field-value-static">{lista.PesoEntrada}{lista.NomCortoUnidadEntrada}</div>
+                          <div className="dx-field-value-static">{lista.PesoEntrada}&nbsp; {lista.NomCortoUnidadEntrada}</div>
                         </div>
                         <div className="dx-field">
                           <div className="dx-field-label">Documentado :</div>

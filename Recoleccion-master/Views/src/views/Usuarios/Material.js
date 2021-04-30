@@ -35,12 +35,15 @@ function Material({
   observaciones,
   almacen,
   subalmacen,
+  setkiloscont,
+  kiloscont,
 }) {
 
 const [claordencompra, setclaordencompra] = useState()
 const [idacuerdo, setidacuerdo] = useState()
 const [idpedidoimportacion, setidpedidoimportacion] = useState()
 const [contaminacion, setcontaminacion] = useState()
+
   
 
 
@@ -76,7 +79,7 @@ const [contaminacion, setcontaminacion] = useState()
           Enviado:&nbsp;{ro.KilosDocumentados}&nbsp; kgs <br /> Recibido:&nbsp;{kilosr}&nbsp; kgs
         </TableCell>
         <TableCell className="table-content">
-          Enviado:&nbsp;{ro.KilosContaminados}&nbsp; kgs <br /> Recibido:&nbsp;{0}
+          Enviado:&nbsp;{ro.KilosContaminados}&nbsp; kgs <br /> Recibido:&nbsp;{kiloscont}
           &nbsp; kgs
         </TableCell>
         <TableCell className="table-content">
@@ -98,15 +101,9 @@ const [contaminacion, setcontaminacion] = useState()
             setcantidadr={setcantidadr}
             setkilosr={setkilosr}
             setobservaciones={setobservaciones}
-            setalmacen={setalmacen}
-            setsubalmacen={setsubalmacen}
-            materialr={materialr}
-            cantidadr={cantidadr}
-            kilosr={kilosr}
             observaciones={observaciones}
-            almacen={almacen}
-            subalmacen={subalmacen}
             contaminacion={contaminacion}
+            setkiloscont={setkiloscont}
           />
         </Modal>
       </TableRow>
