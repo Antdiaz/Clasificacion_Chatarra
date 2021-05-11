@@ -7,7 +7,7 @@ import AdminFooter from 'components/Footers/AdminFooter.js';
 import Sidebar from 'components/Sidebar/Sidebar.js';
 import routes from 'routes.js';
 import { config } from '../utils/config';
-import { callApi, getSessionItem } from '../utils/utils';
+import { callApi, getSessionItem, setSessionData } from '../utils/utils';
 import Usuarios from 'views/Usuarios/Usuarios';
 import Material from 'views/Usuarios/Material';
 import Patio from 'views/Patio/Patio';
@@ -32,8 +32,21 @@ class Admin extends React.Component {
       almacen: 'x',
       subalmacen: 0,
       kiloscont: 0,
+      pesajeparcial:0,
+      poppesaje:false,
+      warning:false,
+      filtropesaje:false,
+      showResults:false,
+      transporte:'todos',
+      status:'todos'
     };
   }
+
+  setwarning =(Val) => this.setState(() => ({ warning: Val}))
+
+  setpoppesaje = (Val) => this.setState(() => ({ poppesaje: Val}))
+
+  setpesajeparcial = (Val) => this.setState(() => ({ pesajeparcial: Val}))
 
   setValores = (Val) => this.setState(() => ({ Valores: Val }));
 
@@ -63,20 +76,29 @@ class Admin extends React.Component {
 
   setkiloscont = (Val) => this.setState(() => ({ kiloscont: Val }));
 
+  setfiltropesaje = (Val) => this.setState(() => ({ filtropesaje: Val }));
+
+  setshowResults = (Val) => this.setState(() => ({showResults: Val }));
+
+  settransporte = (Val) => this.setState(() => ({transporte: Val }));
+
+  setstatus = (Val) => this.setState(() => ({status: Val }));
+
+
   async componentDidMount() {
-    const urlKrakenService = `${config.KrakenService}/${24}/${2}`;
-    const urlKrakenPlanta = `${config.KrakenService}/${24}/${4}`;
-    const urlKrakenUsuario = `${config.KrakenService}/${24}/${3}`;
+    const urlKrakenService = `${config.KrakenService}/${24}/${34}`;
+    const urlKrakenPlanta = `${config.KrakenService}/${24}/${36}`;
+    const urlKrakenUsuario = `${config.KrakenService}/${24}/${35}`;
 
     /* eslint-disable */
     const data = {
-      parameters: '{"ClaUbicacion":' + this.state.editBoxValue + ',"Valor":"%%%"}',
-      tipoEstructura: 1,
+      parameters: '{"ClaUbicacion":' + this.state.editBoxValue + ',"ClaServicioJson":' + 1 + ',"Parametros":"@pnClaUbicacion=' + this.state.editBoxValue +',@psValor=,@pnEsParcial=0"}',
+      tipoEstructura: 0,
     };
 
     const data3 = {
       parameters: '{"Usuario":' + this.state.NumbUsuario + '}',
-      tipoEstructura: 1,
+      tipoEstructura: 0,
     };
     /* eslint-enable */
 
@@ -85,17 +107,23 @@ class Admin extends React.Component {
     });
     /* eslint-disable */
     const data2 = {
-      parameters: '{"ClaUsuarioMod":' + this.state.Usuario + '}',
-      tipoEstructura: 1,
+      parameters: '{"idClaUsuarioMod":' + this.state.Usuario + '}',
+      tipoEstructura: 0,
     };
     /* eslint-enable */
     await callApi(urlKrakenPlanta, 'POST', data2, (res) => {
       this.setPatio(res.Result0);
     });
 
-    await callApi(urlKrakenService, 'POST', data, (res) => {
+    await callApi(urlKrakenService, 'POST', data,(res) => {
       this.setValores(res.Result0);
     });
+
+      fetch('https://api.ipify.org?format=json')
+      .then(results => results.json())
+      .then(data => setSessionData({
+        Ipaddress: data.ip
+      }))
   }
 
   componentDidUpdate(e, prevState) {
@@ -106,12 +134,13 @@ class Admin extends React.Component {
     }
 
     if (prevState.editBoxValue !== this.state.editBoxValue) {
-      const urlKrakenService = `${config.KrakenService}/${24}/${2}`;
+      const urlKrakenService = `${config.KrakenService}/${24}/${34}`;
       /* eslint-disable */
       const data = {
-        parameters: '{"ClaUbicacion":' + this.state.editBoxValue + ',"Valor":"%%%"}',
-        tipoEstructura: 1,
+        parameters: '{"ClaUbicacion":' + this.state.editBoxValue + ',"ClaServicioJson":' + 1 + ',"Parametros":"@pnClaUbicacion=' + this.state.editBoxValue +',@psValor=,@pnEsParcial=0"}',
+        tipoEstructura: 0,
       };
+
       /* eslint-enable */
       callApi(urlKrakenService, 'POST', data, (res) => {
         this.setValores(res.Result0);
@@ -141,6 +170,14 @@ class Admin extends React.Component {
                   material={this.state.material}
                   setmaterial={this.setmaterial}
                   Patio={this.state.Patio}
+                  filtropesaje={this.state.filtropesaje}
+                  setfiltropesaje={this.setfiltropesaje}
+                  showResults={this.state.showResults}
+                  setshowResults={this.setshowResults}
+                  transporte={this.state.transporte}
+                  settransporte={this.settransporte}
+                  status={this.state.status}
+                  setstatus={this.setstatus}
                 />
               )}
               key={key}
@@ -211,6 +248,8 @@ class Admin extends React.Component {
                 sidenavOpen={this.state.sidenavOpen}
               />
               <Usuarios
+                warning={this.state.warning}
+                setwarning={this.setwarning}
                 Valores={this.state.Valores}
                 editBoxValue={this.state.editBoxValue}
                 row={this.state.row}
@@ -232,6 +271,10 @@ class Admin extends React.Component {
                 Patio={this.state.Patio}
                 kiloscont={this.state.kiloscont}
                 setkiloscont={this.setkiloscont}
+                pesajeparcial={this.state.pesajeparcial}
+                setpesajeparcial={this.setpesajeparcial}
+                poppesaje={this.state.poppesaje}
+                setpoppesaje={this.setpoppesaje}
               />
             </Route>
           </Switch>

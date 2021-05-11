@@ -12,6 +12,7 @@ import Paper from '@material-ui/core/Paper';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Modal from 'react-modal';
 import Popupadd from './Popupadd';
+import Warning from './Warning';
 
 function Usuarios({
   Valores,
@@ -33,7 +34,13 @@ function Usuarios({
   almacen,
   subalmacen,
   kiloscont,
-  setkiloscont
+  setkiloscont,
+  pesajeparcial,
+  setpesajeparcial,
+  poppesaje,
+  setpoppesaje,
+  warning,
+  setwarning,
 }) {
   const delay = 5;
   const { placa, id } = useParams();
@@ -45,8 +52,6 @@ function Usuarios({
   const [modaladdOpen, setmodaladdOpen] = useState(false);
   const [addarreglo, setaddarreglo] = useState(0);
 
-  
-
   const customStyles = {
     content: {
       background: 'rgba(128, 128, 128, 0.212)',
@@ -57,12 +62,12 @@ function Usuarios({
   };
 
   useEffect(() => {
-    const urlKrakenVal = `${config.KrakenService}/${24}/${5}`;
+    const urlKrakenVal = `${config.KrakenService}/${24}/${34}`;
 
     /* eslint-disable */
     const data5 = {
-      parameters: '{"ClaUbicacion":' + editBoxValue + ',"ClaVehiculoPorClasificar":' + placa + '}',
-      tipoEstructura: 1,
+      parameters: '{"ClaUbicacion":' + editBoxValue + ',"ClaServicioJson":' + 2 + ',"Parametros":"@pnClaUbicacion=' + editBoxValue +',@psClaVehiculoPorClasificar='+ placa + '"}',
+      tipoEstructura: 0,
     };
     /* eslint-enable */
     callApi(urlKrakenVal, 'POST', data5, (res) => {
@@ -74,10 +79,10 @@ function Usuarios({
       clearTimeout(timer1);
     };
   }, []);
-
   return (
     <>
       <div className="content" style={{ marginTop: '20px' }}>
+        {poppesaje ? <Warning poppesaje={poppesaje} setpoppesaje={setpoppesaje} setpesajeparcial={setpesajeparcial} pesajeparcial={pesajeparcial} />: null}
         <Row style={{ alignItems: 'center', justifyContent: 'center' }}>
           <Card className="placa-imagenes">
             <CardHeader>
@@ -151,6 +156,11 @@ function Usuarios({
                   setaddarreglo={setaddarreglo}
                   modaladdOpen={modaladdOpen}
                   setmodaladdOpen={setmodaladdOpen}
+                  pesajeparcial={pesajeparcial}
+                  setpesajeparcial={setpesajeparcial}
+                  editBoxValue={editBoxValue}
+                  placadato={placadato}
+                  setplacadato={setplacadato}
                 />
               </Modal>
               <CardHeader>
@@ -192,6 +202,12 @@ function Usuarios({
                           subalmacen={subalmacen}
                           kiloscont={kiloscont}
                           setkiloscont={setkiloscont}
+                          pesajeparcial={pesajeparcial}
+                          setpesajeparcial={setpesajeparcial}
+                          poppesaje={poppesaje}
+                          setpoppesaje={setpoppesaje}
+                          warning={warning}
+                          setwarning={setwarning}
                         />
                       )}
                     </TableContainer>

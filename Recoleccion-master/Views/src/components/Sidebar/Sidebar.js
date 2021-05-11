@@ -188,7 +188,7 @@ class Sidebar extends React.Component {
           ) : null}
           <div className="ml-auto">
             <div
-              className={classnames('sidenav-toggler d-none d-xl-block', {
+              className={classnames('sidenav-toggler d-m-block', {
                 active: this.props.sidenavOpen,
               })}
               onClick={this.props.toggleSidenav}

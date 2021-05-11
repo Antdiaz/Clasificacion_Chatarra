@@ -51,7 +51,7 @@ function AdminNavbar({ theme, Patio, editBoxValue, seteditBoxValue }) {
         <Container fluid>
           <Collapse navbar isOpen>
             <Nav className="align-items-left" navbar>
-              <img src={logo} alt="deaceroLogo" style={{ width: '150px' }} />
+              <img src={logo} alt="deaceroLogo" />
             </Nav>
             <Nav className="align-items-center ml-md-auto " navbar />
             <Nav className="align-items-center ml-auto ml-md-0" navbar>

@@ -62,7 +62,7 @@ class Login extends React.Component {
 
     callApi(urlWebService, 'POST', data, (res) => {
       if (!res.token) {
-        showSweetAlert('Error', res.mensaje, 'error');
+        showSweetAlert('Error', 'Intenta de nuevo', 'error');
       } else {
         setSessionData({
           NomUsuario: res.nombreUsuario,
@@ -98,8 +98,8 @@ class Login extends React.Component {
   }
 
   render() {
-    console.log('REACT_APP_VAR', REACT_APP_VAR);
-    console.log('REACT_APP_OTRO', REACT_APP_OTRO);
+    // // console.log('REACT_APP_VAR', REACT_APP_VAR);
+    // // console.log('REACT_APP_OTRO', REACT_APP_OTRO);
     if (sessionAlive()) {
       // Primer componente al que se va a redirigir después de iniciar sesión
       return (
@@ -167,7 +167,7 @@ class Login extends React.Component {
                         onClick={this.handleSubmit}
                         color="warning"
                         type="button"
-                        style={{ width: '30%' }}
+                        style={{ width: "32%" }}
                       >
                         Ingresar
                       </Button>

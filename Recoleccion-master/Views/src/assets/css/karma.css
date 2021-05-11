@@ -56,6 +56,60 @@ table.scroll input {
   border-color: rgba(29, 140, 248, 0.3);
 }
 
+body{
+  overflow-x: hidden !important;
+}
+.navbar-nav{
+  flex:1;
+}
+
+.nav-link,.pr-0{
+  width:max-content
+}
+
+.extra-filter{
+  margin-top: 20px;
+  margin-left: 4%;
+}
+
+
+.Warning{
+  position:fixed;
+  left: 0; 
+  right: 0; 
+  margin-left: auto; 
+  margin-right: auto;
+  margin-top:17%;
+  width:50%;
+  z-index:1;
+}
+
+.warning-container{
+  width:100%;
+  height:auto;
+  background:rgb(255, 243, 205);
+  border-radius: 10px;
+  border:1px solid rgba(243, 186, 81, 0.452);
+  text-align:center;
+  padding:20px;
+  color:rgb(232, 173, 69);
+}
+
+.warning-close{
+  position:absolute;
+  right:1.5%;
+  top:1%;
+}
+
+.extra-select{
+  border-radius: 15px;
+  border-color: rgb(209, 209, 209);
+}
+
+.g-sidenav-hidden  .navbar-vertical {
+  width:62px !important;
+}
+
 table.scroll tbody,
 table.scroll thead {
   display: block;
@@ -70,6 +124,21 @@ table.scroll tbody {
 
 table.scroll tbody > tr > td {
   border: none;
+}
+
+.input-show{
+  margin-top: 130px;
+  width: 300px;
+  position: absolute;
+  left:20%;
+}
+
+.input-parcial{
+  width: 150px;
+  position: absolute;
+  right:6%;
+  margin-top:70px;
+  font-size:12px;
 }
 
 tbody td,
@@ -97,6 +166,10 @@ thead th {
   height: 273px;
   overflow: auto;
   padding-bottom: 10px;
+}
+
+img[alt*="deaceroLogo"] {
+  width: 150px;
 }
 
 #textAreaDescripcion {
@@ -416,7 +489,7 @@ font-size:18px;
 
 .dx-dropdowneditor.dx-dropdowneditor-field-clickable {
   cursor: pointer;
-  width: 30%;
+  width: 160px;
 }
 
 .fa-info-circle{
@@ -458,6 +531,7 @@ margin-left:25px;
   margin:10px;
   width:23%;
   min-width:200px;
+  z-index:-1;
 }
 
 
@@ -740,7 +814,7 @@ box-shadow:2px 2px 2px rgb(196, 195, 195) !important;
 
 @media only screen and (max-width: 990px) {
 .dx-dropdowneditor.dx-dropdowneditor-field-clickable {
-  width: 42%;
+  width: 150px;
 }
 
 .table-content{
@@ -749,6 +823,25 @@ box-shadow:2px 2px 2px rgb(196, 195, 195) !important;
 
 .table-header {
   font-size: 10px !important;
+}
+
+.placa-imagenes{
+  width:300px;
+  margin:20px;
+}
+
+.box{
+  width:80%
+}
+
+.placa-style .dx-texteditor-input {
+  font-size: 16px;
+
+}
+.card-login,.px-lg-5,.py-lg-5, .card-body{
+  padding:.3rem !important;
+  padding-left:1rem !important;
+  padding-right:1rem !important;
 }
 }
 
@@ -759,6 +852,10 @@ box-shadow:2px 2px 2px rgb(196, 195, 195) !important;
 
   .container-fluid{
     padding-right:0px;
+  }
+
+  #PlacasFiltradas .dx-fieldset{
+margin:0px;
   }
 
   .dx-texteditor-input{
@@ -773,6 +870,11 @@ box-shadow:2px 2px 2px rgb(196, 195, 195) !important;
   img[alt*="avatar"] {
     width: 35px !important;
 }
+
+.box .card-header{
+  font-size: 23px;
+}
+
 }
 
 @media only screen and (max-width: 750px) {
@@ -792,18 +894,215 @@ box-shadow:2px 2px 2px rgb(196, 195, 195) !important;
     font-size: 10px;
   }
 
+  .box .card-header{
+    font-size: 20px;
+  }
+
 
   .dx-field{
     width:50%;
+  }
+
+  .placa-imagenes{
+    width:28%;
+    margin:20px;
+  }
+
+  .card-title{
+    font-size: 14px;
+  }
+
+  .box{
+    width:90%
+  }
+
+  .popup-title{
+    font-size:15px;
+  }
+  .popup-button{
+    font-size:15px;
+  }
+
+  .input-group-text{
+    font-size:15px !important;
   }
 }
 
 @media only screen and (max-width: 600px) {
   .dx-fieldset-header {
-    font-size:20px
+    font-size:18px
 }
+
+.dx-dropdowneditor.dx-dropdowneditor-field-clickable {
+  width: 115px;
+}
+
 .kar-component {
   padding: 5px 5px;
 }
 
+.card-title{
+  font-size: 12px;
 }
+
+.input-search{
+  transform:scale(.7)
+}
+
+.input-search h2{
+  margin-top:4px;
+  font-size:20px;
+}
+
+.column-items .col-md-12{
+  padding-left:2px;
+  padding-right:2px;
+}
+
+.fa-info-circle{
+  transform:scale(.8) !important;
+  right: 2vw;
+}
+
+.dx-fieldset{
+  margin-left:5px;
+  margin-right:5px;
+}
+
+.popup-materiales input{
+  margin-top:5px;
+  height:30px;
+}
+.MuiTableCell-root{
+padding-left:10px !important;
+padding-right:10px !important;
+}
+
+.box{
+  width:100%
+}
+
+.popup-title{
+  font-size:13px;
+}
+
+.input-group-text{
+  font-size:13px !important;
+}
+
+img[alt*="deaceroLogo"] {
+  width: 100px !important;
+}
+
+.placa-style .dx-texteditor-input {
+  font-size: 14px;
+
+}
+
+.dx-list-item-content {
+  font-size: 13px;
+}
+
+img[alt*="avatar"] {
+  width: 20px !important;
+}
+
+.fa-lg {
+  font-size: 1rem;
+}
+
+.avatar-sm {
+  width: 20px;
+  height: 20px;
+
+
+}
+
+.dropdown-menu{
+  width:100px !important;
+  left:10% !important;
+}
+}
+
+
+
+
+@media only screen and (max-width: 500px) {
+.fa-info-circle{
+  transform:scale(.8) !important;
+  top:-40px;
+}
+}
+
+@media only screen and (max-width: 460px) {
+
+  img[alt*="deaceroLogo"] {
+    width: 80px !important;
+  }
+  
+  .placa-imagenes{
+    width:40%;
+    margin:10px;
+    min-width:100px;
+  }
+
+  .dx-list-item-content {
+    font-size: 10px;
+  }
+
+  .placa-style .dx-texteditor-input {
+    font-size: 10px;
+  
+  }
+
+  .dx-dropdowneditor.dx-dropdowneditor-field-clickable {
+    width: 90px;
+  }
+
+  .navbar-expand .navbar-nav .nav-link {
+    padding-left: 0px; 
+}
+
+
+.fa-home {
+ margin-left: 9px;
+}
+  .ReactModal__Content--after-open{
+    padding: 0px !important;
+  }
+
+
+  .card-title{
+    font-size: 10px;
+  }
+
+  .dx-fieldset-header{
+font-size: 15px;
+  }
+
+  .box .card-header{
+    font-size: 16px;
+  }
+
+  .card-header{
+    padding: 10px 5px;
+  }
+
+  .g-sidenav-hidden .navbar-vertical {
+    width: 30px !important;
+  }
+   .main-content{
+    margin-left:30px !important;
+  } 
+
+}
+/* .sidenav,.navbar-vertical,.navbar-expand-xs,.navbar-light,.bg-white,.fixed-left,.navbar {
+  display:none;
+} */
+
+.g-sidenav-hidden .navbar-vertical {
+  width: 55px !important;
+}
+ .main-content{
+  margin-left:55px !important;
+} 

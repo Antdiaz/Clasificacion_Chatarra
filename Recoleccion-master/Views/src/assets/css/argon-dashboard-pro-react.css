@@ -7222,7 +7222,7 @@ button.bg-darker:focus {
   }
 }
 
-@media (min-width: 1200px) {
+@media (min-width: 600px) {
   .d-xl-none {
     display: none !important;
   }
@@ -17826,12 +17826,12 @@ textarea[resize="horizontal"] {
   z-index: 1050;
   transition: all 0.4s ease;
 }
-@media (min-width: 1200px) {
+@media (min-width: 600px) {
   .sidenav:hover {
     max-width: 250px;
   }
   .sidenav .sidenav-toggler {
-    padding: 1.5rem;
+    padding: 1.5rem !important;
   }
 }
 .sidenav .navbar-brand,

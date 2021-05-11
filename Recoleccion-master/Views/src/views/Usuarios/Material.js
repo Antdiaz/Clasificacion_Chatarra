@@ -37,19 +37,24 @@ function Material({
   subalmacen,
   setkiloscont,
   kiloscont,
+  pesajeparcial,
+  setpesajeparcial,
+  poppesaje,
+  setpoppesaje,
+  warning,
+  setwarning,
 }) {
+  const [claordencompra, setclaordencompra] = useState();
+  const [idacuerdo, setidacuerdo] = useState();
+  const [idpedidoimportacion, setidpedidoimportacion] = useState();
+  const [contaminacion, setcontaminacion] = useState();
 
-const [claordencompra, setclaordencompra] = useState()
-const [idacuerdo, setidacuerdo] = useState()
-const [idpedidoimportacion, setidpedidoimportacion] = useState()
-const [contaminacion, setcontaminacion] = useState()
-
-  
-
-
-  function List({ro,index}) {
-
+  function List({ ro, index }) {
     const [modalOpen, setmodalOpen] = useState(false);
+
+    const handleModalOpen = () => {
+      setmodalOpen(true);
+    };
 
     const customStyles = {
       content: {
@@ -60,40 +65,53 @@ const [contaminacion, setcontaminacion] = useState()
       },
     };
 
-
     return (
       <TableRow key={index}>
-        <TableCell className="table-content" component="th" scope="row" style={{textAlign: "center", fontWeight: "600"}}>
+        <TableCell
+          className="table-content"
+          component="th"
+          scope="row"
+          style={{ textAlign: 'center', fontWeight: '600' }}
+        >
           {ro.ClaveArticulo}
         </TableCell>
         <TableCell className="table-content">
-          Enviado:&nbsp;{ro.NomArticuloCompra} <br /> Recibido:&nbsp;{materialr} <br />{' '}
+          Enviado:&nbsp;{materialr} <br /> Recibido:&nbsp;{ro.NomArticuloCompra} <br />{' '}
           Observaciones:&nbsp;{observaciones}
         </TableCell>
-        <TableCell className="table-content" style={{textAlign: "center", fontWeight: "600"}}>{ro.PorcentajeMaterial}&nbsp;%</TableCell>
+        <TableCell className="table-content" style={{ textAlign: 'center', fontWeight: '600' }}>
+          {ro.PorcentajeMaterial}&nbsp;%
+        </TableCell>
         <TableCell className="table-content">
-          Enviado:&nbsp;{ro.KilosDocumentados} &nbsp; lbs <br /> Recibido:&nbsp;{cantidadr}
+          Enviado:&nbsp;{0} &nbsp; lbs <br /> Recibido:&nbsp;{ro.CantidadMaterial}
           &nbsp; lbs
         </TableCell>
         <TableCell className="table-content">
-          Enviado:&nbsp;{ro.KilosDocumentados}&nbsp; kgs <br /> Recibido:&nbsp;{kilosr}&nbsp; kgs
+          Enviado:&nbsp;{kilosr}&nbsp; kgs <br /> Recibido:&nbsp;{ro.KilosReales}&nbsp; kgs
         </TableCell>
         <TableCell className="table-content">
-          Enviado:&nbsp;{ro.KilosContaminados}&nbsp; kgs <br /> Recibido:&nbsp;{kiloscont}
+          Enviado:&nbsp;{kiloscont}&nbsp; kgs <br /> Recibido:&nbsp;{0}
           &nbsp; kgs
         </TableCell>
         <TableCell className="table-content">
-          Almacen:&nbsp;{almacen}
+          Almacen:&nbsp;{ro.ClaAlmacen}
           <br />
           Sub-Almacen:&nbsp;{ro.ClaSubAlmacenCompra}
         </TableCell>
         <TableCell className="table-content">
-          <div onClick={()=>setmodalOpen(true)}>
+          <div onClick={!poppesaje ? handleModalOpen: null}>
             <EditIcon style={{ color: '#ff6a00', cursor: 'pointer' }} />
           </div>
         </TableCell>
-        <Modal isOpen={modalOpen} onClose={()=>setmodalOpen(true)} ariaHideApp={false} style={customStyles}>
+
+        <Modal
+          isOpen={modalOpen}
+          onClose={() => setmodalOpen(true)}
+          ariaHideApp={false}
+          style={customStyles}
+        >
           <Popup
+            setmodalOpen={setmodalOpen}
             key={index}
             ro={ro}
             material={material}
@@ -104,6 +122,14 @@ const [contaminacion, setcontaminacion] = useState()
             observaciones={observaciones}
             contaminacion={contaminacion}
             setkiloscont={setkiloscont}
+            pesajeparcial={pesajeparcial}
+            setpesajeparcial={setpesajeparcial}
+            setpoppesaje={setpoppesaje}
+            poppesaje={poppesaje}
+            warning={warning}
+            setwarning={setwarning}
+            editBoxValue={editBoxValue}
+            placadato={placadato}
           />
         </Modal>
       </TableRow>
@@ -111,83 +137,80 @@ const [contaminacion, setcontaminacion] = useState()
   }
 
   useEffect(() => {
-
     /* eslint-disable */
 
-if (placadato[0].ClaOrdenCompra != null && placadato[0].ClaOrdenCompra > 0) {
-  setclaordencompra = ',"ClaOrdenCompra":' + placadato[0].ClaOrdenCompra;
-}
+    if (placadato[0].ClaOrdenCompra != null && placadato[0].ClaOrdenCompra > 0) {
+      setclaordencompra = ',"ClaOrdenCompra":' + placadato[0].ClaOrdenCompra;
+    }
 
-if (placadato[0].IdAcuerdo != null && placadato[0].IdAcuerdo > 0) {
-  setidacuerdo = ',"IdAcuerdo":' + placadato[0].IdAcuerdo;
-}
+    if (placadato[0].IdAcuerdo != null && placadato[0].IdAcuerdo > 0) {
+      setidacuerdo = ',"IdAcuerdo":' + placadato[0].IdAcuerdo;
+    }
 
-if (placadato[0].IdPedidoImportacion != null && placadato[0].IdPedidoImportacion > 0) {
-  setidpedidoimportacion = ',"IdPedidoImportacion":' + placadato[0].IdPedidoImportacion;
-}
+    if (placadato[0].IdPedidoImportacion != null && placadato[0].IdPedidoImportacion > 0) {
+      setidpedidoimportacion = ',"IdPedidoImportacion":' + placadato[0].IdPedidoImportacion;
+    }
 
-
-/* eslint-enable */
-    const urlKrakenMateriales = `${config.KrakenService}/${24}/${6}`;
-    console.log(claordencompra)
-    console.log(idacuerdo)
-    console.log(idpedidoimportacion)
+    /* eslint-enable */
+    const urlKrakenService = `${config.KrakenService}/${24}/${34}`;
     /* eslint-disable */
-    const data2 = {
+    const data3 = {
       parameters:
         '{"ClaUbicacion":' +
         editBoxValue +
-        ',"IdBoleta":' +
+        ',"ClaServicioJson":' +
+        3 +
+        ',"Parametros":"@pnClaUbicacion=' +
+        editBoxValue +
+        ',@pnIdBoleta=' +
         id +
-        ',"ClaProveedor":' +
+        ',@pnClaProveedor=' +
         placadato[0].ClaProveedor +
-        ',"IdListaPrecio":' +
+        ',@pnIdListaPrecio=' +
         placadato[0].IdListaPrecio +
-        ',"ClaUbicacionProveedor":' +
+        ',@pnClaUbicacionProveedor=' +
         placadato[0].ClaUbicacionProveedor +
-        '}',
-      tipoEstructura: 1,
+        '"}',
+      tipoEstructura: 0,
     };
     /* eslint-enable */
-    callApi(urlKrakenMateriales, 'POST', data2, (res) => {
+    callApi(urlKrakenService, 'POST', data3, (res) => {
       setrow(res.Result0);
     });
-    const urlKrakenPrueba = `${config.KrakenService}/${24}/${8}`;
 
+    /* eslint-disable */
 
-     /* eslint-disable */
-
-    const data8 = {
+    const data5 = {
       // parameters: "{\"IdListaPrecio\":"+ placadato[0].IdListaPrecio +",\"ClaOrdenCompra\":"+ placadato[0].ClaOrdenCompra+",\"IdAcuerdo\":"+ placadato[0].IdAcuerdo +",\"IdPedidoImportacion\":"+ placadato[0].IdPedidoImportacion +",\"IdBoleta\":"+ placadato[0].IdBoleta +"}",
-      parameters:
+        parameters:
         '{"ClaUbicacion":' +
         editBoxValue +
-        ',"IdListaPrecio":' +
+        ',"ClaServicioJson":' +
+        5 +
+        ',"Parametros":"@pnClaUbicacion=' +
+        editBoxValue +
+        ',@pnIdListaPrecio=' +
         placadato[0].IdListaPrecio +
-        ',"IdBoleta":' +
-        placadato[0].IdBoleta 
-         +
-        '}',
-      tipoEstructura: 1,
+        ',@pnIdBoleta=' +
+        placadato[0].IdBoleta +
+        '"}',
+      tipoEstructura: 0,
     };
     /* eslint-enable */
-    callApi(urlKrakenPrueba, 'POST', data8, (res) => {
+    callApi(urlKrakenService, 'POST', data5, (res) => {
       setmaterial(res.Result0);
     });
-
-    const urlKrakenContaminacion = `${config.KrakenService}/${24}/${13}`;
-/* eslint-disable */
-    const data13 = {
-      parameters:
-        '{"ClaUbicacion":' +
-        editBoxValue +
-        '}',
-      tipoEstructura: 1,
+    /* eslint-disable */
+    const data10 = {
+      parameters: '{"ClaUbicacion":' + editBoxValue + ',"ClaServicioJson":' + 10 + ',"Parametros":"@pnClaUbicacion=' + editBoxValue +'"}',
+      tipoEstructura: 0,
     };
     /* eslint-enable */
-    callApi(urlKrakenContaminacion, 'POST', data13, (res) => {
+    callApi(urlKrakenService, 'POST', data10, (res) => {
       setcontaminacion(res.Result0);
     });
+
+    
   }, []);
 
   function Clasificacion() {
@@ -196,9 +219,16 @@ if (placadato[0].IdPedidoImportacion != null && placadato[0].IdPedidoImportacion
         <Table className="table" aria-label="a dense table">
           <TableHead>
             <TableRow>
-              <TableCell className="table-header" style={{paddingRight:"0px"}}>Fabricación</TableCell>
+              <TableCell className="table-header" style={{ paddingRight: '0px' }}>
+                Fabricación
+              </TableCell>
               <TableCell className="table-header">Material</TableCell>
-              <TableCell className="table-header" style={{paddingLeft:"0px",paddingRight:"0px"}}>Porcentaje</TableCell>
+              <TableCell
+                className="table-header"
+                style={{ paddingLeft: '0px', paddingRight: '0px' }}
+              >
+                Porcentaje
+              </TableCell>
               <TableCell className="table-header">Cantidad</TableCell>
               <TableCell className="table-header">Kilos</TableCell>
               <TableCell className="table-header">Atril/Tarima</TableCell>

@@ -60,41 +60,43 @@ class Patio extends React.Component {
   }
 
   onValueChanged = (e) => {
-    console.log(e.target.value)
     this.setLugarlocal(e.target.value)
 
   }
 
   async componentDidMount() {
     document.body.classList.add('bg-default');
-    const urlKrakenPlanta = `${config.KrakenService}/${24}/${4}`;
-    const urlKrakenUsuario = `${config.KrakenService}/${24}/${3}`;
+    const urlKrakenPlanta = `${config.KrakenService}/${24}/${36}`;
+    const urlKrakenUsuario = `${config.KrakenService}/${24}/${35}`;
 
     /* eslint-disable */
 
     const data3 = {
       parameters: '{"Usuario":' + this.state.NumbUsuario + '}',
-      tipoEstructura: 1,
+      tipoEstructura: 0,
     };
     /* eslint-enable */
 
     await callApi(urlKrakenUsuario, 'POST', data3, (res) => {
       this.setUsuario(res.Result0[0].IdUsuario);
     });
+
     /* eslint-disable */
     const data2 = {
-      parameters: '{"ClaUsuarioMod":' + this.state.Usuario + '}',
-      tipoEstructura: 1,
+      parameters: '{"idClaUsuarioMod":' + this.state.Usuario + '}',
+      tipoEstructura: 0,
     };
     /* eslint-enable */
     await callApi(urlKrakenPlanta, 'POST', data2, (res) => {
       this.setPatio(res.Result0);
     });
+
   }
 
   componentWillUnmount() {
     document.body.classList.remove('bg-default');
   }
+
 
   render() {
     if (getSessionItem('PatioEscogido')>0) {

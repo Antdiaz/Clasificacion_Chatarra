@@ -344,7 +344,7 @@
     z-index: 1050;
     transition: all 0.4s ease;
 
-    @include media-breakpoint-up(xl) {
+    @include media-breakpoint-up(m) {
         &:hover {
             max-width: $navbar-vertical-open-width;
         }
@@ -462,11 +462,11 @@
 
 @include media-breakpoint-down(lg) {
     .sidenav {
-        transform: translateX(-$navbar-vertical-width);
+        transform: translateX(0px);
 
-        &.fixed-left + .main-content {
-            margin-left: 0 !important;
-        }
+        // &.fixed-left + .main-content {
+        //     margin-left: 0 !important;
+        // }
     }
 
     .g-sidenav-pinned {

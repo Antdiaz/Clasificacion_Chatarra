@@ -9,7 +9,7 @@
     $infix: breakpoint-infix($breakpoint, $grid-breakpoints);
 
     @each $value in $displays {
-      .d#{$infix}-#{$value} { display: $value !important; }
+      .d#{$infix}-#{$value} { display: $value; }
     }
   }
 }
