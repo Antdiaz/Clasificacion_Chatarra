@@ -86,7 +86,7 @@ class Admin extends React.Component {
 
 
   async componentDidMount() {
-    const urlKrakenService = `${config.KrakenService}/${24}/${34}`;
+    const urlKrakenService = `${config.KrakenService}/${24}/${37}`;
     const urlKrakenPlanta = `${config.KrakenService}/${24}/${36}`;
     const urlKrakenUsuario = `${config.KrakenService}/${24}/${35}`;
 

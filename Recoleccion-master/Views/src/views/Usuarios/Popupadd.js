@@ -93,7 +93,7 @@ const Popupadd = (props) => {
   };
 
   useEffect(() => {
-    const urlKrakenService = `${config.KrakenService}/${24}/${34}`;
+    const urlKrakenService = `${config.KrakenService}/${24}/${37}`;
 
     /* eslint-disable */
     const data6 = {
@@ -141,7 +141,7 @@ const Popupadd = (props) => {
   }, [subalmacenes])
 
   useEffect(() => {
-    const urlKrakenService = `${config.KrakenService}/${24}/${34}`;
+    const urlKrakenService = `${config.KrakenService}/${24}/${37}`;
 
     /* eslint-disable */
     const data8 = {
@@ -367,7 +367,7 @@ const Popupadd = (props) => {
   };
 
   const handleSubmit = () => {
-    const urlKrakenService = `${config.KrakenService}/${24}/${34}`;
+    const urlKrakenService = `${config.KrakenService}/${24}/${37}`;
 
     /* eslint-disable */
 
@@ -849,11 +849,7 @@ const Popupadd = (props) => {
                           : cantidadr
                       }
                       disabled={
-                        props.placadato[0].EsPesajeParcial === 1 || pesajeparcial === 1
-                          ? 'disabled'
-                          : porcentajer > 0
-                          ? 'disabled'
-                          : ''
+                        props.placadato[0].EsPesajeParcial === 1 || pesajeparcial === 1 || porcentajer > 0
                       }
                     />
                     <InputGroupAddon addonType="append">
@@ -883,8 +879,6 @@ const Popupadd = (props) => {
                       }
                       disabled={
                         props.placadato[0].EsPesajeParcial === 1 || pesajeparcial === 1
-                          ? 'disabled'
-                          : ''
                       }
                       type="number"
                     />
@@ -913,10 +907,7 @@ const Popupadd = (props) => {
                         }
                         disabled={
                           props.placadato[0].EsPesajeParcial === 1 || pesajeparcial === 1
-                            ? 'disabled'
-                            : cantidadr > 0
-                            ? 'disabled'
-                            : ''
+                            || cantidadr > 0
                         }
                       />
                       <InputGroupAddon addonType="append">
@@ -991,7 +982,7 @@ const Popupadd = (props) => {
                           placeholder="Seleccionar Subalmacen.."
                           onValueChanged={handlesubalmacen}
                           noDataText="Selecciona Material"
-                          disabled={subalmacenes.length===1 ? "disabled":''}
+                          disabled={subalmacenes.length===1}
                         />
                       </Row>
                       <Row
@@ -1101,7 +1092,7 @@ const Popupadd = (props) => {
                   valueExpr={kiloscont < 1 ? "0":"ClaMotivoContaminacion"}
                   placeholder="Seleccionar Material.."
                   onValueChanged={handlerazoncont}
-                  disabled={kiloscont< 1 ? "disabled":''}
+                  disabled={kiloscont< 1}
                 />
                 <Row
                   style={{

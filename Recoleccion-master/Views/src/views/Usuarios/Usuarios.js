@@ -66,7 +66,7 @@ function Usuarios({
 
   useEffect(() => {
     const timeout = setTimeout(()=>{
-    const urlKrakenVal = `${config.KrakenService}/${24}/${34}`;
+    const urlKrakenVal = `${config.KrakenService}/${24}/${37}`;
 
     /* eslint-disable */
     const data5 = {
@@ -105,11 +105,13 @@ function Usuarios({
     });
   },1000)
   }, [!modaladdOpen,!modalOpen]);
+  
   return (
     <>
       <div className="content" style={{ marginTop: '20px' }}>
         {poppesaje && placadato && placadato[0].EsPesajeParcial ===1? (
           <Warning
+            row={row}
             poppesaje={poppesaje}
             setpoppesaje={setpoppesaje}
             setpesajeparcial={setpesajeparcial}

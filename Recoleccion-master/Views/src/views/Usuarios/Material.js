@@ -156,7 +156,7 @@ function Material({
     }
 
     /* eslint-enable */
-    const urlKrakenService = `${config.KrakenService}/${24}/${34}`;
+    const urlKrakenService = `${config.KrakenService}/${24}/${37}`;
 
     /* eslint-disable */
 
@@ -189,7 +189,7 @@ function Material({
     const timeout = setTimeout(()=>{
 
     
-   const urlKrakenService = `${config.KrakenService}/${24}/${34}`;
+   const urlKrakenService = `${config.KrakenService}/${24}/${37}`;
     /* eslint-disable */
     const data3 = {
       parameters:
@@ -224,7 +224,7 @@ function Material({
     if(row){
     const PorcentajeSum= row.reduce((acc,val)=> acc + val.PorcentajeMaterial,0)
     if(PorcentajeSum !== null && PorcentajeSum ===100){
-    const urlKrakenService = `${config.KrakenService}/${24}/${34}`;
+    const urlKrakenService = `${config.KrakenService}/${24}/${37}`;
     /* eslint-disable */
     const data13 = {
       parameters:

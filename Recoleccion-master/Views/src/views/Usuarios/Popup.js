@@ -65,10 +65,11 @@ const Popup = (props) => {
   const Diferencia = props.ro.PorcentajeMaterial;
   const PorcentajeSum = props.row? +props.row.reduce((acc, val) => acc + val.PorcentajeMaterial, 0) + +porcentajer - +Diferencia: 0;
   const almacen = 1;
-  const [materiales, setmateriales] = useState(props.materiales);
+  const [materiales, setmateriales] = useState(props.material);
   const [contaminaciones, setcontaminaciones] = useState(props.contaminacion)
+  const disabled=true;
   useEffect(() => {
-    const urlKrakenService = `${config.KrakenService}/${24}/${34}`;
+    const urlKrakenService = `${config.KrakenService}/${24}/${37}`;
     /* eslint-disable */
     const data6 = {
       parameters:
@@ -309,7 +310,7 @@ const Popup = (props) => {
   };
 
   useEffect(() => {
-    const urlKrakenService = `${config.KrakenService}/${24}/${34}`;
+    const urlKrakenService = `${config.KrakenService}/${24}/${37}`;
 
     /* eslint-disable */
     const data8 = {
@@ -344,7 +345,7 @@ const Popup = (props) => {
   }, [subalmacenes]);
 
   const handledelete = () => {
-    const urlKrakenService = `${config.KrakenService}/${24}/${34}`;
+    const urlKrakenService = `${config.KrakenService}/${24}/${37}`;
 
     /* eslint-disable */
 
@@ -411,7 +412,7 @@ const Popup = (props) => {
 
   const handleClose = () => {
     props.setpoppesaje(true);
-    const urlKrakenService = `${config.KrakenService}/${24}/${34}`;
+    const urlKrakenService = `${config.KrakenService}/${24}/${37}`;
 
     /* eslint-disable */
 
@@ -481,6 +482,7 @@ const Popup = (props) => {
         (props.ro.ClaReferenciaCompra ? props.ro.ClaReferenciaCompra : Referencia) +
         ',@pnIdRenglon=' +
         (props.ro.IdRenglon ? props.ro.IdRenglon : 1) +
+        ',@pnClaArticuloPreReg='+ (props.ro.ClaArticuloPreReg ? props.ro.ClaArticuloPreReg : '') + 
         ',@psNombrePcMod=' +
         ipadress +
         ',@pnClaUsuarioMod=' +
@@ -552,7 +554,7 @@ const Popup = (props) => {
                     value={srefri === 0 ? '' : srefri}
                     defaultValue=""
                     className="popup-number"
-                    disabled="disabled"
+                    disabled={disabled}
                   />
                 </div>
               </div>
@@ -578,7 +580,7 @@ const Popup = (props) => {
                     value={mrefri === 0 ? '' : mrefri}
                     defaultValue=""
                     className="popup-number"
-                    disabled="disabled"
+                    disabled={disabled}
                   />
                 </div>
               </div>
@@ -603,7 +605,7 @@ const Popup = (props) => {
                     value={refri === 0 ? '' : refri}
                     defaultValue=""
                     className="popup-number"
-                    disabled="disabled"
+                    disabled={disabled}
                   />
                 </div>
               </div>
@@ -629,7 +631,7 @@ const Popup = (props) => {
                     value={lavadora === 0 ? '' : lavadora}
                     defaultValue=""
                     className="popup-number"
-                    disabled="disabled"
+                    disabled={disabled}
                   />
                 </div>
               </div>
@@ -652,7 +654,7 @@ const Popup = (props) => {
                     value={boiler === 0 ? '' : boiler}
                     defaultValue=""
                     className="popup-number"
-                    disabled="disabled"
+                    disabled={disabled}
                   />
                 </div>
               </div>
@@ -675,7 +677,7 @@ const Popup = (props) => {
                     value={secadora === 0 ? '' : secadora}
                     defaultValue=""
                     className="popup-number"
-                    disabled="disabled"
+                    disabled={disabled}
                   />
                 </div>
               </div>
@@ -701,7 +703,7 @@ const Popup = (props) => {
                     value={estufa === 0 ? '' : estufa}
                     defaultValue=""
                     className="popup-number"
-                    disabled="disabled"
+                    disabled={disabled}
                   />
                 </div>
               </div>
@@ -724,7 +726,7 @@ const Popup = (props) => {
                     value={microondas === 0 ? '' : microondas}
                     defaultValue=""
                     className="popup-number"
-                    disabled="disabled"
+                    disabled={disabled}
                   />
                 </div>
               </div>
@@ -747,7 +749,7 @@ const Popup = (props) => {
                     value={otros === 0 ? '' : otros}
                     defaultValue=""
                     className="popup-number"
-                    disabled="disabled"
+                    disabled={disabled}
                   />
                 </div>
               </div>
@@ -773,7 +775,7 @@ const Popup = (props) => {
                     value={costal === 0 ? '' : costal}
                     defaultValue=""
                     className="popup-number"
-                    disabled="disabled"
+                    disabled={disabled}
                   />
                 </div>
               </div>
@@ -796,7 +798,7 @@ const Popup = (props) => {
                     value={saco === 0 ? '' : saco}
                     defaultValue=""
                     className="popup-number"
-                    disabled="disabled"
+                    disabled={disabled}
                   />
                 </div>
               </div>
@@ -819,7 +821,7 @@ const Popup = (props) => {
                     value={contenedor === 0 ? '' : contenedor}
                     defaultValue=""
                     className="popup-number"
-                    disabled="disabled"
+                    disabled={disabled}
                   />
                 </div>
               </div>
@@ -903,7 +905,7 @@ const Popup = (props) => {
                       onChange={handlecantidad}
                       value={pesajeparcial === 1 || props.ro.EsPesajeParcial === 1 ? '' : cantidad}
                       disabled={
-                        pesajeparcial === 1 || props.ro.EsPesajeParcial === 1 ? 'disabled' : ''
+                        pesajeparcial === 1 || props.ro.EsPesajeParcial === 1 
                       }
                       type="number"
                     />
@@ -929,7 +931,7 @@ const Popup = (props) => {
                       onChange={handlekilos}
                       value={pesajeparcial === 1 || props.ro.EsPesajeParcial === 1 ? '' : kilos}
                       disabled={
-                        pesajeparcial === 1 || (props.ro.EsPesajeParcial === 1 && 'disabled')
+                        pesajeparcial === 1 || props.ro.EsPesajeParcial === 1 
                       }
                       type="number"
                     />
@@ -952,7 +954,7 @@ const Popup = (props) => {
                           pesajeparcial === 1 || props.ro.EsPesajeParcial === 1 ? 100 : porcentajer
                         }
                         disabled={
-                          pesajeparcial === 1 || (props.ro.EsPesajeParcial === 1 && 'disabled')
+                          pesajeparcial === 1 || (props.ro.EsPesajeParcial === 1 )
                         }
                         type="number"
                       />
@@ -1030,7 +1032,7 @@ const Popup = (props) => {
                           placeholder="Seleccionar Subalmacen.."
                           onValueChanged={handlesubalmacen}
                           noDataText="Selecciona Material"
-                          disabled={subalmacenes.length === 1 ? 'disabled' : ''}
+                          disabled={subalmacenes.length === 1}
                         />
                       </Row>
                       <Row
@@ -1138,7 +1140,7 @@ const Popup = (props) => {
 
             <Row className="popup-row">
               <Col>
-                <Row className="popup-title" style={{ marginLeft: '0px', marginTop: '50px' }}>
+                <Row className="popup-title" style={{marginLeft: '0px', marginTop: '50px' }}>
                   Motivo Contaminacion
                 </Row>
                 <SelectBox
@@ -1147,7 +1149,7 @@ const Popup = (props) => {
                   displayExpr="NomMotivoContaminacion"
                   valueExpr="ClaMotivoContaminacion"
                   onValueChanged={handlerazoncont}
-                  disabled={kiloscont < 1 ? 'disabled' : ''}
+                  disabled={kiloscont < 1}
                 />
                 <Row
                   style={{

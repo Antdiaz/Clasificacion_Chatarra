@@ -9,6 +9,7 @@ function Warning({poppesaje,setpoppesaje,pesajeparcial,setpesajeparcial}) {
     const handlecancel = () => {
       const urlKrakenService = `${config.KrakenService}/${24}/${37}`;
 
+      /* eslint-disable */
       
       const data12 = {
         parameters:
