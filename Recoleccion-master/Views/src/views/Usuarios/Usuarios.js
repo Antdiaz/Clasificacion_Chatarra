@@ -51,6 +51,9 @@ function Usuarios({
   const [placadato, setplacadato] = useState(0);
   const [modaladdOpen, setmodaladdOpen] = useState(false);
   const [addarreglo, setaddarreglo] = useState(0);
+  const [contaminacion, setcontaminacion] = useState();
+  const [change, setchange] = useState(1)
+  const [modalOpen, setmodalOpen] = useState(false);
 
   const customStyles = {
     content: {
@@ -62,11 +65,21 @@ function Usuarios({
   };
 
   useEffect(() => {
+    const timeout = setTimeout(()=>{
     const urlKrakenVal = `${config.KrakenService}/${24}/${34}`;
 
     /* eslint-disable */
     const data5 = {
-      parameters: '{"ClaUbicacion":' + editBoxValue + ',"ClaServicioJson":' + 2 + ',"Parametros":"@pnClaUbicacion=' + editBoxValue +',@psClaVehiculoPorClasificar='+ placa + '"}',
+      parameters:
+        '{"ClaUbicacion":' +
+        editBoxValue +
+        ',"ClaServicioJson":' +
+        2 +
+        ',"Parametros":"@pnClaUbicacion=' +
+        editBoxValue +
+        ',@psClaVehiculoPorClasificar=' +
+        placa +
+        '"}',
       tipoEstructura: 0,
     };
     /* eslint-enable */
@@ -74,15 +87,35 @@ function Usuarios({
       setplacadato(res.Result0);
     });
 
-    const timer1 = setTimeout(() => setShow(true), delay * 1000);
-    return () => {
-      clearTimeout(timer1);
+    /* eslint-disable */
+    const data10 = {
+      parameters:
+        '{"ClaUbicacion":' +
+        editBoxValue +
+        ',"ClaServicioJson":' +
+        10 +
+        ',"Parametros":"@pnClaUbicacion=' +
+        editBoxValue +
+        '"}',
+      tipoEstructura: 0,
     };
-  }, []);
+    /* eslint-enable */
+    callApi(urlKrakenVal, 'POST', data10, (res) => {
+      setcontaminacion(res.Result0);
+    });
+  },1000)
+  }, [!modaladdOpen,!modalOpen]);
   return (
     <>
       <div className="content" style={{ marginTop: '20px' }}>
-        {poppesaje ? <Warning poppesaje={poppesaje} setpoppesaje={setpoppesaje} setpesajeparcial={setpesajeparcial} pesajeparcial={pesajeparcial} />: null}
+        {poppesaje && placadato && placadato[0].EsPesajeParcial ===1? (
+          <Warning
+            poppesaje={poppesaje}
+            setpoppesaje={setpoppesaje}
+            setpesajeparcial={setpesajeparcial}
+            pesajeparcial={pesajeparcial}
+          />
+        ) : null}
         <Row style={{ alignItems: 'center', justifyContent: 'center' }}>
           <Card className="placa-imagenes">
             <CardHeader>
@@ -161,11 +194,22 @@ function Usuarios({
                   editBoxValue={editBoxValue}
                   placadato={placadato}
                   setplacadato={setplacadato}
+                  poppesaje={poppesaje}
+                  setpoppesaje={setpoppesaje}
+                  contaminacion={contaminacion}
+                  row={row}
+                  setrow={setrow}
                 />
               </Modal>
               <CardHeader>
                 <CardTitle style={{ margin: '10px' }}>
-                  <i onClick={() => setmodaladdOpen(true)} style={{ cursor: 'pointer' }} className="fa fa-plus" aria-hidden="true"></i>
+                  <i
+                    onClick={() => setmodaladdOpen(true)}
+                    style={{ cursor: 'pointer' }}
+                    className="fa fa-plus"
+                    aria-hidden="true"
+                  >  
+                  </i>
                   <span style={{ marginLeft: '3vw' }}>Clasificar Material</span>
                   <span style={{ marginLeft: '3vw' }}>Placa:&nbsp;{placa}</span>
                   <span style={{ marginLeft: '3vw' }}>Boleta:{id}</span>
@@ -177,10 +221,13 @@ function Usuarios({
                     <TableContainer component={Paper}>
                       {!placadato ? (
                         <div style={{ textAlign: 'center', paddingTop: '40px' }}>
-                          {show ? 'No hay informacion' : <CircularProgress />}
+                          <CircularProgress />
                         </div>
                       ) : (
                         <Material
+                          modalOpen={modalOpen}
+                          setmodalOpen={setmodalOpen}
+                          contaminacion={contaminacion}
                           placadato={placadato}
                           editBoxValue={editBoxValue}
                           id={id}
@@ -208,6 +255,7 @@ function Usuarios({
                           setpoppesaje={setpoppesaje}
                           warning={warning}
                           setwarning={setwarning}
+                          modaladdOpen={modaladdOpen}
                         />
                       )}
                     </TableContainer>
@@ -232,7 +280,7 @@ function Usuarios({
                       <div
                         style={{ textAlign: 'center', paddingTop: '40px', marginBottom: '40px' }}
                       >
-                        {show ? 'No hay informacion' : <CircularProgress color="primary" />}
+                        <CircularProgress color="primary" />
                       </div>
                     ) : (
                       <PlacaInfo listas={placadato} />

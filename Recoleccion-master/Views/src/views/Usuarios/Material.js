@@ -9,7 +9,7 @@ import Paper from '@material-ui/core/Paper';
 import EditIcon from '@material-ui/icons/Edit';
 import { Card, CardText, CardHeader, CardBody, CardTitle, Button, Row, Col } from 'reactstrap';
 import { config } from '../../utils/config';
-import { callApi, callKrakenApi } from '../../utils/utils';
+import { callApi, callKrakenApi, getSessionItem } from '../../utils/utils';
 import Popup from './Popup';
 import Modal from 'react-modal';
 
@@ -43,19 +43,20 @@ function Material({
   setpoppesaje,
   warning,
   setwarning,
+  contaminacion,
+  modaladdOpen,
+  modalOpen,
+  setmodalOpen
 }) {
   const [claordencompra, setclaordencompra] = useState();
   const [idacuerdo, setidacuerdo] = useState();
   const [idpedidoimportacion, setidpedidoimportacion] = useState();
-  const [contaminacion, setcontaminacion] = useState();
+  const NumbUsuario = getSessionItem('NumUsuario');
+  const ipadress = getSessionItem('Ipaddress');
 
-  function List({ ro, index }) {
-    const [modalOpen, setmodalOpen] = useState(false);
+  function List({ ro, index,modalOpen,setmodalOpen }) {
 
-    const handleModalOpen = () => {
-      setmodalOpen(true);
-    };
-
+  const [modaledit, setmodaledit] = useState(false)
     const customStyles = {
       content: {
         background: 'rgba(128, 128, 128, 0.212)',
@@ -76,22 +77,22 @@ function Material({
           {ro.ClaveArticulo}
         </TableCell>
         <TableCell className="table-content">
-          Enviado:&nbsp;{materialr} <br /> Recibido:&nbsp;{ro.NomArticuloCompra} <br />{' '}
+          Enviado:&nbsp;{ro.NomArticuloPreReg ? ro.NomArticuloPreReg.split('-').pop(): '0'} <br /> Recibido:&nbsp;{ro.NomArticuloCompra} <br />{' '}
           Observaciones:&nbsp;{observaciones}
         </TableCell>
         <TableCell className="table-content" style={{ textAlign: 'center', fontWeight: '600' }}>
-          {ro.PorcentajeMaterial}&nbsp;%
+          {ro.PorcentajeMaterial ? ro.PorcentajeMaterial: ro.EsPesajeParcial ? 100: 0}&nbsp;%
         </TableCell>
         <TableCell className="table-content">
-          Enviado:&nbsp;{0} &nbsp; lbs <br /> Recibido:&nbsp;{ro.CantidadMaterial}
-          &nbsp; lbs
+          Enviado:&nbsp;{0} &nbsp;{ro.NomUnidad} <br /> Recibido:&nbsp;{ro.CantidadMaterial ? ro.CantidadMaterial:0}
+          &nbsp; {ro.NomUnidad}
         </TableCell>
         <TableCell className="table-content">
-          Enviado:&nbsp;{kilosr}&nbsp; kgs <br /> Recibido:&nbsp;{ro.KilosReales}&nbsp; kgs
+          Enviado:&nbsp;{ro.KgsMaterialPrereg ? ro.KgsMaterialPrereg:0}&nbsp; Kg <br /> Recibido:&nbsp;{ro.KilosReales ? ro.KilosReales:0 }&nbsp; Kg
         </TableCell>
         <TableCell className="table-content">
-          Enviado:&nbsp;{kiloscont}&nbsp; kgs <br /> Recibido:&nbsp;{0}
-          &nbsp; kgs
+          Enviado:&nbsp;{kiloscont}&nbsp; Kg <br /> Recibido:&nbsp;{0}
+          &nbsp; Kg
         </TableCell>
         <TableCell className="table-content">
           Almacen:&nbsp;{ro.ClaAlmacen}
@@ -99,19 +100,21 @@ function Material({
           Sub-Almacen:&nbsp;{ro.ClaSubAlmacenCompra}
         </TableCell>
         <TableCell className="table-content">
-          <div onClick={!poppesaje ? handleModalOpen: null}>
+          <div onClick={!poppesaje && ro.EsPesajeParcial === 1 ? ()=>{setmodaledit(true)}:poppesaje && ro.EsPesajeParcial !== 1 ? ()=>{setmodaledit(true)} : null}>
             <EditIcon style={{ color: '#ff6a00', cursor: 'pointer' }} />
           </div>
         </TableCell>
 
         <Modal
-          isOpen={modalOpen}
-          onClose={() => setmodalOpen(true)}
+          isOpen={modaledit}
+          onClose={() => modaledit(true)}
           ariaHideApp={false}
           style={customStyles}
         >
           <Popup
+            row={row}
             setmodalOpen={setmodalOpen}
+            modalOpen={modalOpen}
             key={index}
             ro={ro}
             material={material}
@@ -130,6 +133,7 @@ function Material({
             setwarning={setwarning}
             editBoxValue={editBoxValue}
             placadato={placadato}
+            setmodaledit={setmodaledit}
           />
         </Modal>
       </TableRow>
@@ -153,6 +157,39 @@ function Material({
 
     /* eslint-enable */
     const urlKrakenService = `${config.KrakenService}/${24}/${34}`;
+
+    /* eslint-disable */
+
+    const data5 = {
+      // parameters: "{\"IdListaPrecio\":"+ placadato[0].IdListaPrecio +",\"ClaOrdenCompra\":"+ placadato[0].ClaOrdenCompra+",\"IdAcuerdo\":"+ placadato[0].IdAcuerdo +",\"IdPedidoImportacion\":"+ placadato[0].IdPedidoImportacion +",\"IdBoleta\":"+ placadato[0].IdBoleta +"}",
+        parameters:
+        '{"ClaUbicacion":' +
+        editBoxValue +
+        ',"ClaServicioJson":' +
+        5 +
+        ',"Parametros":"@pnClaUbicacion=' +
+        editBoxValue +
+        ',@pnIdListaPrecio=' +
+        placadato[0].IdListaPrecio +
+        ',@pnIdBoleta=' +
+        placadato[0].IdBoleta +
+        '"}',
+      tipoEstructura: 0,
+    };
+    /* eslint-enable */
+    callApi(urlKrakenService, 'POST', data5, (res) => {
+      setmaterial(res.Result0);
+    });
+
+    
+  }, []);
+
+  useEffect(() => {
+
+    const timeout = setTimeout(()=>{
+
+    
+   const urlKrakenService = `${config.KrakenService}/${24}/${34}`;
     /* eslint-disable */
     const data3 = {
       parameters:
@@ -177,41 +214,45 @@ function Material({
     callApi(urlKrakenService, 'POST', data3, (res) => {
       setrow(res.Result0);
     });
+  },1500)
+  }, [!modaladdOpen,!modalOpen])
 
+  
+
+  useEffect(() => {
+
+    if(row){
+    const PorcentajeSum= row.reduce((acc,val)=> acc + val.PorcentajeMaterial,0)
+    if(PorcentajeSum !== null && PorcentajeSum ===100){
+    const urlKrakenService = `${config.KrakenService}/${24}/${34}`;
     /* eslint-disable */
-
-    const data5 = {
-      // parameters: "{\"IdListaPrecio\":"+ placadato[0].IdListaPrecio +",\"ClaOrdenCompra\":"+ placadato[0].ClaOrdenCompra+",\"IdAcuerdo\":"+ placadato[0].IdAcuerdo +",\"IdPedidoImportacion\":"+ placadato[0].IdPedidoImportacion +",\"IdBoleta\":"+ placadato[0].IdBoleta +"}",
-        parameters:
+    const data13 = {
+      parameters:
         '{"ClaUbicacion":' +
-        editBoxValue +
-        ',"ClaServicioJson":' +
-        5 +
-        ',"Parametros":"@pnClaUbicacion=' +
-        editBoxValue +
-        ',@pnIdListaPrecio=' +
-        placadato[0].IdListaPrecio +
-        ',@pnIdBoleta=' +
-        placadato[0].IdBoleta +
-        '"}',
+          editBoxValue +
+          ',"ClaServicioJson":13,"Parametros":"@pnClaUbicacion=' +
+          editBoxValue +
+          ',@pnIdBoleta=' +
+          placadato[0].IdBoleta +
+          ',@pnClaTipoClasificacion=1,@pnClaUbicacionProveedor=' +
+          placadato[0].ClaUbicacionProveedor +
+          ',@pnClaOrdenCompra=,@pnClaTipoOrdenCompra=,@pnIdListaPrecio=' +
+          placadato[0].IdListaPrecio +
+          ',@pnEsNoCargoDescargoMaterial=0,@pnClaUsuarioMod=' +
+          NumbUsuario +
+          ',@psNombrePcMod=' +
+          ipadress +
+          ',@pnIdMensaje=,@psMensaje=,@pnEsPesajeParcial="}',
       tipoEstructura: 0,
     };
     /* eslint-enable */
-    callApi(urlKrakenService, 'POST', data5, (res) => {
-      setmaterial(res.Result0);
-    });
-    /* eslint-disable */
-    const data10 = {
-      parameters: '{"ClaUbicacion":' + editBoxValue + ',"ClaServicioJson":' + 10 + ',"Parametros":"@pnClaUbicacion=' + editBoxValue +'"}',
-      tipoEstructura: 0,
-    };
-    /* eslint-enable */
-    callApi(urlKrakenService, 'POST', data10, (res) => {
-      setcontaminacion(res.Result0);
+
+    callApi(urlKrakenService, 'POST', data13, (res) => {
+      console.log(res);
     });
 
-    
-  }, []);
+  }}
+  }, [row])
 
   function Clasificacion() {
     return (
@@ -236,7 +277,7 @@ function Material({
               <TableCell> </TableCell>
             </TableRow>
           </TableHead>
-          <TableBody>{row && row.map((ro, index) => <List ro={ro} key={index} />)}</TableBody>
+          <TableBody>{row ? row.map((ro, index) => <List ro={ro} key={index} modalOpen={modalOpen} setmodalOpen={setmodalOpen} />):null}</TableBody>
         </Table>
       </div>
     );

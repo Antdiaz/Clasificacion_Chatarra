@@ -25,7 +25,7 @@ import Items from './Items';
 import create from 'zustand';
 import { Link } from 'react-router-dom';
 
-function Consulta({ Valores, Datos, setDatos, Patio, editBoxValue, seteditBoxValue,filtropesaje,setfiltropesaje,showResults,setshowResults,status,setstatus,transporte,settransporte}) {
+function Consulta({ Valores, Datos, setDatos, Patio, editBoxValue, seteditBoxValue,filtropesaje,setfiltropesaje,showResults,setshowResults,status,setstatus,transporte,settransporte,poppesaje,setpoppesaje,setrow}) {
   const [Filtro, setFiltro] = useState(null);
 
   const useCheckbox = (e) => {
@@ -161,6 +161,8 @@ function Consulta({ Valores, Datos, setDatos, Patio, editBoxValue, seteditBoxVal
 
       {Valores && (
         <Items
+          setrow={setrow}
+          setpoppesaje={setpoppesaje}
           listas={
             Datos && filtropesaje
               ? Valores.filter(
@@ -189,7 +191,7 @@ function Consulta({ Valores, Datos, setDatos, Patio, editBoxValue, seteditBoxVal
                 (status === 'porclasificar' ?  [lista.EsClasificado].includes(0):status === 'clasificado' ? [lista.EsClasificado].includes(1):[lista.EsClasificado]) &&
                   lista.ClaVehiculoPorClasificar.includes(Datos) ||
                   [lista.NomChofer].includes(Datos) ||
-                  [lista.NomProveedor].includes([Datos]) ||
+                  lista.NomProveedor.includes(Datos) ||
                   lista.NomMotivoEntrada.includes(Datos) ||
                   lista.IdBoleta.toString().includes(Datos) ||
                   lista.IdBoleta.toString().includes(Datos) ||

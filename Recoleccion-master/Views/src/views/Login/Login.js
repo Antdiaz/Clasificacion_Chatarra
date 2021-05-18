@@ -107,7 +107,14 @@ class Login extends React.Component {
           <Route path="/" render={(props) => <Patio {...props} />} />
         </Router>
       );
-    }
+    } 
+    // if(!sessionAlive()){
+    //   return (
+    //     <Router history={this.props.history}>
+    //       <Route path="/" />
+    //     </Router>
+    //   );
+    // }
     logOut();
     document.body.classList.add('bg-default');
 
@@ -167,7 +174,7 @@ class Login extends React.Component {
                         onClick={this.handleSubmit}
                         color="warning"
                         type="button"
-                        style={{ width: "32%" }}
+                        style={{ width: '32%' }}
                       >
                         Ingresar
                       </Button>

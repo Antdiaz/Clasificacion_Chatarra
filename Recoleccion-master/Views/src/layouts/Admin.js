@@ -33,7 +33,7 @@ class Admin extends React.Component {
       subalmacen: 0,
       kiloscont: 0,
       pesajeparcial:0,
-      poppesaje:false,
+      poppesaje:true,
       warning:false,
       filtropesaje:false,
       showResults:false,
@@ -178,6 +178,8 @@ class Admin extends React.Component {
                   settransporte={this.settransporte}
                   status={this.state.status}
                   setstatus={this.setstatus}
+                  poppesaje={this.state.poppesaje}
+                  setpoppesaje={this.setpoppesaje}
                 />
               )}
               key={key}

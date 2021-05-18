@@ -134,7 +134,7 @@ class Sidebar extends React.Component {
         );
       }
       return (
-        <NavItem className={this.activeRoute(prop.layout + prop.path)} key={key}>
+        <NavItem className={this.activeRoute(prop.layout + prop.path)} key={key} style={{overflow: "hidden"}}>
           <NavLink
             to={prop.layout + prop.path}
             activeClassName=""

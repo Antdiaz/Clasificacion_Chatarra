@@ -27,7 +27,6 @@ async function callApi(url, method, data = {}, callBack, multipart = false) {
     console.log(`Url: ${url}`);
   }
 
-  try {
     const response = await fetch(url, {
       method,
       headers,
@@ -42,19 +41,18 @@ async function callApi(url, method, data = {}, callBack, multipart = false) {
       }
       callBack(res);
     } else {
-      throw Error(`${response.message}`);
-    }
-  } catch (err) {
-    swal('Error', err.message, 'error', {
-      buttons: {
-        confirm: {
-          text: 'Aceptar',
-          className: 'animation-on-hover btn btn-success',
+      const res = await response.json();
+      swal('Error', (res.message.replace(/['"]+/g, '')), 'error', {
+        buttons: {
+          confirm: {
+            text: 'Aceptar',
+            className: 'animation-on-hover btn btn-success',
+          },
         },
-      },
-    });
-  }
-}
+      });
+    }
+    }
+    
 /**
  * Función para realizar la petición a Kraken por medio de su servicio en Node js
  * @param {Number} claProducto número de el producto, dueño de la entidad

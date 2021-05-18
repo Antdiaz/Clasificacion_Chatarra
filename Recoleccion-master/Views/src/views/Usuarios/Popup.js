@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   CardHeader,
   Row,
@@ -45,26 +45,76 @@ const Popup = (props) => {
   const [costal, setcostal] = useState(0);
   const [saco, setsaco] = useState(0);
   const [contenedor, setcontenedor] = useState(0);
-  const [cantidad, setcantidad] = useState(0);
-  const [kilos, setkilos] = useState(props.ro.KilosReales);
+  const [cantidad, setcantidad] = useState(
+    props.ro.CantidadMaterial ? props.ro.CantidadMaterial : 0
+  );
+  const [Referencia, setReferencia] = useState(0);
+  const [kilos, setkilos] = useState(props.ro.KilosReales ? props.ro.KilosReales : 0);
   const [observaciones, setobservaciones] = useState(null);
-  const [idmaterial, setidmaterial] = useState(0);
+  const [idmaterial, setidmaterial] = useState(props.ro.ClaArticuloCompra ? props.ro.ClaArticuloCompra : 0);
   const [nombrematerial, setnombrematerial] = useState(props.ro.NomArticuloCompra);
-  const [kiloscont, setkiloscont] = useState(props.ro.KilosContaminados);
-  const [razoncont, setrazoncont] = useState(props.ro.ClaMotivoContaminacion);
-  const [porcentajer, setporcentajer] = useState(props.ro.PorcentajeMaterial);
-  const [pesajeparcial, setpesajeparcial] = useState(props.pesajeparcial);
+  const [kiloscont, setkiloscont] = useState(props.ro.KilosContaminados ? props.ro.KilosContaminados : 0);
+  const [razoncont, setrazoncont] = useState(props.ro.ClaMotivoContaminacion ? props.ro.ClaMotivoContaminacion : 0);
+  const [porcentajer, setporcentajer] = useState(props.ro.PorcentajeMaterial ? props.ro.PorcentajeMaterial : 0);
+  const [pesajeparcial, setpesajeparcial] = useState(props.ro.EsPesajeParcial ? props.ro.EsPesajeParcial : 0);
   const ipadress = getSessionItem('Ipaddress');
-  const NumbUsuario= getSessionItem('NumUsuario');
+  const NumbUsuario = getSessionItem('NumUsuario');
+  const [subalmacen, setsubalmacen] = useState(0);
+  const [nomsubalmacen, setnomsubalmacen] = useState(0);
+  const [subalmacenes, setsubalmacenes] = useState(0);
+  const Diferencia = props.ro.PorcentajeMaterial;
+  const PorcentajeSum = props.row? +props.row.reduce((acc, val) => acc + val.PorcentajeMaterial, 0) + +porcentajer - +Diferencia: 0;
+  const almacen = 1;
+  const [materiales, setmateriales] = useState(props.materiales);
+  const [contaminaciones, setcontaminaciones] = useState(props.contaminacion)
+  useEffect(() => {
+    const urlKrakenService = `${config.KrakenService}/${24}/${34}`;
+    /* eslint-disable */
+    const data6 = {
+      parameters:
+        '{"ClaUbicacion":' +
+        props.editBoxValue +
+        ',"ClaServicioJson":6,"Parametros":"@pnClaUbicacion=' +
+        props.editBoxValue +
+        ',@pnClaArticuloCompra=' +
+        idmaterial +
+        ',@pnClaProveedor=' +
+        props.placadato[0].ClaProveedor +
+        ',@pnIdListaPrecio=' +
+        props.placadato[0].IdListaPrecio +
+        ',@pnClaOrdenCompra=,@pnClaTipoOrdenCompra="}',
+      tipoEstructura: 0,
+    };
+    const data7 = {
+      parameters:
+        '{"ClaUbicacion":' +
+        props.editBoxValue +
+        ',"ClaServicioJson":7,"Parametros":"@pnClaUbicacion=' +
+        props.editBoxValue +
+        ',@pnClaArticuloCompra=' +
+        idmaterial +
+        '"}',
+      tipoEstructura: 0,
+    };
 
+    /* eslint-enable */
+    callApi(urlKrakenService, 'POST', data6, (res) => {
+      console.log(res.Result0);
+    });
+
+    callApi(urlKrakenService, 'POST', data7, (res) => {
+      setsubalmacenes(res.Result0);
+    });
+  }, [idmaterial]);
 
   const onValueChanged = (e) => {
     setidmaterial(e.value);
+    setsubalmacen(0);
     setnombrematerial(e.component.option('text').split('-').pop());
   };
 
   const useCheckbox = (e) => {
-    if (props.pesajeparcial===1) {
+    if (props.ro.EsPesajeParcial === 1) {
       false;
     } else {
       setpesajeparcial(e.target.checked ? 1 : 0);
@@ -72,7 +122,6 @@ const Popup = (props) => {
       setcantidad(0);
     }
   };
-
 
   const electrodomestico =
     50 * srefri +
@@ -117,7 +166,8 @@ const Popup = (props) => {
   };
 
   const handlesubalmacen = (event) => {
-    setsubalmacen(event.target.value);
+    setsubalmacen(event.value);
+    setnomsubalmacen(event.component.option('text'));
   };
 
   const handleSum1 = () => {
@@ -258,49 +308,203 @@ const Popup = (props) => {
     setIsNext(!isNext);
   };
 
+  useEffect(() => {
+    const urlKrakenService = `${config.KrakenService}/${24}/${34}`;
 
-  const handleClose = () => {
+    /* eslint-disable */
+    const data8 = {
+      parameters:
+        '{"ClaUbicacion":' +
+        props.editBoxValue +
+        ',"ClaServicioJson":8,"Parametros":"@pnClaUbicacion=' +
+        props.editBoxValue +
+        ',@pnClaArticuloCompra=' +
+        idmaterial +
+        ',@pnClaSubAlmacenCompra=' +
+        subalmacen +
+        ',@psNomSubAlmacenCompra=' +
+        nomsubalmacen +
+        ',@pnIdBoleta=' +
+        props.placadato[0].IdBoleta +
+        '"}',
+      tipoEstructura: 0,
+    };
+    /* eslint-enable */
+    if (subalmacen > 0) {
+      callApi(urlKrakenService, 'POST', data8, (res) => {
+        setReferencia(res.Result0[0].ClaReferenciaCompra);
+      });
+    }
+  }, [nomsubalmacen]);
+
+  useEffect(() => {
+    if (subalmacenes.length === 1) {
+      setsubalmacen(subalmacenes[0].ClaSubAlmacenCompra);
+    }
+  }, [subalmacenes]);
+
+  const handledelete = () => {
     const urlKrakenService = `${config.KrakenService}/${24}/${34}`;
 
     /* eslint-disable */
 
-    const data12 = {"parameters": "{\"ClaUbicacion\":"+props.editBoxValue+",\"ClaServicioJson\":12,\"Parametros\":\"@pnClaUbicacion="+props.editBoxValue+",@pnIdBoleta=" +
-    props.placadato[0].IdBoleta+",@pnClaArticuloCompra="+
-    props.ro.ClaArticuloCompra+",@pnCantidadMaterial="+
-    props.ro.CantidadMaterial+ ",@pnKilosMaterial=" +
-    props.ro.KilosMaterial+",@pnKilosReales=" +
-    kilos+",@pnKilosContaminados="  +
-    kiloscont+",@pnKilosDocumentados="+
-    props.ro.KilosDocumentados+",@pnPorcentajeMaterial=" +
-    porcentajer+",@pnEsPesajeParcial=" +
-    props.ro.EsPesajeParcial+",@pnClaAlmacen=" +
-    props.ro.ClaAlmacen+",@pnClaSubAlmacenCompra=" +
-    props.ro.ClaSubAlmacenCompra+",@pnClaMotivoContaminacion=" +
-    razoncont + ",@pnEsNoCargoDescargoMaterial=" +
-    props.placadato[0].EsNoCargoDescargoMaterial+",@pnClaProveedor=" +
-    props.placadato[0].ClaProveedor + ",@pnIdListaPrecio=" +
-    props.placadato[0].IdListaPrecio+",@pnClaTipoOrdenCompra=,@pnClaOrdenCompra=,@pnClaUbicacionProveedor=" +
-    props.placadato[0].ClaUbicacionProveedor+ ",@psClaReferenciaCompra=" +
-    props.ro.ClaReferenciaCompra + ",@pnIdRenglon=" +
-    props.ro.IdRenglon + ",@psNombrePcMod=" +
-    ipadress + ",@pnClaUsuarioMod=" +
-    NumbUsuario +",@pnAccionSp=\"}",
-    "tipoEstructura": 0
-    }
+    const data12 = {
+      parameters:
+        '{"ClaUbicacion":' +
+        props.editBoxValue +
+        ',"ClaServicioJson":12,"Parametros":"@pnClaUbicacion=' +
+        props.editBoxValue +
+        ',@pnIdBoleta=' +
+        props.placadato[0].IdBoleta +
+        ',@pnClaArticuloCompra=' +
+        props.ro.ClaArticuloCompra +
+        ',@pnCantidadMaterial=' +
+        props.ro.CantidadMaterial +
+        ',@pnKilosMaterial=' +
+        props.ro.KilosMaterial +
+        ',@pnKilosReales=' +
+        kilos +
+        ',@pnKilosContaminados=' +
+        kiloscont +
+        ',@pnKilosDocumentados=' +
+        props.ro.KilosDocumentados +
+        ',@pnPorcentajeMaterial=' +
+        porcentajer +
+        ',@pnEsPesajeParcial=' +
+        (props.ro.EsPesajeParcial ? props.ro.EsPesajeParcial : pesajeparcial) +
+        ',@pnClaAlmacen=' +
+        (props.ro.ClaAlmacen ? props.ro.ClaAlmacen : 0) +
+        ',@pnClaSubAlmacenCompra=' +
+        [props.placadato[0].ClaSubAlmacenCompra] +
+        ',@pnClaMotivoContaminacion=' +
+        razoncont +
+        ',@pnEsNoCargoDescargoMaterial=' +
+        props.placadato[0].EsNoCargoDescargoMaterial +
+        ',@pnClaProveedor=' +
+        props.placadato[0].ClaProveedor +
+        ',@pnIdListaPrecio=' +
+        props.placadato[0].IdListaPrecio +
+        ',@pnClaTipoOrdenCompra=,@pnClaOrdenCompra=,@pnClaUbicacionProveedor=' +
+        props.placadato[0].ClaUbicacionProveedor +
+        ',@psClaReferenciaCompra=' +
+        '' +
+        props.ro.ClaReferenciaCompra +
+        Referencia +
+        ',@pnIdRenglon=' +
+        props.ro.IdRenglon +
+        ',@psNombrePcMod=' +
+        ipadress +
+        ',@pnClaUsuarioMod=' +
+        NumbUsuario +
+        ',@pnAccionSp=3"}',
+      tipoEstructura: 0,
+    };
     /* eslint-enable */
 
+    callApi(urlKrakenService, 'POST', data12, (res) => {
+      console.log(res);
+    });
+
+    props.setpoppesaje(true);
+    props.setmodaledit(false);
+  };
+
+  const handleClose = () => {
+    props.setpoppesaje(true);
+    const urlKrakenService = `${config.KrakenService}/${24}/${34}`;
+
+    /* eslint-disable */
+
+    const data11 = {
+      parameters:
+        '{"ClaUbicacion":' +
+        props.editBoxValue +
+        ',"ClaServicioJson":' +
+        11 +
+        ',"Parametros":"@pnClaUbicacion=' +
+        props.editBoxValue +
+        ',@pnIdBoleta=' +
+        props.placadato[0].IdBoleta +
+        ',@psObservaciones=,@pnEsRevisionEfectuada=' +
+        props.placadato[0].EsRevisionEfectuada +
+        ',@pnClaTipoClasificacion=' +
+        props.placadato[0].ClaTipoClasificacion +
+        ',@pnEsNoCargoDescargoMaterial=' +
+        props.placadato[0].EsNoCargoDescargoMaterial +
+        ',@psNombrePcMod=' +
+        ipadress +
+        ',@pnClaUsuarioMod=' +
+        NumbUsuario +
+        '"}',
+      tipoEstructura: 0,
+    };
+
+    const data12 = {
+      parameters:
+        '{"ClaUbicacion":' +
+        props.editBoxValue +
+        ',"ClaServicioJson":12,"Parametros":"@pnClaUbicacion=' +
+        props.editBoxValue +
+        ',@pnIdBoleta=' +
+        props.placadato[0].IdBoleta +
+        ',@pnClaArticuloCompra=' +
+        (props.ro.ClaArticuloCompra ? props.ro.ClaArticuloCompra : idmaterial) +
+        ',@pnCantidadMaterial=' +
+        (props.ro.CantidadMaterial ? props.ro.CantidadMaterial : cantidad) +
+        ',@pnKilosMaterial=' +
+        (props.ro.KilosMaterial ? props.ro.KilosMaterial : 0) +
+        ',@pnKilosReales=' +
+        kilos +
+        ',@pnKilosContaminados=' +
+        kiloscont +
+        ',@pnKilosDocumentados=' +
+        (props.ro.KilosDocumentados ? props.ro.KilosDocumentados : 0) +
+        ',@pnPorcentajeMaterial=' +
+        porcentajer +
+        ',@pnEsPesajeParcial=' +
+        (props.ro.EsPesajeParcial ? props.ro.EsPesajeParcial : pesajeparcial) +
+        ',@pnClaAlmacen=' +
+        (props.ro.ClaAlmacen ? props.ro.ClaAlmacen : 1) +
+        ',@pnClaSubAlmacenCompra=' +
+        (props.ro.ClaSubAlmacenCompra !== null ? props.ro.ClaSubAlmacenCompra : subalmacen) +
+        ',@pnClaMotivoContaminacion=' +
+        razoncont +
+        ',@pnEsNoCargoDescargoMaterial=' +
+        props.placadato[0].EsNoCargoDescargoMaterial +
+        ',@pnClaProveedor=' +
+        props.placadato[0].ClaProveedor +
+        ',@pnIdListaPrecio=' +
+        props.placadato[0].IdListaPrecio +
+        ',@pnClaTipoOrdenCompra=,@pnClaOrdenCompra=,@pnClaUbicacionProveedor=' +
+        props.placadato[0].ClaUbicacionProveedor +
+        ',@psClaReferenciaCompra=' +
+        (props.ro.ClaReferenciaCompra ? props.ro.ClaReferenciaCompra : Referencia) +
+        ',@pnIdRenglon=' +
+        (props.ro.IdRenglon ? props.ro.IdRenglon : 1) +
+        ',@psNombrePcMod=' +
+        ipadress +
+        ',@pnClaUsuarioMod=' +
+        NumbUsuario +
+        ',@pnAccionSp="}',
+      tipoEstructura: 0,
+    };
+    /* eslint-enable */
+
+    callApi(urlKrakenService, 'POST', data11, (res) => {
+      console.log(res);
+    });
 
     callApi(urlKrakenService, 'POST', data12, (res) => {
-      console.log(res)
+      console.log(res);
     });
 
     props.setpesajeparcial(pesajeparcial);
-    props.setpoppesaje(pesajeparcial);
+    props.setmodaledit(false);
   };
 
-console.log(kilos)
   const handleBack = () => {
-    props.setmodalOpen(false);
+    props.setmodaledit(false);
+    props.setmodaledit(false);
   };
 
   function Botes() {
@@ -639,7 +843,7 @@ console.log(kilos)
   return (
     <div>
       {!isNext ? (
-        idmaterial === 301476 ? (
+        idmaterial === 10000 ? (
           <Botes />
         ) : (
           <div className="box">
@@ -653,15 +857,30 @@ console.log(kilos)
               <Row className="popup-row" style={{ marginTop: '10px' }}>
                 <Col>
                   <Row className="popup-title">Material Enviado</Row>
-                  <Row>{0}</Row>
+                  <Row>
+                    {props.ro.NomArticuloPreReg ? props.ro.NomArticuloPreReg.split('-').pop() : 0}
+                  </Row>
                 </Col>
+                <Row
+                  style={{
+                    color: 'red',
+                    position: 'absolute',
+                    marginTop: '64px',
+                    marginLeft: '52%',
+                  }}
+                  className="warning"
+                >
+                  <span style={{ color: 'red !important' }}>
+                    {idmaterial < 1 ? 'Seleccionar material' : null}
+                  </span>
+                </Row>
                 <Col className="selector">
                   <Row className="popup-title" style={{ marginLeft: '0px' }}>
                     Material Recibido
                   </Row>
                   <SelectBox
-                    dataSource={props.material}
-                    defaultValue={props.ro.ClaArticuloCompra}
+                    dataSource={materiales}
+                    defaultValue={idmaterial}
                     displayExpr="NomArticuloCompra"
                     valueExpr="ClaArticuloCompra"
                     placeholder="Seleccionar Material.."
@@ -672,7 +891,7 @@ console.log(kilos)
               <Row className="popup-row">
                 <Col>
                   <Row className="popup-title">Cantidad Enviada</Row>
-                  <Row>{props.ro.KilosDocumentados}</Row>
+                  <Row>{props.ro.CantidadMaterial ? props.ro.CantidadMaterial : '0'}</Row>
                 </Col>
                 <Col>
                   <Row className="popup-title" style={{ marginLeft: '0px' }}>
@@ -682,8 +901,10 @@ console.log(kilos)
                     <Input
                       className="popup-recibidos"
                       onChange={handlecantidad}
-                      value={pesajeparcial=== 1 || props.pesajeparcial===1 ? '' : cantidad}
-                      disabled={pesajeparcial===1 || props.pesajeparcial===1 ? 'disabled' : ''}
+                      value={pesajeparcial === 1 || props.ro.EsPesajeParcial === 1 ? '' : cantidad}
+                      disabled={
+                        pesajeparcial === 1 || props.ro.EsPesajeParcial === 1 ? 'disabled' : ''
+                      }
                       type="number"
                     />
                     <InputGroupAddon addonType="append">
@@ -696,7 +917,7 @@ console.log(kilos)
               <Row className="popup-row">
                 <Col>
                   <Row className="popup-title">Kilos Enviados</Row>
-                  <Row>{props.ro.KilosDocumentados}</Row>
+                  <Row>{props.ro.KgsMaterialPrereg ? props.ro.KgsMaterialPrereg : '0'}</Row>
                 </Col>
                 <Col>
                   <Row className="popup-title" style={{ marginLeft: '0px' }}>
@@ -706,8 +927,10 @@ console.log(kilos)
                     <Input
                       className="popup-recibidos"
                       onChange={handlekilos}
-                      value={pesajeparcial===1 || props.pesajeparcial===1 ? '' : kilos}
-                      disabled={pesajeparcial===1 || (props.pesajeparcial===1 && 'disabled')}
+                      value={pesajeparcial === 1 || props.ro.EsPesajeParcial === 1 ? '' : kilos}
+                      disabled={
+                        pesajeparcial === 1 || (props.ro.EsPesajeParcial === 1 && 'disabled')
+                      }
                       type="number"
                     />
                     <InputGroupAddon addonType="append">
@@ -725,7 +948,12 @@ console.log(kilos)
                       <Input
                         className="popup-recibidos"
                         onChange={handleporcentajer}
-                        defaultValue={props.ro.PorcentajeMaterial}
+                        value={
+                          pesajeparcial === 1 || props.ro.EsPesajeParcial === 1 ? 100 : porcentajer
+                        }
+                        disabled={
+                          pesajeparcial === 1 || (props.ro.EsPesajeParcial === 1 && 'disabled')
+                        }
                         type="number"
                       />
                       <InputGroupAddon addonType="append">
@@ -749,13 +977,27 @@ console.log(kilos)
                     <input
                       type="checkbox"
                       onChange={useCheckbox}
-                      checked={pesajeparcial===1 || props.pesajeparcial===1}
+                      checked={pesajeparcial === 1 || props.ro.EsPesajeParcial === 1}
                       style={{ width: '12px', height: '12px' }}
                     />
                     <>{/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}</>
                     <label type="text">&nbsp; Pesaje Parcial</label>
                   </form>
                 </Col>
+              </Row>
+
+              <Row
+                style={{
+                  color: 'red',
+                  position: 'absolute',
+                  marginTop: '-65px',
+                  marginLeft: '0px',
+                }}
+                className="warning"
+              >
+                <span style={{ color: 'red !important' }}>
+                  {PorcentajeSum > 100 ? 'El porcentaje no puede exceder el 100%' : null}
+                </span>
               </Row>
 
               <Row className="popup-row">
@@ -771,7 +1013,7 @@ console.log(kilos)
                   <Row className="popup-title">
                     <Col>Almacén</Col>
                     <Col>
-                      <Row>{props.ro.ClaAlmacen}</Row>
+                      <Row>{props.ro.ClaAlmacen ? props.ro.ClaAlmacen : almacen}</Row>
                     </Col>
                   </Row>
                 </Col>
@@ -779,7 +1021,31 @@ console.log(kilos)
                   <Row className="popup-title">
                     <Col>Subalmacén</Col>
                     <Col>
-                      <Row>{props.ro.ClaSubAlmacenCompra}</Row>
+                      <Row>
+                        <SelectBox
+                          dataSource={subalmacenes}
+                          defaultValue={subalmacen}
+                          displayExpr="NomSubAlmacenCompra"
+                          valueExpr="ClaSubAlmacenCompra"
+                          placeholder="Seleccionar Subalmacen.."
+                          onValueChanged={handlesubalmacen}
+                          noDataText="Selecciona Material"
+                          disabled={subalmacenes.length === 1 ? 'disabled' : ''}
+                        />
+                      </Row>
+                      <Row
+                        style={{
+                          color: 'red',
+                          position: 'absolute',
+                          marginTop: '0px',
+                          marginLeft: '-5%',
+                        }}
+                        className="warning"
+                      >
+                        <span style={{ color: 'red !important' }}>
+                          {idmaterial > 1 && subalmacen === 0 ? 'Selecciona subalmacen' : null}
+                        </span>
+                      </Row>
                     </Col>
                   </Row>
                 </Col>
@@ -789,8 +1055,18 @@ console.log(kilos)
               <button
                 style={{ marginRight: '30px' }}
                 type="button"
+                className="popup-delete"
+                onClick={handledelete}
+              >
+                <i className="fas fa-trash-alt"></i> Eliminar
+              </button>
+              <button
+                style={{ marginRight: '30px' }}
+                type="button"
                 className="popup-button"
-                onClick={togglePopup2}
+                onClick={
+                  PorcentajeSum > 100 || idmaterial < 1 || subalmacen < 1 ? null : togglePopup2
+                }
               >
                 Siguiente &gt;
               </button>
@@ -819,7 +1095,8 @@ console.log(kilos)
                   Cantidad Recibida
                 </Row>
                 <Row className="popup-elem" style={{ marginLeft: '0px' }}>
-                  {props.pesajeparcial === 1 || pesajeparcial===1 ? '--' :cantidad}&nbsp; lbs
+                  {props.ro.EsPesajeParcial === 1 || pesajeparcial === 1 ? '--' : cantidad}&nbsp;
+                  lbs
                 </Row>
               </Col>
               <Col>
@@ -827,7 +1104,7 @@ console.log(kilos)
                   Kilos Recibidos
                 </Row>
                 <Row className="popup-elem" style={{ marginLeft: '0px' }}>
-                  {props.pesajeparcial === 1 || pesajeparcial===1 ? '--' :kilos}&nbsp; kgs
+                  {props.ro.EsPesajeParcial === 1 || pesajeparcial === 1 ? '--' : kilos}&nbsp; kgs
                 </Row>
               </Col>
               <Col>
@@ -835,7 +1112,8 @@ console.log(kilos)
                   Porcentaje
                 </Row>
                 <Row className="popup-elem" style={{ marginLeft: '0px' }}>
-                  {porcentajer}&nbsp;%
+                  {props.ro.EsPesajeParcial === 1 || pesajeparcial === 1 ? '--' : porcentajer}
+                  &nbsp;%
                 </Row>
               </Col>
             </Row>
@@ -848,7 +1126,7 @@ console.log(kilos)
                   <Input
                     className="popup-recibidos"
                     type="number"
-                    defaultValue={props.ro.KilosContaminados}
+                    defaultValue={props.ro.KilosContaminados ? props.ro.KilosContaminados : 0}
                     onChange={handlecont}
                   />
                   <InputGroupAddon addonType="append">
@@ -864,12 +1142,26 @@ console.log(kilos)
                   Motivo Contaminacion
                 </Row>
                 <SelectBox
-                  dataSource={props.contaminacion}
+                  dataSource={contaminaciones}
                   defaultValue={props.ro.ClaMotivoContaminacion}
                   displayExpr="NomMotivoContaminacion"
                   valueExpr="ClaMotivoContaminacion"
                   onValueChanged={handlerazoncont}
+                  disabled={kiloscont < 1 ? 'disabled' : ''}
                 />
+                <Row
+                  style={{
+                    color: 'red',
+                    position: 'absolute',
+                    marginTop: '0px',
+                    marginLeft: '0%',
+                  }}
+                  className="warning"
+                >
+                  <span style={{ color: 'red !important' }}>
+                    {kiloscont > 0 && razoncont < 1 ? 'Seleccionar Motivo' : null}
+                  </span>
+                </Row>
               </Col>
             </Row>
           </Container>
@@ -878,7 +1170,7 @@ console.log(kilos)
               style={{ marginRight: '30px' }}
               type="button"
               className="popup-button"
-              onClick={handleClose}
+              onClick={kiloscont > 0 && razoncont < 1 ? '' : handleClose}
             >
               Guardar &#43;
             </button>

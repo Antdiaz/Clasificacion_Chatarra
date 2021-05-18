@@ -2,10 +2,11 @@ import React from 'react'
 import 'devextreme-react/text-area';
 import { Row, Col} from 'reactstrap';
 import { Link } from 'react-router-dom';
+import { SettingsRemoteTwoTone } from '@material-ui/icons';
 
 
 
-const Items= ({listas}) => {
+const Items= ({listas,setpoppesaje,setrow}) => {
     return (
       <div>
         {listas !==undefined && listas.map((lista) => (
@@ -25,7 +26,7 @@ const Items= ({listas}) => {
                     }}
                   >
                     <Link style={{color:"rgb(41, 41, 41)"}} to={`/Informacion/${lista.ClaVehiculoPorClasificar ? lista.ClaVehiculoPorClasificar : "Sin dato" }/${lista.IdBoleta}`}>
-                      <i className="fa fa-info-circle fa-2x" aria-hidden="true"></i>
+                      <i className="fa fa-info-circle fa-2x" onClick={()=>{setpoppesaje(true);setrow(0)}} aria-hidden="true"></i>
                     </Link>
                     <div className="form" style={{width: "100%"}}>
                       <div className="dx-fieldset">
@@ -50,7 +51,7 @@ const Items= ({listas}) => {
                         )}
                         <div className="dx-field">
                           <div className="dx-field-label">Peso :</div>
-                          <div className="dx-field-value-static">{lista.PesoEntrada}&nbsp; {lista.NomCortoUnidadEntrada}</div>
+                          <div className="dx-field-value-static">{lista.PesoEntrada.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}&nbsp; {lista.NomCortoUnidadEntrada}</div>
                         </div>
                         <div className="dx-field">
                           <div className="dx-field-label">Documentado :</div>

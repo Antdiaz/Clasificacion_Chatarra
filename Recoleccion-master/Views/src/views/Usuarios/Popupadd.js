@@ -38,6 +38,7 @@ import {
   getSessionItem,
 } from '../../utils/utils';
 import { config } from '../../utils/config';
+import { string } from 'prop-types';
 
 const Popupadd = (props) => {
   const [isNext, setIsNext] = useState(false);
@@ -57,7 +58,7 @@ const Popupadd = (props) => {
   const [cantidadr, setcantidadr] = useState(0);
   const [kilose, setkilose] = useState(0);
   const [kilosr, setkilosr] = useState(0);
-  const [porcentajer, setporcentajer] = useState(0);
+  const [porcentajer, setporcentajer] = useState(pesajeparcial===1 ? 100:0);
   const [observaciones, setobservaciones] = useState('Ninguna');
   const [idmateriale, setidmateriale] = useState(0);
   const [pesajeparcial, setpesajeparcial] = useState(0);
@@ -66,9 +67,16 @@ const Popupadd = (props) => {
   const [idmaterialr, setidmaterialr] = useState(0);
   const [nombrematerialr, setnombrematerialr] = useState(0);
   const [nombremateriale, setnombremateriale] = useState(0);
-  const [error, seterror] = useState(null);
-  const [subalmacen, setsubalmacen] = useState(0)
-  const [subalmacenes, setsubalmacenes] = useState(0)
+  const [subalmacen, setsubalmacen] = useState(0);
+  const [nomsubalmacen, setnomsubalmacen] = useState(0);
+  const [subalmacenes, setsubalmacenes] = useState(0);
+  const [kiloscont, setkiloscont] = useState(0);
+  const [razoncont, setrazoncont] = useState(0);
+  const [Referencia, setReferencia] = useState(0);
+  const PorcentajeSum = props.row ?
+    +props.row.reduce((acc, val) => acc + val.PorcentajeMaterial, 0) + +porcentajer : 0;
+
+
 
   const useCheckbox = (e) => {
     if (props.pesajeparcial === 1) {
@@ -78,6 +86,10 @@ const Popupadd = (props) => {
       setkilosr(0);
       setcantidadr(0);
     }
+  };
+
+  const handlerazoncont = (event) => {
+    setrazoncont(event.value);
   };
 
   useEffect(() => {
@@ -110,6 +122,7 @@ const Popupadd = (props) => {
         '"}',
       tipoEstructura: 0,
     };
+
     /* eslint-enable */
     callApi(urlKrakenService, 'POST', data6, (res) => {
       console.log(res.Result0);
@@ -120,9 +133,50 @@ const Popupadd = (props) => {
     });
   }, [idmaterialr]);
 
+  useEffect(() => {
+  
+    if(subalmacenes.length===1){
+      setsubalmacen(subalmacenes[0].ClaSubAlmacenCompra)
+    }
+  }, [subalmacenes])
+
+  useEffect(() => {
+    const urlKrakenService = `${config.KrakenService}/${24}/${34}`;
+
+    /* eslint-disable */
+    const data8 = {
+      parameters:
+        '{"ClaUbicacion":' +
+        props.editBoxValue +
+        ',"ClaServicioJson":8,"Parametros":"@pnClaUbicacion=' +
+        props.editBoxValue +
+        ',@pnClaArticuloCompra=' +
+        idmaterialr +
+        ',@pnClaSubAlmacenCompra=' +
+        subalmacen +
+        ',@psNomSubAlmacenCompra=' +
+        nomsubalmacen +
+        ',@pnIdBoleta=' +
+        props.placadato[0].IdBoleta +
+        '"}',
+      tipoEstructura: 0,
+    };
+    /* eslint-enable */
+    if (subalmacen > 0) {
+      callApi(urlKrakenService, 'POST', data8, (res) => {
+        setReferencia(res.Result0[0].ClaReferenciaCompra);
+      });
+    }
+  }, [nomsubalmacen]);
+
   const onValueChangedr = (e) => {
     setidmaterialr(e.value);
+    setsubalmacen(0)
     setnombrematerialr(e.component.option('text').split('-').pop());
+  };
+
+  const handlekiloscont = (e) => {
+    setkiloscont(e.target.value);
   };
 
   const electrodomestico =
@@ -157,20 +211,17 @@ const Popupadd = (props) => {
     // const maxLength = max.toString().length-1
     // const newVal = val < max ? val : parseInt(val.toString().substring(0, maxLength))
     setporcentajer(event.target.value);
-
-    if (porcentajer > 100) {
-      seterror('Valor máximo es 100');
-    } else {
-      seterror();
-    }
   };
 
   const handlealmacen = (event) => {
     setalmacen(event.target.value);
+    
   };
 
   const handlesubalmacen = (event) => {
+
     setsubalmacen(event.value);
+    setnomsubalmacen(event.component.option('text'));
   };
 
   const handleSum1 = () => {
@@ -320,6 +371,30 @@ const Popupadd = (props) => {
 
     /* eslint-disable */
 
+    const data11 = {
+      parameters:
+        '{"ClaUbicacion":' +
+        props.editBoxValue +
+        ',"ClaServicioJson":' +
+        11 +
+        ',"Parametros":"@pnClaUbicacion=' +
+        props.editBoxValue +
+        ',@pnIdBoleta=' +
+        props.placadato[0].IdBoleta +
+        ',@psObservaciones=,@pnEsRevisionEfectuada=' +
+        props.placadato[0].EsRevisionEfectuada +
+        ',@pnClaTipoClasificacion=' +
+        props.placadato[0].ClaTipoClasificacion +
+        ',@pnEsNoCargoDescargoMaterial=' +
+        props.placadato[0].EsNoCargoDescargoMaterial +
+        ',@psNombrePcMod=' +
+        ipadress +
+        ',@pnClaUsuarioMod=' +
+        NumbUsuario +
+        '"}',
+      tipoEstructura: 0,
+    };
+
     const data12 = {
       parameters:
         '{"ClaUbicacion":' +
@@ -329,70 +404,50 @@ const Popupadd = (props) => {
         ',@pnIdBoleta=' +
         props.placadato[0].IdBoleta +
         ',@pnClaArticuloCompra=' +
-        props.ro.ClaArticuloCompra +
+        idmaterialr +
         ',@pnCantidadMaterial=' +
-        props.ro.CantidadMaterial +
-        ',@pnKilosMaterial=' +
-        props.ro.KilosMaterial +
-        ',@pnKilosReales=' +
-        kilos +
-        ',@pnKilosContaminados=' +
+        cantidadr +
+        ',@pnKilosMaterial=0,@pnKilosReales=0,@pnKilosContaminados=' +
         kiloscont +
-        ',@pnKilosDocumentados=' +
-        props.ro.KilosDocumentados +
-        ',@pnPorcentajeMaterial=' +
+        ',@pnKilosDocumentados=0,@pnPorcentajeMaterial=' +
         porcentajer +
         ',@pnEsPesajeParcial=' +
         pesajeparcial +
-        ',@pnClaAlmacen=' +
-        props.ro.ClaAlmacen +
-        ',@pnClaSubAlmacenCompra=' +
-        props.ro.ClaSubAlmacenCompra +
+        ',@pnClaAlmacen=1,@pnClaSubAlmacenCompra=' +
+        subalmacen +
         ',@pnClaMotivoContaminacion=' +
         razoncont +
-        ',@pnEsNoCargoDescargoMaterial=' +
-        props.placadato[0].EsNoCargoDescargoMaterial +
-        ',@pnClaProveedor=' +
+        ',@pnEsNoCargoDescargoMaterial=0,@pnClaProveedor=' +
         props.placadato[0].ClaProveedor +
         ',@pnIdListaPrecio=' +
         props.placadato[0].IdListaPrecio +
         ',@pnClaTipoOrdenCompra=,@pnClaOrdenCompra=,@pnClaUbicacionProveedor=' +
         props.placadato[0].ClaUbicacionProveedor +
         ',@psClaReferenciaCompra=' +
-        props.ro.ClaReferenciaCompra +
-        ',@pnIdRenglon=' +
-        props.ro.IdRenglon +
-        ',@psNombrePcMod=' +
+        Referencia +
+        ',@pnIdRenglon=1,@psNombrePcMod=' +
         ipadress +
         ',@pnClaUsuarioMod=' +
         NumbUsuario +
         ',@pnAccionSp="}',
       tipoEstructura: 0,
     };
+
+    // usage
     /* eslint-enable */
+
+    callApi(urlKrakenService, 'POST', data11, (res) => {
+      console.log(res);
+    });
 
     callApi(urlKrakenService, 'POST', data12, (res) => {
       console.log(res);
     });
 
-    props.setaddarreglo({
-      Result0: [
-        {
-          NomArticuloCompra: nombremateriale,
-          NomArticuloRecibido: nombrematerialr,
-          PorcentajeMaterial: porcentajer,
-          CantidadEnviado: cantidade,
-          CantidadRecibido: cantidadr,
-          Observaciones: observaciones,
-          Kilose: kilose,
-          Kilosr: kilosr,
-        },
-      ],
-    });
-    rops.setpesajeparcial(pesajeparcial);
-    props.setpoppesaje(pesajeparcial);
-    console.log(props.addarreglo);
+    props.setrow(null)
+    props.setpesajeparcial(pesajeparcial);
     props.setmodaladdOpen(false);
+    props.setpoppesaje(true);
   };
 
   function Botes() {
@@ -731,7 +786,7 @@ const Popupadd = (props) => {
   return (
     <div>
       {!isNext ? (
-        idmaterialr === 301476 ? (
+        idmaterialr === 10000 ? (
           <Botes />
         ) : (
           <div className="box">
@@ -747,13 +802,26 @@ const Popupadd = (props) => {
                   <Row className="popup-title">Material Enviado</Row>
                   <Row> No aplica</Row>
                 </Col>
+                <Row
+                  style={{
+                    color: 'red',
+                    position: 'absolute',
+                    marginTop: '64px',
+                    marginLeft: '52%',
+                  }}
+                  className="warning"
+                >
+                  <span style={{ color: 'red !important' }}>
+                    {idmaterialr < 1 ? 'Seleccionar material' : null}
+                  </span>
+                </Row>
                 <Col className="selector">
                   <Row className="popup-title" style={{ marginLeft: '0px' }}>
                     Material Recibido
                   </Row>
                   <SelectBox
                     dataSource={props.material}
-                    defaultValue=""
+                    defaultValue={idmaterialr}
                     displayExpr="NomArticuloCompra"
                     valueExpr="ClaArticuloCompra"
                     placeholder="Seleccionar Material.."
@@ -775,8 +843,18 @@ const Popupadd = (props) => {
                       className="popup-recibidos"
                       onChange={handlecantidadr}
                       type="number"
-                      value={pesajeparcial === 1 || props.pesajeparcial === 1 ? '' : cantidadr}
-                      disabled={pesajeparcial === 1 || props.pesajeparcial === 1 ? 'disabled' : ''}
+                      value={
+                        props.placadato[0].EsPesajeParcial === 1 || pesajeparcial === 1
+                          ? ''
+                          : cantidadr
+                      }
+                      disabled={
+                        props.placadato[0].EsPesajeParcial === 1 || pesajeparcial === 1
+                          ? 'disabled'
+                          : porcentajer > 0
+                          ? 'disabled'
+                          : ''
+                      }
                     />
                     <InputGroupAddon addonType="append">
                       <InputGroupText>lbs</InputGroupText>
@@ -798,8 +876,16 @@ const Popupadd = (props) => {
                     <Input
                       className="popup-recibidos"
                       onChange={handlekilosr}
-                      value={pesajeparcial === 1 || props.pesajeparcial === 1 ? '' : kilosr}
-                      disabled={pesajeparcial === 1 || (props.pesajeparcial === 1 && 'disabled')}
+                      value={
+                        props.placadato[0].EsPesajeParcial === 1 || pesajeparcial === 1
+                          ? ''
+                          : kilosr
+                      }
+                      disabled={
+                        props.placadato[0].EsPesajeParcial === 1 || pesajeparcial === 1
+                          ? 'disabled'
+                          : ''
+                      }
                       type="number"
                     />
                     <InputGroupAddon addonType="append">
@@ -820,7 +906,18 @@ const Popupadd = (props) => {
                         type="number"
                         min={0}
                         max={100}
-                        defaultValue={porcentajer}
+                        value={
+                          props.placadato[0].EsPesajeParcial === 1 || pesajeparcial === 1
+                            ? 100
+                            : porcentajer
+                        }
+                        disabled={
+                          props.placadato[0].EsPesajeParcial === 1 || pesajeparcial === 1
+                            ? 'disabled'
+                            : cantidadr > 0
+                            ? 'disabled'
+                            : ''
+                        }
                       />
                       <InputGroupAddon addonType="append">
                         <InputGroupText>&nbsp;%&nbsp;</InputGroupText>
@@ -843,7 +940,7 @@ const Popupadd = (props) => {
                     <input
                       type="checkbox"
                       onChange={useCheckbox}
-                      checked={pesajeparcial === 1 || props.pesajeparcial === 1}
+                      checked={pesajeparcial === 1 || props.placadato[0].EsPesajeParcial === 1}
                       style={{ width: '12px', height: '12px' }}
                     />
                     <>{/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}</>
@@ -854,13 +951,15 @@ const Popupadd = (props) => {
               <Row
                 style={{
                   color: 'red',
-                  fontSize: '12px',
                   position: 'absolute',
-                  marginTop: '-19px',
+                  marginTop: '-65px',
                   marginLeft: '0px',
                 }}
+                className="warning"
               >
-                {error && <span style={{ color: 'red !important' }}>{error}</span>}
+                <span style={{ color: 'red !important' }}>
+                  {PorcentajeSum > 100 ? 'El porcentaje no puede exceder el 100%' : null}
+                </span>
               </Row>
               <Row className="popup-row">
                 <Col>
@@ -886,12 +985,27 @@ const Popupadd = (props) => {
                       <Row>
                         <SelectBox
                           dataSource={subalmacenes}
-                          defaultValue=""
+                          defaultValue={subalmacen}
                           displayExpr="NomSubAlmacenCompra"
                           valueExpr="ClaSubAlmacenCompra"
                           placeholder="Seleccionar Subalmacen.."
                           onValueChanged={handlesubalmacen}
+                          noDataText="Selecciona Material"
+                          disabled={subalmacenes.length===1 ? "disabled":''}
                         />
+                      </Row>
+                      <Row
+                        style={{
+                          color: 'red',
+                          position: 'absolute',
+                          marginTop: '0px',
+                          marginLeft: '-5%',
+                        }}
+                        className="warning"
+                      >
+                        <span style={{ color: 'red !important' }}>
+                          {idmaterialr>1 && subalmacen===0 ? "Selecciona subalmacen":null}
+                        </span>
                       </Row>
                     </Col>
                   </Row>
@@ -903,7 +1017,7 @@ const Popupadd = (props) => {
                 style={{ marginRight: '30px' }}
                 type="button"
                 className="popup-button"
-                onClick={porcentajer < 101 && togglePopup2}
+                onClick={PorcentajeSum > 100 || idmaterialr<1 || subalmacen<1? null : togglePopup2}
               >
                 Siguiente &gt;
               </button>
@@ -932,7 +1046,10 @@ const Popupadd = (props) => {
                   Cantidad Recibida
                 </Row>
                 <Row className="popup-elem" style={{ marginLeft: '0px' }}>
-                  {props.pesajeparcial === 1 || pesajeparcial === 1 ? '--' : cantidadr}&nbsp; lbs
+                  {pesajeparcial === 1 || props.placadato[0].EsPesajeParcial === 1
+                    ? '--'
+                    : cantidadr}
+                  &nbsp; lbs
                 </Row>
               </Col>
               <Col>
@@ -940,7 +1057,8 @@ const Popupadd = (props) => {
                   Kilos Recibidos
                 </Row>
                 <Row className="popup-elem" style={{ marginLeft: '0px' }}>
-                  {props.pesajeparcial === 1 || pesajeparcial === 1 ? '--' : kilosr}&nbsp; kgs
+                  {pesajeparcial === 1 || props.placadato[0].EsPesajeParcial === 1 ? '--' : kilosr}
+                  &nbsp; kgs
                 </Row>
               </Col>
               <Col>
@@ -958,7 +1076,12 @@ const Popupadd = (props) => {
                   Kilos Contaminados
                 </Row>
                 <InputGroup style={{ width: '35%' }}>
-                  <Input className="popup-recibidos" type="number" />
+                  <Input
+                    className="popup-recibidos"
+                    type="number"
+                    onChange={handlekiloscont}
+                    defaultValue={kiloscont}
+                  />
                   <InputGroupAddon addonType="append">
                     <InputGroupText>kgs</InputGroupText>
                   </InputGroupAddon>
@@ -973,11 +1096,26 @@ const Popupadd = (props) => {
                 </Row>
                 <SelectBox
                   dataSource={props.contaminacion}
-                  defaultValue=""
+                  defaultValue=''
                   displayExpr="NomMotivoContaminacion"
-                  valueExpr="ClaMotivoContaminacion"
+                  valueExpr={kiloscont < 1 ? "0":"ClaMotivoContaminacion"}
                   placeholder="Seleccionar Material.."
+                  onValueChanged={handlerazoncont}
+                  disabled={kiloscont< 1 ? "disabled":''}
                 />
+                <Row
+                  style={{
+                    color: 'red',
+                    position: 'absolute',
+                    marginTop: '0px',
+                    marginLeft: '0%',
+                  }}
+                  className="warning"
+                >
+                  <span style={{ color: 'red !important' }}>
+                    {kiloscont > 0 && razoncont<1 ? 'Seleccionar Motivo' : null}
+                  </span>
+                </Row>
               </Col>
             </Row>
           </Container>
@@ -986,7 +1124,7 @@ const Popupadd = (props) => {
               style={{ marginRight: '30px' }}
               type="button"
               className="popup-button"
-              onClick={handleSubmit}
+              onClick={kiloscont>0 && razoncont<1 ?'': handleSubmit}
             >
               Guardar &#43;
             </button>

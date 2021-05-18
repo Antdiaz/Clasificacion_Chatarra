@@ -380,6 +380,14 @@ table::-webkit-scrollbar-thumb {
     font-weight: 500;
 }
 
+.warning{
+  font-size: 12px;
+}
+
+.swal-text{
+  text-align: center !important;
+}
+
 .row {
   display: flex;
   align-items: center;
@@ -746,6 +754,22 @@ box-shadow:2px 2px 2px rgb(196, 195, 195) !important;
   border:0px;
   text-decoration: none;
 }
+
+.popup-delete{
+  color:black;
+  margin:15px;
+  font-size:20px;
+  background-color: transparent;
+  box-shadow: none;
+  float:left;
+  border:0px;
+  text-decoration: none;
+}
+
+.popup-delete:hover{
+  color:Red;
+}
+
 .popup-title{
   font-size: 18px;
   color:#1e519e;
@@ -839,9 +863,9 @@ box-shadow:2px 2px 2px rgb(196, 195, 195) !important;
 
 }
 .card-login,.px-lg-5,.py-lg-5, .card-body{
-  padding:.3rem !important;
+  /* padding:.3rem !important;
   padding-left:1rem !important;
-  padding-right:1rem !important;
+  padding-right:1rem !important; */
 }
 }
 
@@ -880,6 +904,11 @@ margin:0px;
 @media only screen and (max-width: 750px) {
   .input-bar{
     width:70%
+  }
+
+  .input-parcial{
+    right:0%;
+    margin-top:90px;
   }
 
   .input-search{
@@ -931,6 +960,10 @@ margin:0px;
 @media only screen and (max-width: 600px) {
   .dx-fieldset-header {
     font-size:18px
+}
+
+.warning{
+  font-size: 10px;
 }
 
 .dx-dropdowneditor.dx-dropdowneditor-field-clickable {
@@ -1031,6 +1064,10 @@ img[alt*="avatar"] {
 .fa-info-circle{
   transform:scale(.8) !important;
   top:-40px;
+}
+
+.warning{
+  font-size: 8px;
 }
 }
 
