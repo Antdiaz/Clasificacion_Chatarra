@@ -53,7 +53,7 @@ function Usuarios({
   const [addarreglo, setaddarreglo] = useState(0);
   const [contaminacion, setcontaminacion] = useState();
   const [change, setchange] = useState(1)
-  const [modalOpen, setmodalOpen] = useState(false);
+  const [editOpen, seteditOpen] = useState(true);
 
   const customStyles = {
     content: {
@@ -104,13 +104,14 @@ function Usuarios({
       setcontaminacion(res.Result0);
     });
   },1000)
-  }, [!modaladdOpen,!modalOpen]);
-  
+  }, [!modaladdOpen,!editOpen]);
   return (
     <>
       <div className="content" style={{ marginTop: '20px' }}>
         {poppesaje && placadato && placadato[0].EsPesajeParcial ===1? (
           <Warning
+            placadato={placadato}
+            editBoxValue={editBoxValue}
             row={row}
             poppesaje={poppesaje}
             setpoppesaje={setpoppesaje}
@@ -227,8 +228,8 @@ function Usuarios({
                         </div>
                       ) : (
                         <Material
-                          modalOpen={modalOpen}
-                          setmodalOpen={setmodalOpen}
+                          editOpen={editOpen}
+                          seteditOpen={seteditOpen}
                           contaminacion={contaminacion}
                           placadato={placadato}
                           editBoxValue={editBoxValue}

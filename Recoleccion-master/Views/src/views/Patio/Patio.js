@@ -36,31 +36,31 @@ class Patio extends React.Component {
       NumbUsuario: getSessionItem('NumUsuario'),
       Usuario: null,
       Patio: null,
-      Lugarlocal:0,
-      LugarSesion:0
+      Lugarsesion:0,
+      Lugaradd:null
       
     };
   }
 
   setUsuario = (Val) => this.setState(() => ({ Usuario: Val }));
 
-  setLugarlocal = (Val) => this.setState(() => ({ Lugarlocal: Val }));
+  setLugarsesion = (Val) => this.setState(() => ({ Lugarsesion: Val }));
 
   setPatio = (Val) => this.setState(() => ({ Patio: Val }));
 
-  setLugarSesion = (Val) => this.setState(() => ({ LugarSesion: Val }));
+  setLugaradd = (Val) => this.setState(() => ({ Lugaradd: Val }));
 
   
   handleSubmit = (e) => {
     e.preventDefault();
-    this.setLugarSesion(this.state.Lugarlocal)
+    this.setLugaradd(true)
     setSessionData({
-      PatioEscogido: this.state.LugarSesion
+      PatioEscogido: this.state.Lugarsesion
     });
   }
 
   onValueChanged = (e) => {
-    this.setLugarlocal(e.target.value)
+    this.setLugarsesion(e.target.value)
 
   }
 
@@ -91,6 +91,11 @@ class Patio extends React.Component {
       this.setPatio(res.Result0);
     });
 
+    if(this.state.Patio.length===1){
+      this.setLugaradd(true)
+      this.setLugarsesion(this.state.Patio[0].ClaUbicacion)
+    }
+
   }
 
   componentWillUnmount() {
@@ -99,7 +104,7 @@ class Patio extends React.Component {
 
 
   render() {
-    if (getSessionItem('PatioEscogido')>0) {
+    if (this.state.Lugarsesion >0 && this.state.Lugaradd ? this.state.Lugaradd === true :  getSessionItem('PatioEscogido')) {
       const url = getSessionItem('url', '/layout/Placas');
       document.body.classList.remove('bg-default');
       // Primer componente al que se va a redirigir después de iniciar sesión

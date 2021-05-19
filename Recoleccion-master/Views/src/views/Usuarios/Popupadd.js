@@ -363,10 +363,12 @@ const Popupadd = (props) => {
   };
 
   const handleBack = () => {
+    props.setpoppesaje(true);
     props.setmodaladdOpen(false);
   };
 
   const handleSubmit = () => {
+    props.setpoppesaje(true);
     const urlKrakenService = `${config.KrakenService}/${24}/${37}`;
 
     /* eslint-disable */
@@ -820,6 +822,7 @@ const Popupadd = (props) => {
                     Material Recibido
                   </Row>
                   <SelectBox
+                    searchEnabled={true}
                     dataSource={props.material}
                     defaultValue={idmaterialr}
                     displayExpr="NomArticuloCompra"
@@ -1086,6 +1089,7 @@ const Popupadd = (props) => {
                   Motivo Contaminacion
                 </Row>
                 <SelectBox
+                  searchEnabled={true}
                   dataSource={props.contaminacion}
                   defaultValue=''
                   displayExpr="NomMotivoContaminacion"

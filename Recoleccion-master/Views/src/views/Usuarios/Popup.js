@@ -59,8 +59,8 @@ const Popup = (props) => {
   const [pesajeparcial, setpesajeparcial] = useState(props.ro.EsPesajeParcial ? props.ro.EsPesajeParcial : 0);
   const ipadress = getSessionItem('Ipaddress');
   const NumbUsuario = getSessionItem('NumUsuario');
-  const [subalmacen, setsubalmacen] = useState(0);
-  const [nomsubalmacen, setnomsubalmacen] = useState(0);
+  const [subalmacen, setsubalmacen] = useState(props.ro.ClaSubAlmacenCompra ? props.ro.ClaSubAlmacenCompra : 0);
+  const [nomsubalmacen, setnomsubalmacen] = useState(props.ro.NomSubAlmacenCompra ? props.ro.NomSubAlmacenCompra: 0);
   const [subalmacenes, setsubalmacenes] = useState(0);
   const Diferencia = props.ro.PorcentajeMaterial;
   const PorcentajeSum = props.row? +props.row.reduce((acc, val) => acc + val.PorcentajeMaterial, 0) + +porcentajer - +Diferencia: 0;
@@ -68,6 +68,8 @@ const Popup = (props) => {
   const [materiales, setmateriales] = useState(props.material);
   const [contaminaciones, setcontaminaciones] = useState(props.contaminacion)
   const disabled=true;
+
+  
   useEffect(() => {
     const urlKrakenService = `${config.KrakenService}/${24}/${37}`;
     /* eslint-disable */
@@ -390,7 +392,6 @@ const Popup = (props) => {
         ',@psClaReferenciaCompra=' +
         '' +
         props.ro.ClaReferenciaCompra +
-        Referencia +
         ',@pnIdRenglon=' +
         props.ro.IdRenglon +
         ',@psNombrePcMod=' +
@@ -401,13 +402,14 @@ const Popup = (props) => {
       tipoEstructura: 0,
     };
     /* eslint-enable */
-
+    
     callApi(urlKrakenService, 'POST', data12, (res) => {
       console.log(res);
     });
 
     props.setpoppesaje(true);
     props.setmodaledit(false);
+    props.seteditOpen(false);
   };
 
   const handleClose = () => {
@@ -499,13 +501,13 @@ const Popup = (props) => {
     callApi(urlKrakenService, 'POST', data12, (res) => {
       console.log(res);
     });
-
+    props.seteditOpen(false);
     props.setpesajeparcial(pesajeparcial);
     props.setmodaledit(false);
   };
 
   const handleBack = () => {
-    props.setmodaledit(false);
+    props.setpoppesaje(true);
     props.setmodaledit(false);
   };
 
@@ -881,6 +883,7 @@ const Popup = (props) => {
                     Material Recibido
                   </Row>
                   <SelectBox
+                    searchEnabled={true}
                     dataSource={materiales}
                     defaultValue={idmaterial}
                     displayExpr="NomArticuloCompra"
@@ -1144,6 +1147,7 @@ const Popup = (props) => {
                   Motivo Contaminacion
                 </Row>
                 <SelectBox
+                  searchEnabled={true}
                   dataSource={contaminaciones}
                   defaultValue={props.ro.ClaMotivoContaminacion}
                   displayExpr="NomMotivoContaminacion"

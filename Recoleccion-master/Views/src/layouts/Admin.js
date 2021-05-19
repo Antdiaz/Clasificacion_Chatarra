@@ -134,7 +134,7 @@ class Admin extends React.Component {
     }
 
     if (prevState.editBoxValue !== this.state.editBoxValue) {
-      const urlKrakenService = `${config.KrakenService}/${24}/${34}`;
+      const urlKrakenService = `${config.KrakenService}/${24}/${37}`;
       /* eslint-disable */
       const data = {
         parameters: '{"ClaUbicacion":' + this.state.editBoxValue + ',"ClaServicioJson":' + 1 + ',"Parametros":"@pnClaUbicacion=' + this.state.editBoxValue +',@psValor=,@pnEsParcial=0"}',

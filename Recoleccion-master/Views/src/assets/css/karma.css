@@ -221,6 +221,15 @@ min-height:120px !important;
   font-size:1vw !important;
 }
 
+.pre-registro{
+  color: rgba(255, 106, 0, 0.842) !important;
+  opacity:.8;
+  padding-left:10px;
+  padding-top:16vh;
+  font-size:1vw !important;
+  position:absolute;
+}
+
 .table td{
   font-size:.8rem;
 }
@@ -839,6 +848,11 @@ box-shadow:2px 2px 2px rgb(196, 195, 195) !important;
 @media only screen and (max-width: 990px) {
 .dx-dropdowneditor.dx-dropdowneditor-field-clickable {
   width: 150px;
+}
+
+.pre-registro{
+  padding-top:17vh;
+  font-size:10px !important;
 }
 
 .table-content{
