@@ -1,7 +1,6 @@
 import React from 'react';
 import { Route, Router, Redirect } from 'react-router-dom';
 import classnames from 'classnames';
-import env from '@beam-australia/react-env';
 import {
   Button,
   Card,
@@ -22,9 +21,6 @@ import AdminLayout from '../../layouts/Admin';
 
 import {
   setSessionData,
-  sessionAlive,
-  logOut,
-  showSweetAlert,
   callApi,
   getSessionItem,
 } from '../../utils/utils';

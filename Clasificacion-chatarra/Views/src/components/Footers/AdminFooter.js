@@ -2,7 +2,7 @@
 import React from 'react';
 
 // reactstrap components
-import { NavItem, NavLink, Nav, Container, Row, Col } from 'reactstrap';
+import {Nav, Container, Row, Col } from 'reactstrap';
 
 class Calendar extends React.Component {
   render() {

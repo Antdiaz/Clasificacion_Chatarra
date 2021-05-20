@@ -11,9 +11,6 @@ import {
 } from 'reactstrap';
 import {
   callApi,
-  callKrakenApi,
-  showSweetAlert,
-  getCliente,
   getSessionItem,
 } from '../../utils/utils';
 import { config } from '../../utils/config';
@@ -31,7 +28,7 @@ import smbag from '../../assets/img/little-bag.png';
 import bag from '../../assets/img/bag.png';
 import contenedors from '../../assets/img/contenedor.png';
 
-const Popup = (props) => {
+const Material = (props) => {
   const [isNext, setIsNext] = useState(false);
   const [srefri, setsrefri] = useState(0);
   const [mrefri, setmrefri] = useState(0);
@@ -1190,4 +1187,4 @@ const Popup = (props) => {
   );
 };
 
-export default Popup;
+export default Material;

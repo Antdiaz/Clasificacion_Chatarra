@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route, Router, Redirect } from 'react-router-dom';
+import { Route, Router} from 'react-router-dom';
 import classnames from 'classnames';
 import env from '@beam-australia/react-env';
 import {
@@ -18,7 +18,6 @@ import {
 } from 'reactstrap';
 import AuthHeader from 'components/Headers/AuthHeader';
 import { config } from '../../utils/config';
-import AdminLayout from '../../layouts/Admin';
 
 import {
   setSessionData,
@@ -26,7 +25,6 @@ import {
   logOut,
   showSweetAlert,
   callApi,
-  getSessionItem,
 } from '../../utils/utils';
 import Patio from 'views/Patio/Patio';
 

@@ -1,5 +1,5 @@
 
-import Consulta from 'views/Consulta/Consulta.js';
+import Consulta from 'views/Consulta_Placas/Consulta_Placas.js';
 
 const routes = [
   {

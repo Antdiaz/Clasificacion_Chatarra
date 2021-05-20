@@ -1,21 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import DataGrid from 'devextreme-react/data-grid';
 import { config } from '../../utils/config';
-import { callApi, callKrakenApi } from '../../utils/utils';
+import { callApi} from '../../utils/utils';
 import { Card, CardText, CardHeader, CardBody, CardTitle, Button, Row, Col } from 'reactstrap';
 import { useParams } from 'react-router';
-import PlacaInfo from './PlacaInfo';
-import Popup from './Popup';
-import Material from './Material';
 import TableContainer from '@material-ui/core/TableContainer';
 import Paper from '@material-ui/core/Paper';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Modal from 'react-modal';
-import Popupadd from './Popupadd';
-import Warning from './Warning';
+import NuevoMaterial from './Clasificar_Nuevo_Material';
+import PesajeParcial from './PesajeParcial';
+import Materiales from './Materiales';
+import DetalleBoleta from './Detalle_Boleta';
 
-function Usuarios({
-  Valores,
+function Boleta({
   editBoxValue,
   row,
   setrow,
@@ -52,7 +49,6 @@ function Usuarios({
   const [modaladdOpen, setmodaladdOpen] = useState(false);
   const [addarreglo, setaddarreglo] = useState(0);
   const [contaminacion, setcontaminacion] = useState();
-  const [change, setchange] = useState(1)
   const [editOpen, seteditOpen] = useState(true);
 
   const customStyles = {
@@ -109,7 +105,7 @@ function Usuarios({
     <>
       <div className="content" style={{ marginTop: '20px' }}>
         {poppesaje && placadato && placadato[0].EsPesajeParcial ===1? (
-          <Warning
+          <PesajeParcial
             placadato={placadato}
             editBoxValue={editBoxValue}
             row={row}
@@ -186,7 +182,7 @@ function Usuarios({
                 ariaHideApp={false}
                 style={customStyles}
               >
-                <Popupadd
+                <NuevoMaterial
                   material={material}
                   addarreglo={addarreglo}
                   setaddarreglo={setaddarreglo}
@@ -227,7 +223,7 @@ function Usuarios({
                           <CircularProgress />
                         </div>
                       ) : (
-                        <Material
+                        <Materiales
                           editOpen={editOpen}
                           seteditOpen={seteditOpen}
                           contaminacion={contaminacion}
@@ -286,7 +282,7 @@ function Usuarios({
                         <CircularProgress color="primary" />
                       </div>
                     ) : (
-                      <PlacaInfo listas={placadato} />
+                      <DetalleBoleta listas={placadato} />
                     )}
                   </Col>
                 </Row>
@@ -299,4 +295,4 @@ function Usuarios({
   );
 }
 
-export default Usuarios;
+export default Boleta;

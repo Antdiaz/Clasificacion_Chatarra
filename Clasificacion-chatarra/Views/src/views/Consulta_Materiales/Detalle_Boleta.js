@@ -1,11 +1,10 @@
 import React from 'react'
 import 'devextreme-react/text-area';
 import { Row, Col} from 'reactstrap';
-import { Link } from 'react-router-dom';
 
 
 
-const PlacaInfo= ({Valores, listas}) => {
+const DetalleBoleta= ({Valores, listas}) => {
     return (
       <div>
         {listas !==undefined && listas.map((lista) => (
@@ -90,4 +89,4 @@ const PlacaInfo= ({Valores, listas}) => {
     );
 }
 
-export default PlacaInfo
+export default DetalleBoleta

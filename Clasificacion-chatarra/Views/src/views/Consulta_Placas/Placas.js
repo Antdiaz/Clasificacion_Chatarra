@@ -2,7 +2,6 @@ import React from 'react'
 import 'devextreme-react/text-area';
 import { Row, Col} from 'reactstrap';
 import { Link } from 'react-router-dom';
-import { SettingsRemoteTwoTone } from '@material-ui/icons';
 
 
 

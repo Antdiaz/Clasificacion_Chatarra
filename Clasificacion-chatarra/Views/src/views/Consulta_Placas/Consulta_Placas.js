@@ -1,29 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import Form, { EmptyItem, Item } from 'devextreme-react/form';
-import SelectBox from 'devextreme-react/select-box';
 import 'devextreme-react/text-area';
 import {
   Row,
   Col,
-  Card,
-  CardText,
-  CardHeader,
-  CardBody,
-  CardTitle,
   Button,
   Input,
 } from 'reactstrap';
-import { config } from '../../utils/config';
-import {
-  callApi,
-  callKrakenApi,
-  showSweetAlert,
-  getCliente,
-  getSessionItem,
-} from '../../utils/utils';
-import Items from './Items';
-import create from 'zustand';
-import { Link } from 'react-router-dom';
+import Items from './Placas';
+
 
 function Consulta({ Valores, Datos, setDatos, Patio, editBoxValue, seteditBoxValue,filtropesaje,setfiltropesaje,showResults,setshowResults,status,setstatus,transporte,settransporte,poppesaje,setpoppesaje,setrow}) {
   const [Filtro, setFiltro] = useState(null);

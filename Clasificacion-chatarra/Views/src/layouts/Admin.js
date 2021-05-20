@@ -1,6 +1,6 @@
 import React from 'react';
 // react library for routing
-import { Route, Switch, Redirect } from 'react-router-dom';
+import { Route, Switch} from 'react-router-dom';
 // core components
 import AdminNavbar from 'components/Navbars/AdminNavbar.js';
 import AdminFooter from 'components/Footers/AdminFooter.js';
@@ -8,9 +8,7 @@ import Sidebar from 'components/Sidebar/Sidebar.js';
 import routes from 'routes.js';
 import { config } from '../utils/config';
 import { callApi, getSessionItem, setSessionData } from '../utils/utils';
-import Usuarios from 'views/Usuarios/Usuarios';
-import Material from 'views/Usuarios/Material';
-import Patio from 'views/Patio/Patio';
+import Boleta from 'views/Consulta_Materiales/Boleta_Pantalla';
 
 class Admin extends React.Component {
   constructor(props) {
@@ -249,7 +247,7 @@ class Admin extends React.Component {
                 toggleSidenav={this.toggleSidenav}
                 sidenavOpen={this.state.sidenavOpen}
               />
-              <Usuarios
+              <Boleta
                 warning={this.state.warning}
                 setwarning={this.setwarning}
                 Valores={this.state.Valores}

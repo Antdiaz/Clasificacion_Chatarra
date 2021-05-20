@@ -1,11 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Card,
-  CardText,
   CardHeader,
-  CardBody,
-  CardTitle,
-  Button,
   Row,
   Col,
   Container,
@@ -15,9 +10,6 @@ import {
   InputGroupText,
 } from 'reactstrap';
 import SelectBox from 'devextreme-react/select-box';
-import Form, { Item } from 'devextreme-react/form';
-import KitchenIcon from '@material-ui/icons/Kitchen';
-import LocalLaundryServiceIcon from '@material-ui/icons/LocalLaundryService';
 import dryer from '../../assets/img/dryer.png';
 import freezer from '../../assets/img/freezer.png';
 import heater from '../../assets/img/heater.png';
@@ -32,15 +24,12 @@ import bag from '../../assets/img/bag.png';
 import contenedors from '../../assets/img/contenedor.png';
 import {
   callApi,
-  callKrakenApi,
-  showSweetAlert,
-  getCliente,
   getSessionItem,
 } from '../../utils/utils';
 import { config } from '../../utils/config';
-import { string } from 'prop-types';
 
-const Popupadd = (props) => {
+
+const NuevoMaterial = (props) => {
   const [isNext, setIsNext] = useState(false);
   const [srefri, setsrefri] = useState(0);
   const [mrefri, setmrefri] = useState(0);
@@ -60,13 +49,11 @@ const Popupadd = (props) => {
   const [kilosr, setkilosr] = useState(0);
   const [porcentajer, setporcentajer] = useState(pesajeparcial===1 ? 100:0);
   const [observaciones, setobservaciones] = useState('Ninguna');
-  const [idmateriale, setidmateriale] = useState(0);
   const [pesajeparcial, setpesajeparcial] = useState(0);
   const ipadress = getSessionItem('Ipaddress');
   const NumbUsuario = getSessionItem('NumUsuario');
   const [idmaterialr, setidmaterialr] = useState(0);
   const [nombrematerialr, setnombrematerialr] = useState(0);
-  const [nombremateriale, setnombremateriale] = useState(0);
   const [subalmacen, setsubalmacen] = useState(0);
   const [nomsubalmacen, setnomsubalmacen] = useState(0);
   const [subalmacenes, setsubalmacenes] = useState(0);
@@ -1133,4 +1120,4 @@ const Popupadd = (props) => {
   );
 };
 
-export default Popupadd;
+export default NuevoMaterial;

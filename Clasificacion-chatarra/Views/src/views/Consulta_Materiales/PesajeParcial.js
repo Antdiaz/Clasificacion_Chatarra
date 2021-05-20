@@ -1,15 +1,11 @@
 import React from 'react';
 import {
   callApi,
-  callKrakenApi,
-  showSweetAlert,
-  getCliente,
   getSessionItem,
 } from '../../utils/utils';
 import { config } from '../../utils/config';
-import { Row } from 'reactstrap';
 
-function Warning(props) {
+function PesajeParcial(props) {
   const ipadress = getSessionItem('Ipaddress');
   const NumbUsuario = getSessionItem('NumUsuario');
     const handlepoppesaje = () => {
@@ -90,4 +86,4 @@ function Warning(props) {
   );
 }
 
-export default Warning;
+export default PesajeParcial;

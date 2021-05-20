@@ -2,18 +2,15 @@ import React, { useState, useEffect } from 'react';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import Paper from '@material-ui/core/Paper';
 import EditIcon from '@material-ui/icons/Edit';
-import { Card, CardText, CardHeader, CardBody, CardTitle, Button, Row, Col } from 'reactstrap';
 import { config } from '../../utils/config';
-import { callApi, callKrakenApi, getSessionItem } from '../../utils/utils';
-import Popup from './Popup';
+import { callApi, getSessionItem } from '../../utils/utils';
 import Modal from 'react-modal';
+import Material from './Clasificar_Material';
 
-function Material({
+function Materiales({
   handleClose,
   placadato,
   editBoxValue,
@@ -123,7 +120,7 @@ function Material({
             ariaHideApp={false}
             style={customStyles}
           >
-            <Popup
+            <Material
               row={row}
               seteditOpen={seteditOpen}
               editOpen={editOpen}
@@ -302,4 +299,4 @@ function Material({
   );
 }
 
-export default Material;
+export default Materiales;
