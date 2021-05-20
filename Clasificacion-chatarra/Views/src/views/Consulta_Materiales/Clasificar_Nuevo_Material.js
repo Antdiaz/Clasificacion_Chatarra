@@ -9,6 +9,8 @@ import {
   InputGroupAddon,
   InputGroupText,
 } from 'reactstrap';
+
+// imagenes de botes/Electrodomésticos
 import SelectBox from 'devextreme-react/select-box';
 import dryer from '../../assets/img/dryer.png';
 import freezer from '../../assets/img/freezer.png';
@@ -30,6 +32,7 @@ import { config } from '../../utils/config';
 
 
 const NuevoMaterial = (props) => {
+  // Valores que leen cantidades de botes y electrodomésticos
   const [isNext, setIsNext] = useState(false);
   const [srefri, setsrefri] = useState(0);
   const [mrefri, setmrefri] = useState(0);
@@ -42,6 +45,9 @@ const NuevoMaterial = (props) => {
   const [otros, setotros] = useState(0);
   const [costal, setcostal] = useState(0);
   const [saco, setsaco] = useState(0);
+
+    // Valores dinámicos locales al editar material
+
   const [contenedor, setcontenedor] = useState(0);
   const [cantidade, setcantidade] = useState(0);
   const [cantidadr, setcantidadr] = useState(0);
@@ -64,7 +70,7 @@ const NuevoMaterial = (props) => {
     +props.row.reduce((acc, val) => acc + val.PorcentajeMaterial, 0) + +porcentajer : 0;
 
 
-
+// Función para cambio a pesaje parcial
   const useCheckbox = (e) => {
     if (props.pesajeparcial === 1) {
       false;
@@ -75,9 +81,10 @@ const NuevoMaterial = (props) => {
     }
   };
 
-  const handlerazoncont = (event) => {
-    setrazoncont(event.value);
-  };
+  // Función que corre servicios antes del render cada que haya un cambio de material
+  // Servicio JSON 6 --> SP= AmpSch.AmpClaArticuloDatosSel <Consultar datos Material>
+  // Servicio JSON 7 --> SP= AmpSch.AmpClaSubAlmacenArticuloCmb <Consultar listado Subalmacenes>
+ 
 
   useEffect(() => {
     const urlKrakenService = `${config.KrakenService}/${24}/${37}`;
@@ -111,6 +118,7 @@ const NuevoMaterial = (props) => {
     };
 
     /* eslint-enable */
+    if(idmaterialr>0){
     callApi(urlKrakenService, 'POST', data6, (res) => {
       console.log(res.Result0);
     });
@@ -118,14 +126,13 @@ const NuevoMaterial = (props) => {
     callApi(urlKrakenService, 'POST', data7, (res) => {
       setsubalmacenes(res.Result0);
     });
+  }
   }, [idmaterialr]);
 
-  useEffect(() => {
+
+  // Función que corre servicios antes del render para obtener Referencia cada que cambia el Material/subalmacen
+  // Servicio JSON 8 --> SP= AmpSch.AmpClaSubAlmacenDatosSel <Consultar datos subalmacen>
   
-    if(subalmacenes.length===1){
-      setsubalmacen(subalmacenes[0].ClaSubAlmacenCompra)
-    }
-  }, [subalmacenes])
 
   useEffect(() => {
     const urlKrakenService = `${config.KrakenService}/${24}/${37}`;
@@ -149,22 +156,31 @@ const NuevoMaterial = (props) => {
       tipoEstructura: 0,
     };
     /* eslint-enable */
-    if (subalmacen > 0) {
+    if (subalmacen > 0 && nomsubalmacen) {
       callApi(urlKrakenService, 'POST', data8, (res) => {
         setReferencia(res.Result0[0].ClaReferenciaCompra);
       });
     }
-  }, [nomsubalmacen]);
+  }, [nomsubalmacen,subalmacen,subalmacenes]);
 
+
+  // Función que pone valor determinado de subalmacén si es único
+
+  useEffect(() => {
+    if (subalmacenes.length === 1) {
+      setsubalmacen(subalmacenes[0].ClaSubAlmacenCompra);
+      setnomsubalmacen(subalmacenes[0].NomSubAlmacenCompra)
+    }
+  }, [subalmacenes]);
+
+  // Función para cambio de material en el wizard
   const onValueChangedr = (e) => {
     setidmaterialr(e.value);
     setsubalmacen(0)
     setnombrematerialr(e.component.option('text').split('-').pop());
   };
 
-  const handlekiloscont = (e) => {
-    setkiloscont(e.target.value);
-  };
+ // Operaciones para obtener los kilos de botes/electrodomésticos
 
   const electrodomestico =
     50 * srefri +
@@ -180,8 +196,15 @@ const NuevoMaterial = (props) => {
 
   const kilosbotes = botes + electrodomestico;
 
+
+  // Funciones para obtener las cantidades/opciones individuales que el usuario ingrese
+
   const handlecantidadr = (event) => {
     setcantidadr(event.target.value);
+  };
+
+  const handlerazoncont = (event) => {
+    setrazoncont(event.value);
   };
 
   const handlekilosr = (event) => {
@@ -190,6 +213,10 @@ const NuevoMaterial = (props) => {
 
   const handleobservaciones = (event) => {
     setobservaciones(event.target.value);
+  };
+
+  const handlekiloscont = (e) => {
+    setkiloscont(e.target.value);
   };
 
   const handleporcentaje = (event) => {
@@ -210,6 +237,8 @@ const NuevoMaterial = (props) => {
     setsubalmacen(event.value);
     setnomsubalmacen(event.component.option('text'));
   };
+
+  // Funciones para sumar/restar las cantidades de botes/electrodomésticos con límite de 50 piezas
 
   const handleSum1 = () => {
     if (srefri < 50) {
@@ -349,11 +378,17 @@ const NuevoMaterial = (props) => {
     setIsNext(!isNext);
   };
 
+  // Función para cambiar del paso 1 (Clasificación de Material) & paso 2 (Contaminación)
+
   const handleBack = () => {
     props.setpoppesaje(true);
     props.setmodaladdOpen(false);
   };
 
+   // Función que guarda los cambios efectuados en el material
+  // Servicio JSON 11 --> SP= BasSch.BasGuardarClasEntCompraMatPrimaProc <Guarda clasificación>
+ // Servicio JSON 12 --> SP= BasSch.BasRegistraMaterialClasEntCompraMatPrimaProc <Registra material a clasificar>
+  
   const handleSubmit = () => {
     props.setpoppesaje(true);
     const urlKrakenService = `${config.KrakenService}/${24}/${37}`;
@@ -436,8 +471,9 @@ const NuevoMaterial = (props) => {
     props.setrow(null)
     props.setpesajeparcial(pesajeparcial);
     props.setmodaladdOpen(false);
-    props.setpoppesaje(true);
   };
+
+  // Componente de botes y electrodomésticos para el respectivo material
 
   function Botes() {
     return (
@@ -771,6 +807,8 @@ const NuevoMaterial = (props) => {
       </div>
     );
   }
+
+   // Componente final de Wizard para editar material
 
   return (
     <div>

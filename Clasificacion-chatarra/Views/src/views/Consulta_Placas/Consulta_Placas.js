@@ -10,24 +10,28 @@ import Items from './Placas';
 
 
 function Consulta({ Valores, Datos, setDatos,filtropesaje,setfiltropesaje,showResults,setshowResults,status,setstatus,transporte,settransporte,setpoppesaje,setrow}) {
+ // Valor usado para el input de filtrado
   const [Filtro, setFiltro] = useState(null);
 
+// Función para filtrado de Placas con Pesaje Parcial
   const useCheckbox = (e) => {
     setfiltropesaje(e.target.checked)
     setDatos('')
   }
-
+// Función para input de filtrado
   const handleChange = (event) => {
     event.preventDefault();
     setFiltro(event.target.value);
   };
 
+  // Función para filtrado de Tipo de Transporte
   const handleinputt = (event) => {
     event.preventDefault();
     settransporte(event.target.value);
     setDatos('')
   };
 
+  // Función para filtrado de Tipo de Status
   const handleinputs = (event) => {
     event.preventDefault();
     setstatus(event.target.value);
@@ -38,6 +42,8 @@ function Consulta({ Valores, Datos, setDatos,filtropesaje,setfiltropesaje,showRe
     setshowResults(!showResults);
   };
 
+
+// Función para Filtrado que se agregó al input
   const handleSearch = (e) => {
     e.preventDefault();
 
@@ -52,6 +58,7 @@ function Consulta({ Valores, Datos, setDatos,filtropesaje,setfiltropesaje,showRe
     <div style={{ minHeight: '450px' }}>
       <Row>
         <Col className="input-show" style={{ position: 'absolute' }}>
+          {/* Símbolo ">" cuando no se muestran los filtros */}
           {!showResults && (
             <div className="extra-tab">
               <i className="fas fa-angle-down fa-2x" onClick={handleShow}></i>
@@ -60,6 +67,7 @@ function Consulta({ Valores, Datos, setDatos,filtropesaje,setfiltropesaje,showRe
         </Col>
       </Row>
       <Col className="input-parcial">
+        {/* Filtro de Pesaje Parcial */}
         <form>
           <input
             type="checkbox"
@@ -79,6 +87,7 @@ function Consulta({ Valores, Datos, setDatos,filtropesaje,setfiltropesaje,showRe
         </Col>
         <Col className="input-bar" md={{ size: 4, offset: 0 }}>
           <div className="popup-materiales">
+            {/* Input para filtrar por lo que el usuario escriba */}
             <Input
               onChange={handleChange}
               type="text"
@@ -90,6 +99,7 @@ function Consulta({ Valores, Datos, setDatos,filtropesaje,setfiltropesaje,showRe
         </Col>
         <Col className="input-search" md={{ size: 1, offset: 0 }}>
           <div id="formularioTickets">
+            {/* Botón para hacer el filtrado */}
             <Button
               onClick={handleSearch}
               className="animation-on-hover float-right"
@@ -100,6 +110,7 @@ function Consulta({ Valores, Datos, setDatos,filtropesaje,setfiltropesaje,showRe
           </div>
         </Col>
       </Row>
+      {/* Filtros de tipo de tranporte y status */}
       {showResults && (
         <Row className="extra-filter">
           <Col md={{ size: 0, offset: 3 }}>
@@ -142,7 +153,7 @@ function Consulta({ Valores, Datos, setDatos,filtropesaje,setfiltropesaje,showRe
           </Col>
         </Row>
       )}
-
+      {/* Placas de la Ubicación afectado por los filtros */}
       {Valores && (
         <Items
           setrow={setrow}

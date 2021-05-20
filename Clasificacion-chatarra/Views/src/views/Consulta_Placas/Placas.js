@@ -4,7 +4,7 @@ import { Row, Col} from 'reactstrap';
 import { Link } from 'react-router-dom';
 
 
-
+// Cascaron del mapeo de elementos
 const Items= ({listas,setpoppesaje,setrow}) => {
     return (
       <div>

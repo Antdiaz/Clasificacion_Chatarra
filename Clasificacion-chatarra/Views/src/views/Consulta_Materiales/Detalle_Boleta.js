@@ -3,7 +3,7 @@ import 'devextreme-react/text-area';
 import { Row, Col} from 'reactstrap';
 
 
-
+// Elemento Cascaron para detalle de la placa
 const DetalleBoleta= ({listas}) => {
     return (
       <div>

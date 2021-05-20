@@ -17,7 +17,7 @@ import {
 } from 'reactstrap';
 import AuthHeader from 'components/Headers/AuthHeader';
 import { config } from '../../utils/config';
-import AdminLayout from '../../layouts/Admin';
+import AdminLayout from '../../layouts/Controller';
 
 import {
   setSessionData,
@@ -46,7 +46,7 @@ class Patio extends React.Component {
 
   setLugaradd = (Val) => this.setState(() => ({ Lugaradd: Val }));
 
-  
+  // Función para Selección de patio al enter
   handleSubmit = (e) => {
     e.preventDefault();
     this.setLugaradd(true)
@@ -55,11 +55,14 @@ class Patio extends React.Component {
     });
   }
 
+  // Función para leer patio seleccionado
   onValueChanged = (e) => {
     this.setLugarsesion(e.target.value)
 
   }
 
+  // Función para correr los servicios antes del render
+  // Servicios utilizados 35 -> Datos Usuario  36 -> Patios por Usuario
   async componentDidMount() {
     document.body.classList.add('bg-default');
     const urlKrakenPlanta = `${config.KrakenService}/${24}/${36}`;
@@ -129,6 +132,7 @@ class Patio extends React.Component {
                       <div className="mb-2">
                         <span className="kar-label">Seleccionar Ubicación</span>
                       </div>
+                      {/* Cuadro de selección de Ubicación */}
                       <InputGroup className="input-group-merge input-group-alternative">
                         <InputGroupAddon addonType="prepend">
                           <InputGroupText className="kar-input-login"></InputGroupText>

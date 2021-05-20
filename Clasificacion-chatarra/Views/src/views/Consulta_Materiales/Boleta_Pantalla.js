@@ -7,9 +7,13 @@ import TableContainer from '@material-ui/core/TableContainer';
 import Paper from '@material-ui/core/Paper';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Modal from 'react-modal';
+// Wizard nuevo material
 import NuevoMaterial from './Clasificar_Nuevo_Material';
+// Mensaje pesaje parcial
 import PesajeParcial from './PesajeParcial';
+// Listado Clasificación material
 import Materiales from './Materiales';
+// Detalle de Boleta
 import DetalleBoleta from './Detalle_Boleta';
 
 function Boleta({
@@ -22,14 +26,6 @@ function Boleta({
   setcantidadr,
   setkilosr,
   setobservaciones,
-  setalmacen,
-  setsubalmacen,
-  materialr,
-  cantidadr,
-  kilosr,
-  observaciones,
-  almacen,
-  subalmacen,
   kiloscont,
   setkiloscont,
   pesajeparcial,
@@ -39,13 +35,17 @@ function Boleta({
   warning,
   setwarning,
 }) {
+   // Valores obtenidos de URL de detalle de boleta
   const { placa, id } = useParams();
+   // Valores de servicio sobre información de boleta
   const [placadato, setplacadato] = useState(0);
+  // Valor que lee cuando se abre wizard de agregar Material
   const [modaladdOpen, setmodaladdOpen] = useState(false);
-  const [addarreglo, setaddarreglo] = useState(0);
+  // Listado de servicio de Razón de Contaminación
   const [contaminacion, setcontaminacion] = useState();
+  // Valor que lee cuando se abre wizard de editar Material
   const [editOpen, seteditOpen] = useState(true);
-
+ // Estilo de pop up/ wizard
   const customStyles = {
     content: {
       background: 'rgba(128, 128, 128, 0.212)',
@@ -56,6 +56,8 @@ function Boleta({
   };
 
   useEffect(() => {
+    // Servicio JSON 2 --> SP= AmpSch.AmpClaConsultaVehiculoAClasificarSel <Consultar datos placa>
+    // El timeout es para darle tiempo de respuesta
     setTimeout(()=>{
     const urlKrakenVal = `${config.KrakenService}/${24}/${37}`;
 
@@ -78,6 +80,7 @@ function Boleta({
       setplacadato(res.Result0);
     });
 
+    // Servicio JSON 10 --> SP= AmpSch.AmpClaMotivoContaminacionCmb <Consultar motivo Contaminacion>
     /* eslint-disable */
     const data10 = {
       parameters:
@@ -95,11 +98,14 @@ function Boleta({
       setcontaminacion(res.Result0);
     });
   },1000)
-  }, [!modaladdOpen,!editOpen]);
+  }, [poppesaje,!editOpen]);
   return (
     <>
       <div className="content" style={{ marginTop: '20px' }}>
-        {poppesaje && placadato && placadato[0].EsPesajeParcial ===1? (
+
+        {/* Pop up mensaje si material es pesaje parcial */} 
+
+        {placadato && poppesaje && placadato && placadato[0].EsPesajeParcial ===1? (
           <PesajeParcial
             placadato={placadato}
             editBoxValue={editBoxValue}
@@ -110,6 +116,9 @@ function Boleta({
             pesajeparcial={pesajeparcial}
           />
         ) : null}
+
+        {/* Sección Imagenes */} 
+
         <Row style={{ alignItems: 'center', justifyContent: 'center' }}>
           <Card className="placa-imagenes">
             <CardHeader>
@@ -171,6 +180,9 @@ function Boleta({
         <Row>
           <Col>
             <Card>
+
+              {/* Pop up para clasificar un nuevo material */} 
+
               <Modal
                 isOpen={modaladdOpen}
                 onClose={() => setmodaladdOpen(true)}
@@ -210,6 +222,9 @@ function Boleta({
                 <Row>
                   <Col md={{ size: 12, offset: 0 }}>
                     <TableContainer component={Paper}>
+
+                      {/* Sección de Clasificación de materiales */} 
+
                       {!placadato ? (
                         <div style={{ textAlign: 'center', paddingTop: '40px' }}>
                           <CircularProgress />
@@ -259,6 +274,9 @@ function Boleta({
               <CardBody>
                 <Row>
                   <Col md={{ size: 12, offset: 0 }}>
+
+                    {/* Sección de detalles de la boleta/placa */} 
+
                     {!placadato ? (
                       <div
                         style={{ textAlign: 'center', paddingTop: '40px', marginBottom: '40px' }}

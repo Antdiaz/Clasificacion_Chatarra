@@ -8,6 +8,7 @@ import EditIcon from '@material-ui/icons/Edit';
 import { config } from '../../utils/config';
 import { callApi, getSessionItem } from '../../utils/utils';
 import Modal from 'react-modal';
+// Wizard editar material
 import Material from './Clasificar_Material';
 
 function Materiales({
@@ -40,7 +41,11 @@ function Materiales({
   const ipadress = getSessionItem('Ipaddress');
 
   function List({ ro, index, editOpen, seteditOpen }) {
+    // Valor de elemento individual al querer editar material
+
     const [modaledit, setmodaledit] = useState(false);
+
+    // Estilo de pop up/ wizard para agregar material
     const customStyles = {
       content: {
         background: 'rgba(128, 128, 128, 0.212)',
@@ -50,6 +55,7 @@ function Materiales({
       },
     };
 
+    // Componente cascarón de cada material mostrado
     return (
       <>
         {ro.ClaArticuloPreReg ? <span className="pre-registro">Pre-registro</span> : null}
@@ -101,7 +107,7 @@ function Materiales({
               <EditIcon style={{ color: ro.EsPesajeParcial ? 'grey':'#ff6a00' , cursor: 'pointer' }} />
             </div>
           </TableCell>
-
+          {/* Pop up para editar un material */} 
           <Modal
             isOpen={modaledit}
             onClose={() => modaledit(true)}
@@ -138,6 +144,8 @@ function Materiales({
     );
   }
 
+  // Función que corre servicios antes del render cada que haya un cambio de material
+  // Servicio JSON 5 --> SP= AmpSch.AmpClaArticulosdeProvSel <Consultar Materiales>
   useEffect(() => {
     const urlKrakenService = `${config.KrakenService}/${24}/${37}`;
 
@@ -165,6 +173,9 @@ function Materiales({
     });
   }, []);
 
+
+    // Función que corre servicios antes del render cada que haya un cambio de material y cada que se cierra un wizard
+  // Servicio JSON 3 --> SP= AmpSch.AmpClaConsultaVehiculoMaterialClasificacionSel <Consultar Materiales Clasificados>
   useEffect(() => {
     const timeout = setTimeout(() => {
       const urlKrakenService = `${config.KrakenService}/${24}/${37}`;
@@ -196,10 +207,15 @@ function Materiales({
     }, 1500);
   }, [!modaladdOpen, !editOpen,!poppesaje]);
 
+
+   // Función que corre servicios antes del render cada que haya un material, solo si el porcentaje total es 100% o si se maneja por cantidad
+  // Servicio JSON 13 --> SP=BasSch.BasValidacionClasEntCompraMatPrimaProc <Valida clasificación>
+  
   useEffect(() => {
     if (row) {
       const PorcentajeSum = row.reduce((acc, val) => acc + val.PorcentajeMaterial, 0);
-      if (PorcentajeSum !== null && PorcentajeSum === 100) {
+      const CantidadSum= row.reduce((acc, val) => acc + val.CantidadMaterial, 0);
+      if ((PorcentajeSum !== null && PorcentajeSum === 100) || (PorcentajeSum === 0 && CantidadSum>0)) {
         const urlKrakenService = `${config.KrakenService}/${24}/${37}`;
         /* eslint-disable */
         const data13 = {
@@ -230,6 +246,7 @@ function Materiales({
     }
   }, [row]);
 
+   // Componente de sección de materiales con sus headers
   function Clasificacion() {
     return (
       <div>
@@ -265,6 +282,7 @@ function Materiales({
     );
   }
 
+   // Componente visual final
   return (
     <div>
       <Clasificacion />

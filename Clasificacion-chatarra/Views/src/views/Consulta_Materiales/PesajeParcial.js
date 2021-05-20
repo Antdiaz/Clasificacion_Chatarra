@@ -5,6 +5,7 @@ import {
 } from '../../utils/utils';
 import { config } from '../../utils/config';
 
+// Elemento pop up de Proceso de pesaje parcial
 function PesajeParcial(props) {
   const ipadress = getSessionItem('Ipaddress');
   const NumbUsuario = getSessionItem('NumUsuario');
@@ -12,11 +13,13 @@ function PesajeParcial(props) {
     props.setpoppesaje(!props.poppesaje)
     }
 
+// Función para cancelar proceso de pesaje parcial
+ // Función que elimina material que el usuario desee (Se usa el parámetro de AccionSP = 3 para eliminar)
+  // Servicio JSON 12 --> SP= BasSch.BasRegistraMaterialClasEntCompraMatPrimaProc <Registra material a clasificar>
     const handlecancel = () => {
 
       const urlKrakenService = `${config.KrakenService}/${24}/${37}`;
       props.row && props.row.forEach((ro)=>{
-        console.log(ro)
         /* eslint-disable */
         const data12 = {
           parameters:
@@ -76,6 +79,8 @@ function PesajeParcial(props) {
       props.setpesajeparcial(0)
       props.setpoppesaje(!props.poppesaje)
       }
+
+  // Elemento pop up visual
   return (
     <div className="Warning">
       <div className="warning-container">

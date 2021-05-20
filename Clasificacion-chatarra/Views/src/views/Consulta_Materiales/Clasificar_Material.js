@@ -15,6 +15,8 @@ import {
 } from '../../utils/utils';
 import { config } from '../../utils/config';
 import SelectBox from 'devextreme-react/select-box';
+
+ // imagenes de botes/Electrodomésticos
 import dryer from '../../assets/img/dryer.png';
 import freezer from '../../assets/img/freezer.png';
 import heater from '../../assets/img/heater.png';
@@ -29,6 +31,8 @@ import bag from '../../assets/img/bag.png';
 import contenedors from '../../assets/img/contenedor.png';
 
 const Material = (props) => {
+
+  // Valores que leen cantidades de botes y electrodomésticos
   const [isNext, setIsNext] = useState(false);
   const [srefri, setsrefri] = useState(0);
   const [mrefri, setmrefri] = useState(0);
@@ -42,9 +46,9 @@ const Material = (props) => {
   const [costal, setcostal] = useState(0);
   const [saco, setsaco] = useState(0);
   const [contenedor, setcontenedor] = useState(0);
-  const [cantidad, setcantidad] = useState(
-    props.ro.CantidadMaterial ? props.ro.CantidadMaterial : 0
-  );
+
+  // Valores dinámicos locales al editar material
+  const [cantidad, setcantidad] = useState(props.ro.CantidadMaterial ? props.ro.CantidadMaterial : 0 );
   const [Referencia, setReferencia] = useState(0);
   const [kilos, setkilos] = useState(props.ro.KilosReales ? props.ro.KilosReales : 0);
   const [observaciones, setobservaciones] = useState(null);
@@ -66,7 +70,10 @@ const Material = (props) => {
   const [contaminaciones, setcontaminaciones] = useState(props.contaminacion)
   const disabled=true;
 
-  
+
+  // Función que corre servicios antes del render cada que haya un cambio de material
+  // Servicio JSON 6 --> SP= AmpSch.AmpClaArticuloDatosSel <Consultar datos Material>
+  // Servicio JSON 7 --> SP= AmpSch.AmpClaSubAlmacenArticuloCmb <Consultar listado Subalmacenes>
   useEffect(() => {
     const urlKrakenService = `${config.KrakenService}/${24}/${37}`;
     /* eslint-disable */
@@ -107,12 +114,15 @@ const Material = (props) => {
     });
   }, [idmaterial]);
 
+
+// Función para cambio de material en el wizard
   const onValueChanged = (e) => {
     setidmaterial(e.value);
     setsubalmacen(0);
     setnombrematerial(e.component.option('text').split('-').pop());
   };
 
+  // Función para cambio a pesaje parcial
   const useCheckbox = (e) => {
     if (props.ro.EsPesajeParcial === 1) {
       false;
@@ -123,6 +133,7 @@ const Material = (props) => {
     }
   };
 
+// Operaciones para obtener los kilos de botes/electrodomésticos
   const electrodomestico =
     50 * srefri +
     100 * mrefri +
@@ -137,6 +148,7 @@ const Material = (props) => {
 
   const kilosbotes = botes + electrodomestico;
 
+// Funciones para obtener las cantidades/opciones individuales que el usuario ingrese
   const handlecantidad = (event) => {
     setcantidad(event.target.value);
   };
@@ -169,6 +181,8 @@ const Material = (props) => {
     setsubalmacen(event.value);
     setnomsubalmacen(event.component.option('text'));
   };
+
+// Funciones para sumar/restar las cantidades de botes/electrodomésticos con límite de 50 piezas
 
   const handleSum1 = () => {
     if (srefri < 50) {
@@ -308,6 +322,11 @@ const Material = (props) => {
     setIsNext(!isNext);
   };
 
+
+   // Función que corre servicios antes del render para obtener Referencia cada que cambia el Material/subalmacen
+  // Servicio JSON 8 --> SP= AmpSch.AmpClaSubAlmacenDatosSel <Consultar datos subalmacen>
+  
+
   useEffect(() => {
     const urlKrakenService = `${config.KrakenService}/${24}/${37}`;
 
@@ -330,18 +349,24 @@ const Material = (props) => {
       tipoEstructura: 0,
     };
     /* eslint-enable */
+    
     if (subalmacen > 0) {
       callApi(urlKrakenService, 'POST', data8, (res) => {
         setReferencia(res.Result0[0].ClaReferenciaCompra);
       });
     }
-  }, [nomsubalmacen]);
+  }, [nomsubalmacen,subalmacen,subalmacenes]);
 
+  // Función que pone valor determinado de subalmacén si es único
+ 
   useEffect(() => {
     if (subalmacenes.length === 1) {
       setsubalmacen(subalmacenes[0].ClaSubAlmacenCompra);
     }
   }, [subalmacenes]);
+
+  // Función que elimina material que el usuario desee (Se usa el parámetro de AccionSP = 3 para eliminar)
+  // Servicio JSON 12 --> SP= BasSch.BasRegistraMaterialClasEntCompraMatPrimaProc <Registra material a clasificar>
 
   const handledelete = () => {
     const urlKrakenService = `${config.KrakenService}/${24}/${37}`;
@@ -387,7 +412,6 @@ const Material = (props) => {
         ',@pnClaTipoOrdenCompra=,@pnClaOrdenCompra=,@pnClaUbicacionProveedor=' +
         props.placadato[0].ClaUbicacionProveedor +
         ',@psClaReferenciaCompra=' +
-        '' +
         props.ro.ClaReferenciaCompra +
         ',@pnIdRenglon=' +
         props.ro.IdRenglon +
@@ -408,6 +432,11 @@ const Material = (props) => {
     props.setmodaledit(false);
     props.seteditOpen(false);
   };
+
+  // Función que guarda los cambios efectuados en el material
+  // Servicio JSON 11 --> SP= BasSch.BasGuardarClasEntCompraMatPrimaProc <Guarda clasificación>
+ // Servicio JSON 12 --> SP= BasSch.BasRegistraMaterialClasEntCompraMatPrimaProc <Registra material a clasificar>
+  
 
   const handleClose = () => {
     props.setpoppesaje(true);
@@ -450,17 +479,17 @@ const Material = (props) => {
         ',@pnClaArticuloCompra=' +
         (props.ro.ClaArticuloCompra ? props.ro.ClaArticuloCompra : idmaterial) +
         ',@pnCantidadMaterial=' +
-        (props.ro.CantidadMaterial ? props.ro.CantidadMaterial : cantidad) +
+        (cantidad < 0 ? 0 : cantidad) +
         ',@pnKilosMaterial=' +
-        (props.ro.KilosMaterial ? props.ro.KilosMaterial : 0) +
+        kilos  +
         ',@pnKilosReales=' +
-        kilos +
+        (props.ro.KilosReales ? props.ro.KilosReales : 0) +
         ',@pnKilosContaminados=' +
         kiloscont +
         ',@pnKilosDocumentados=' +
         (props.ro.KilosDocumentados ? props.ro.KilosDocumentados : 0) +
         ',@pnPorcentajeMaterial=' +
-        porcentajer +
+        (porcentajer<0 ? 0 : porcentajer) +
         ',@pnEsPesajeParcial=' +
         (props.ro.EsPesajeParcial ? props.ro.EsPesajeParcial : pesajeparcial) +
         ',@pnClaAlmacen=' +
@@ -478,7 +507,7 @@ const Material = (props) => {
         ',@pnClaTipoOrdenCompra=,@pnClaOrdenCompra=,@pnClaUbicacionProveedor=' +
         props.placadato[0].ClaUbicacionProveedor +
         ',@psClaReferenciaCompra=' +
-        (props.ro.ClaReferenciaCompra ? props.ro.ClaReferenciaCompra : Referencia) +
+         Referencia +
         ',@pnIdRenglon=' +
         (props.ro.IdRenglon ? props.ro.IdRenglon : 1) +
         ',@pnClaArticuloPreReg='+ (props.ro.ClaArticuloPreReg ? props.ro.ClaArticuloPreReg : '') + 
@@ -503,11 +532,13 @@ const Material = (props) => {
     props.setmodaledit(false);
   };
 
+  // Función para cambiar del paso 1 (Clasificación de Material) & paso 2 (Contaminación)
   const handleBack = () => {
     props.setpoppesaje(true);
     props.setmodaledit(false);
   };
 
+  // Componente de botes y electrodomésticos para el respectivo material
   function Botes() {
     return (
       <div className="box">
@@ -841,6 +872,7 @@ const Material = (props) => {
     );
   }
 
+  // Componente final de Wizard para editar material
   return (
     <div>
       {!isNext ? (
@@ -905,7 +937,7 @@ const Material = (props) => {
                       onChange={handlecantidad}
                       value={pesajeparcial === 1 || props.ro.EsPesajeParcial === 1 ? '' : cantidad}
                       disabled={
-                        pesajeparcial === 1 || props.ro.EsPesajeParcial === 1 
+                        pesajeparcial === 1 || props.ro.EsPesajeParcial === 1 || porcentajer>0
                       }
                       type="number"
                     />
@@ -954,7 +986,7 @@ const Material = (props) => {
                           pesajeparcial === 1 || props.ro.EsPesajeParcial === 1 ? 100 : porcentajer
                         }
                         disabled={
-                          pesajeparcial === 1 || (props.ro.EsPesajeParcial === 1 )
+                          pesajeparcial === 1 || (props.ro.EsPesajeParcial === 1 ) || cantidad>0
                         }
                         type="number"
                       />
