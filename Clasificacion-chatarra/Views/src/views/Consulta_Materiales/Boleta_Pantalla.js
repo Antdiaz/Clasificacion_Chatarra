@@ -39,12 +39,7 @@ function Boleta({
   warning,
   setwarning,
 }) {
-  const delay = 5;
   const { placa, id } = useParams();
-  const [show, setShow] = useState(false);
-  const buttonOptions = {
-    text: 'Siguiente \u2192',
-  };
   const [placadato, setplacadato] = useState(0);
   const [modaladdOpen, setmodaladdOpen] = useState(false);
   const [addarreglo, setaddarreglo] = useState(0);
@@ -61,7 +56,7 @@ function Boleta({
   };
 
   useEffect(() => {
-    const timeout = setTimeout(()=>{
+    setTimeout(()=>{
     const urlKrakenVal = `${config.KrakenService}/${24}/${37}`;
 
     /* eslint-disable */
@@ -184,8 +179,6 @@ function Boleta({
               >
                 <NuevoMaterial
                   material={material}
-                  addarreglo={addarreglo}
-                  setaddarreglo={setaddarreglo}
                   modaladdOpen={modaladdOpen}
                   setmodaladdOpen={setmodaladdOpen}
                   pesajeparcial={pesajeparcial}
@@ -193,7 +186,6 @@ function Boleta({
                   editBoxValue={editBoxValue}
                   placadato={placadato}
                   setplacadato={setplacadato}
-                  poppesaje={poppesaje}
                   setpoppesaje={setpoppesaje}
                   contaminacion={contaminacion}
                   row={row}
@@ -238,14 +230,6 @@ function Boleta({
                           setcantidadr={setcantidadr}
                           setkilosr={setkilosr}
                           setobservaciones={setobservaciones}
-                          setalmacen={setalmacen}
-                          setsubalmacen={setsubalmacen}
-                          materialr={materialr}
-                          cantidadr={cantidadr}
-                          kilosr={kilosr}
-                          observaciones={observaciones}
-                          almacen={almacen}
-                          subalmacen={subalmacen}
                           kiloscont={kiloscont}
                           setkiloscont={setkiloscont}
                           pesajeparcial={pesajeparcial}

@@ -11,7 +11,6 @@ import Modal from 'react-modal';
 import Material from './Clasificar_Material';
 
 function Materiales({
-  handleClose,
   placadato,
   editBoxValue,
   id,
@@ -19,19 +18,11 @@ function Materiales({
   setrow,
   material,
   setmaterial,
-  isOpen,
   setmaterialr,
   setcantidadr,
   setkilosr,
   setobservaciones,
-  setalmacen,
-  setsubalmacen,
-  materialr,
-  cantidadr,
-  kilosr,
   observaciones,
-  almacen,
-  subalmacen,
   setkiloscont,
   kiloscont,
   pesajeparcial,
@@ -45,9 +36,6 @@ function Materiales({
   editOpen,
   seteditOpen,
 }) {
-  const [claordencompra, setclaordencompra] = useState();
-  const [idacuerdo, setidacuerdo] = useState();
-  const [idpedidoimportacion, setidpedidoimportacion] = useState();
   const NumbUsuario = getSessionItem('NumUsuario');
   const ipadress = getSessionItem('Ipaddress');
 
@@ -151,21 +139,6 @@ function Materiales({
   }
 
   useEffect(() => {
-    /* eslint-disable */
-
-    if (placadato[0].ClaOrdenCompra != null && placadato[0].ClaOrdenCompra > 0) {
-      setclaordencompra = ',"ClaOrdenCompra":' + placadato[0].ClaOrdenCompra;
-    }
-
-    if (placadato[0].IdAcuerdo != null && placadato[0].IdAcuerdo > 0) {
-      setidacuerdo = ',"IdAcuerdo":' + placadato[0].IdAcuerdo;
-    }
-
-    if (placadato[0].IdPedidoImportacion != null && placadato[0].IdPedidoImportacion > 0) {
-      setidpedidoimportacion = ',"IdPedidoImportacion":' + placadato[0].IdPedidoImportacion;
-    }
-
-    /* eslint-enable */
     const urlKrakenService = `${config.KrakenService}/${24}/${37}`;
 
     /* eslint-disable */

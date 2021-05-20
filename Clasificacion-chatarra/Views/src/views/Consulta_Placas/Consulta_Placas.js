@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState} from 'react';
 import 'devextreme-react/text-area';
 import {
   Row,
@@ -9,7 +9,7 @@ import {
 import Items from './Placas';
 
 
-function Consulta({ Valores, Datos, setDatos, Patio, editBoxValue, seteditBoxValue,filtropesaje,setfiltropesaje,showResults,setshowResults,status,setstatus,transporte,settransporte,poppesaje,setpoppesaje,setrow}) {
+function Consulta({ Valores, Datos, setDatos,filtropesaje,setfiltropesaje,showResults,setshowResults,status,setstatus,transporte,settransporte,setpoppesaje,setrow}) {
   const [Filtro, setFiltro] = useState(null);
 
   const useCheckbox = (e) => {

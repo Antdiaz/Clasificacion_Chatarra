@@ -4,7 +4,7 @@ import { Row, Col} from 'reactstrap';
 
 
 
-const DetalleBoleta= ({Valores, listas}) => {
+const DetalleBoleta= ({listas}) => {
     return (
       <div>
         {listas !==undefined && listas.map((lista) => (

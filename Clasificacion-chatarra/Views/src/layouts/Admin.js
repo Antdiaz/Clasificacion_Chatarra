@@ -161,13 +161,10 @@ class Admin extends React.Component {
                   Valores={this.state.Valores}
                   Datos={this.state.Datos}
                   setDatos={this.setDatos}
-                  Usuario={this.state.Usuario}
-                  editBoxValue={this.state.editBoxValue}
                   row={this.state.row}
                   setrow={this.setrow}
                   material={this.state.material}
                   setmaterial={this.setmaterial}
-                  Patio={this.state.Patio}
                   filtropesaje={this.state.filtropesaje}
                   setfiltropesaje={this.setfiltropesaje}
                   showResults={this.state.showResults}
@@ -176,7 +173,6 @@ class Admin extends React.Component {
                   settransporte={this.settransporte}
                   status={this.state.status}
                   setstatus={this.setstatus}
-                  poppesaje={this.state.poppesaje}
                   setpoppesaje={this.setpoppesaje}
                 />
               )}
@@ -250,7 +246,6 @@ class Admin extends React.Component {
               <Boleta
                 warning={this.state.warning}
                 setwarning={this.setwarning}
-                Valores={this.state.Valores}
                 editBoxValue={this.state.editBoxValue}
                 row={this.state.row}
                 setrow={this.setrow}
@@ -268,7 +263,6 @@ class Admin extends React.Component {
                 setobservaciones={this.setobservaciones}
                 setalmacen={this.setalmacen}
                 setsubalmacen={this.setsubalmacen}
-                Patio={this.state.Patio}
                 kiloscont={this.state.kiloscont}
                 setkiloscont={this.setkiloscont}
                 pesajeparcial={this.state.pesajeparcial}
