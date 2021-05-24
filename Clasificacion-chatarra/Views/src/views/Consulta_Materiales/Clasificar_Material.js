@@ -69,8 +69,12 @@ const Material = (props) => {
   const [materiales, setmateriales] = useState(props.material);
   const [contaminaciones, setcontaminaciones] = useState(props.contaminacion)
   const disabled=true;
+  const [Datosmaterial, setDatosmaterial] = useState(0)
 
 
+  console.log(porcentajer)
+  console.log(kilos)
+  console.log(cantidad)
   // Función que corre servicios antes del render cada que haya un cambio de material
   // Servicio JSON 6 --> SP= AmpSch.AmpClaArticuloDatosSel <Consultar datos Material>
   // Servicio JSON 7 --> SP= AmpSch.AmpClaSubAlmacenArticuloCmb <Consultar listado Subalmacenes>
@@ -105,14 +109,15 @@ const Material = (props) => {
     };
 
     /* eslint-enable */
+    if(idmaterial > 0){
     callApi(urlKrakenService, 'POST', data6, (res) => {
-      console.log(res.Result0);
+      setDatosmaterial(res.Result0);
     });
 
     callApi(urlKrakenService, 'POST', data7, (res) => {
       setsubalmacenes(res.Result0);
     });
-  }, [idmaterial]);
+  }}, [idmaterial]);
 
 
 // Función para cambio de material en el wizard
@@ -358,12 +363,13 @@ const Material = (props) => {
   }, [nomsubalmacen,subalmacen,subalmacenes]);
 
   // Función que pone valor determinado de subalmacén si es único
- 
   useEffect(() => {
-    if (subalmacenes.length === 1) {
+    if (subalmacenes.length===1) {
       setsubalmacen(subalmacenes[0].ClaSubAlmacenCompra);
+      setnomsubalmacen(subalmacenes[0].NomSubAlmacenCompra)
     }
   }, [subalmacenes]);
+
 
   // Función que elimina material que el usuario desee (Se usa el parámetro de AccionSP = 3 para eliminar)
   // Servicio JSON 12 --> SP= BasSch.BasRegistraMaterialClasEntCompraMatPrimaProc <Registra material a clasificar>
@@ -479,9 +485,9 @@ const Material = (props) => {
         ',@pnClaArticuloCompra=' +
         (props.ro.ClaArticuloCompra ? props.ro.ClaArticuloCompra : idmaterial) +
         ',@pnCantidadMaterial=' +
-        (cantidad < 0 ? 0 : cantidad) +
+        (cantidad==='' ? 0 : kilos>0 ? (kilos/Datosmaterial[0].PesoTeoricoKgs) : cantidad) +
         ',@pnKilosMaterial=' +
-        kilos  +
+        (kilos==='' ? 0 :cantidad>0 ? (cantidad*Datosmaterial[0].PesoTeoricoKgs) :  kilos)  +
         ',@pnKilosReales=' +
         (props.ro.KilosReales ? props.ro.KilosReales : 0) +
         ',@pnKilosContaminados=' +
@@ -489,7 +495,7 @@ const Material = (props) => {
         ',@pnKilosDocumentados=' +
         (props.ro.KilosDocumentados ? props.ro.KilosDocumentados : 0) +
         ',@pnPorcentajeMaterial=' +
-        (porcentajer<0 ? 0 : porcentajer) +
+        (porcentajer==='' ? 0 : porcentajer) +
         ',@pnEsPesajeParcial=' +
         (props.ro.EsPesajeParcial ? props.ro.EsPesajeParcial : pesajeparcial) +
         ',@pnClaAlmacen=' +
@@ -935,14 +941,14 @@ const Material = (props) => {
                     <Input
                       className="popup-recibidos"
                       onChange={handlecantidad}
-                      value={pesajeparcial === 1 || props.ro.EsPesajeParcial === 1 ? '' : cantidad}
+                      value={pesajeparcial === 1 || props.ro.EsPesajeParcial === 1 ? '' :kilos>0 && Datosmaterial ? kilos*Datosmaterial[0].PesoTeoricoKgs : cantidad}
                       disabled={
-                        pesajeparcial === 1 || props.ro.EsPesajeParcial === 1 || porcentajer>0
+                        pesajeparcial === 1 || props.ro.EsPesajeParcial === 1 || porcentajer>0 || kilos > 0
                       }
                       type="number"
                     />
                     <InputGroupAddon addonType="append">
-                      <InputGroupText>lbs</InputGroupText>
+                      <InputGroupText>{Datosmaterial ? Datosmaterial[0].NomUnidad : " "}</InputGroupText>
                     </InputGroupAddon>
                   </InputGroup>
                 </Col>
@@ -961,9 +967,9 @@ const Material = (props) => {
                     <Input
                       className="popup-recibidos"
                       onChange={handlekilos}
-                      value={pesajeparcial === 1 || props.ro.EsPesajeParcial === 1 ? '' : kilos}
+                      value={pesajeparcial === 1 || props.ro.EsPesajeParcial === 1 ? '' :cantidad>0 && Datosmaterial ? cantidad/Datosmaterial[0].PesoTeoricoKgs: kilos}
                       disabled={
-                        pesajeparcial === 1 || props.ro.EsPesajeParcial === 1 
+                        pesajeparcial === 1 || props.ro.EsPesajeParcial === 1 || cantidad > 0 || porcentajer > 0
                       }
                       type="number"
                     />
@@ -983,10 +989,10 @@ const Material = (props) => {
                         className="popup-recibidos"
                         onChange={handleporcentajer}
                         value={
-                          pesajeparcial === 1 || props.ro.EsPesajeParcial === 1 ? 100 : porcentajer
+                          pesajeparcial === 1 || props.ro.EsPesajeParcial === 1 ? 100 :  porcentajer
                         }
                         disabled={
-                          pesajeparcial === 1 || (props.ro.EsPesajeParcial === 1 ) || cantidad>0
+                          pesajeparcial === 1 || (props.ro.EsPesajeParcial === 1 ) || cantidad >0 || kilos> 0
                         }
                         type="number"
                       />
@@ -1129,8 +1135,8 @@ const Material = (props) => {
                   Cantidad Recibida
                 </Row>
                 <Row className="popup-elem" style={{ marginLeft: '0px' }}>
-                  {props.ro.EsPesajeParcial === 1 || pesajeparcial === 1 ? '--' : cantidad}&nbsp;
-                  lbs
+                  {props.ro.EsPesajeParcial === 1 || pesajeparcial === 1 ? '--' :cantidad==='' ? 0 :kilos>0 ? kilos/Datosmaterial[0].PesoTeoricoKgs : cantidad}&nbsp;
+                  {Datosmaterial ? Datosmaterial[0].NomUnidad : " "}
                 </Row>
               </Col>
               <Col>
@@ -1138,7 +1144,7 @@ const Material = (props) => {
                   Kilos Recibidos
                 </Row>
                 <Row className="popup-elem" style={{ marginLeft: '0px' }}>
-                  {props.ro.EsPesajeParcial === 1 || pesajeparcial === 1 ? '--' : kilos}&nbsp; kgs
+                  {props.ro.EsPesajeParcial === 1 || pesajeparcial === 1 ? '--' :kilos ==='' ? 0 :cantidad>0 ? cantidad*Datosmaterial[0].PesoTeoricoKgs : kilos}&nbsp; kgs
                 </Row>
               </Col>
               <Col>
@@ -1146,7 +1152,7 @@ const Material = (props) => {
                   Porcentaje
                 </Row>
                 <Row className="popup-elem" style={{ marginLeft: '0px' }}>
-                  {props.ro.EsPesajeParcial === 1 || pesajeparcial === 1 ? '--' : porcentajer}
+                  {props.ro.EsPesajeParcial === 1 || pesajeparcial === 1 ? '--' :porcentajer===''? 0: porcentajer}
                   &nbsp;%
                 </Row>
               </Col>

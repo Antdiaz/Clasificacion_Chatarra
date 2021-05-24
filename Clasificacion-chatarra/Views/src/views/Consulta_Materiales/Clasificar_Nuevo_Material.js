@@ -24,12 +24,8 @@ import others from '../../assets/img/no-image.png';
 import smbag from '../../assets/img/little-bag.png';
 import bag from '../../assets/img/bag.png';
 import contenedors from '../../assets/img/contenedor.png';
-import {
-  callApi,
-  getSessionItem,
-} from '../../utils/utils';
+import { callApi, getSessionItem } from '../../utils/utils';
 import { config } from '../../utils/config';
-
 
 const NuevoMaterial = (props) => {
   // Valores que leen cantidades de botes y electrodomésticos
@@ -46,16 +42,18 @@ const NuevoMaterial = (props) => {
   const [costal, setcostal] = useState(0);
   const [saco, setsaco] = useState(0);
 
-    // Valores dinámicos locales al editar material
-
+  // Valores dinámicos locales al editar material
+  const [Datosmaterial, setDatosmaterial] = useState(0)
   const [contenedor, setcontenedor] = useState(0);
   const [cantidade, setcantidade] = useState(0);
   const [cantidadr, setcantidadr] = useState(0);
   const [kilose, setkilose] = useState(0);
   const [kilosr, setkilosr] = useState(0);
-  const [porcentajer, setporcentajer] = useState(pesajeparcial===1 ? 100:0);
+  const [porcentajer, setporcentajer] = useState(pesajeparcial === 1 ? 100 : 0);
   const [observaciones, setobservaciones] = useState('Ninguna');
-  const [pesajeparcial, setpesajeparcial] = useState(0);
+  const [pesajeparcial, setpesajeparcial] = useState(
+    props.placadato[0].EsPesajeParcial === 1 ? props.placadato[0].EsPesajeParcial : 0
+  );
   const ipadress = getSessionItem('Ipaddress');
   const NumbUsuario = getSessionItem('NumUsuario');
   const [idmaterialr, setidmaterialr] = useState(0);
@@ -66,11 +64,28 @@ const NuevoMaterial = (props) => {
   const [kiloscont, setkiloscont] = useState(0);
   const [razoncont, setrazoncont] = useState(0);
   const [Referencia, setReferencia] = useState(0);
-  const PorcentajeSum = props.row ?
-    +props.row.reduce((acc, val) => acc + val.PorcentajeMaterial, 0) + +porcentajer : 0;
-
-
-// Función para cambio a pesaje parcial
+  const PorcentajeSum = props.row
+    ? +props.row.reduce((acc, val) => acc + val.PorcentajeMaterial, 0) + +porcentajer
+    : 0;
+  const [Contaminantes, setContaminantes] = useState([
+    [
+      { nombre: 'Bollas', peso: '50', comentario: '50kgs', imagen: smfreezer, id: 1 },
+      { nombre: 'Cilindro', peso: '100', comentario: '100kgs', imagen: smfreezer, id: 2 },
+      {
+        nombre: 'Tanque Estacionario',
+        peso: '200',
+        comentario: '200kgs',
+        imagen: smfreezer,
+        id: 3,
+      },
+    ],
+    [
+      { nombre: 'Llantas Chico', peso: '25', comentario: '25kgs', imagen: smfreezer, id: 4 },
+      { nombre: 'Llantas Mediano', peso: '50', comentario: '50kgs', imagen: smfreezer, id: 5 },
+      { nombre: 'Llantas grande', peso: '100', comentario: '100kgs', imagen: smfreezer, id: 6 },
+    ],
+  ]);
+  // Función para cambio a pesaje parcial
   const useCheckbox = (e) => {
     if (props.pesajeparcial === 1) {
       false;
@@ -81,10 +96,12 @@ const NuevoMaterial = (props) => {
     }
   };
 
+  console.log(cantidadr)
+  console.log(kilosr)
+  console.log(porcentajer)
   // Función que corre servicios antes del render cada que haya un cambio de material
   // Servicio JSON 6 --> SP= AmpSch.AmpClaArticuloDatosSel <Consultar datos Material>
   // Servicio JSON 7 --> SP= AmpSch.AmpClaSubAlmacenArticuloCmb <Consultar listado Subalmacenes>
- 
 
   useEffect(() => {
     const urlKrakenService = `${config.KrakenService}/${24}/${37}`;
@@ -118,21 +135,19 @@ const NuevoMaterial = (props) => {
     };
 
     /* eslint-enable */
-    if(idmaterialr>0){
-    callApi(urlKrakenService, 'POST', data6, (res) => {
-      console.log(res.Result0);
-    });
+    if (idmaterialr > 0) {
+      callApi(urlKrakenService, 'POST', data6, (res) => {
+        setDatosmaterial(res.Result0);
+      });
 
-    callApi(urlKrakenService, 'POST', data7, (res) => {
-      setsubalmacenes(res.Result0);
-    });
-  }
+      callApi(urlKrakenService, 'POST', data7, (res) => {
+        setsubalmacenes(res.Result0);
+      });
+    }
   }, [idmaterialr]);
-
 
   // Función que corre servicios antes del render para obtener Referencia cada que cambia el Material/subalmacen
   // Servicio JSON 8 --> SP= AmpSch.AmpClaSubAlmacenDatosSel <Consultar datos subalmacen>
-  
 
   useEffect(() => {
     const urlKrakenService = `${config.KrakenService}/${24}/${37}`;
@@ -161,26 +176,25 @@ const NuevoMaterial = (props) => {
         setReferencia(res.Result0[0].ClaReferenciaCompra);
       });
     }
-  }, [nomsubalmacen,subalmacen,subalmacenes]);
-
+  }, [nomsubalmacen, subalmacen, subalmacenes]);
 
   // Función que pone valor determinado de subalmacén si es único
 
   useEffect(() => {
     if (subalmacenes.length === 1) {
       setsubalmacen(subalmacenes[0].ClaSubAlmacenCompra);
-      setnomsubalmacen(subalmacenes[0].NomSubAlmacenCompra)
+      setnomsubalmacen(subalmacenes[0].NomSubAlmacenCompra);
     }
   }, [subalmacenes]);
 
   // Función para cambio de material en el wizard
   const onValueChangedr = (e) => {
     setidmaterialr(e.value);
-    setsubalmacen(0)
+    setsubalmacen(0);
     setnombrematerialr(e.component.option('text').split('-').pop());
   };
 
- // Operaciones para obtener los kilos de botes/electrodomésticos
+  // Operaciones para obtener los kilos de botes/electrodomésticos
 
   const electrodomestico =
     50 * srefri +
@@ -195,7 +209,6 @@ const NuevoMaterial = (props) => {
   const botes = 35 * costal + 250 * saco + 150 * contenedor;
 
   const kilosbotes = botes + electrodomestico;
-
 
   // Funciones para obtener las cantidades/opciones individuales que el usuario ingrese
 
@@ -229,11 +242,9 @@ const NuevoMaterial = (props) => {
 
   const handlealmacen = (event) => {
     setalmacen(event.target.value);
-    
   };
 
   const handlesubalmacen = (event) => {
-
     setsubalmacen(event.value);
     setnomsubalmacen(event.component.option('text'));
   };
@@ -385,10 +396,10 @@ const NuevoMaterial = (props) => {
     props.setmodaladdOpen(false);
   };
 
-   // Función que guarda los cambios efectuados en el material
+  // Función que guarda los cambios efectuados en el material
   // Servicio JSON 11 --> SP= BasSch.BasGuardarClasEntCompraMatPrimaProc <Guarda clasificación>
- // Servicio JSON 12 --> SP= BasSch.BasRegistraMaterialClasEntCompraMatPrimaProc <Registra material a clasificar>
-  
+  // Servicio JSON 12 --> SP= BasSch.BasRegistraMaterialClasEntCompraMatPrimaProc <Registra material a clasificar>
+
   const handleSubmit = () => {
     props.setpoppesaje(true);
     const urlKrakenService = `${config.KrakenService}/${24}/${37}`;
@@ -430,8 +441,9 @@ const NuevoMaterial = (props) => {
         ',@pnClaArticuloCompra=' +
         idmaterialr +
         ',@pnCantidadMaterial=' +
-        cantidadr +
-        ',@pnKilosMaterial=0,@pnKilosReales=0,@pnKilosContaminados=' +
+        (cantidadr==='' ? 0 : kilosr>0 ? (kilosr/Datosmaterial[0].PesoTeoricoKgs) : cantidadr) +
+        ',@pnKilosMaterial='+
+        (kilosr==='' ? 0 :cantidadr>0 ? (cantidadr*Datosmaterial[0].PesoTeoricoKgs) :  kilosr) +',@pnKilosReales=0,@pnKilosContaminados=' +
         kiloscont +
         ',@pnKilosDocumentados=0,@pnPorcentajeMaterial=' +
         porcentajer +
@@ -468,7 +480,7 @@ const NuevoMaterial = (props) => {
       console.log(res);
     });
 
-    props.setrow(null)
+    props.setrow(null);
     props.setpesajeparcial(pesajeparcial);
     props.setmodaladdOpen(false);
   };
@@ -808,7 +820,7 @@ const NuevoMaterial = (props) => {
     );
   }
 
-   // Componente final de Wizard para editar material
+  // Componente final de Wizard para editar material
 
   return (
     <div>
@@ -873,15 +885,17 @@ const NuevoMaterial = (props) => {
                       type="number"
                       value={
                         props.placadato[0].EsPesajeParcial === 1 || pesajeparcial === 1
-                          ? ''
-                          : cantidadr
+                          ? 0
+                          : kilosr>0 && Datosmaterial ? kilosr*Datosmaterial[0].PesoTeoricoKgs:cantidadr
                       }
                       disabled={
-                        props.placadato[0].EsPesajeParcial === 1 || pesajeparcial === 1 || porcentajer > 0
+                        props.placadato[0].EsPesajeParcial === 1 ||
+                        pesajeparcial === 1 ||
+                        porcentajer > 0 || kilosr > 0
                       }
                     />
                     <InputGroupAddon addonType="append">
-                      <InputGroupText>lbs</InputGroupText>
+                      <InputGroupText>{Datosmaterial ? Datosmaterial[0].NomUnidad : " "}</InputGroupText>
                     </InputGroupAddon>
                   </InputGroup>
                 </Col>
@@ -902,12 +916,10 @@ const NuevoMaterial = (props) => {
                       onChange={handlekilosr}
                       value={
                         props.placadato[0].EsPesajeParcial === 1 || pesajeparcial === 1
-                          ? ''
-                          : kilosr
+                          ? 0
+                          :cantidadr>0 && Datosmaterial ? cantidadr/Datosmaterial[0].PesoTeoricoKgs: kilosr
                       }
-                      disabled={
-                        props.placadato[0].EsPesajeParcial === 1 || pesajeparcial === 1
-                      }
+                      disabled={props.placadato[0].EsPesajeParcial === 1 || pesajeparcial === 1 || cantidadr > 0 || porcentajer > 0}
                       type="number"
                     />
                     <InputGroupAddon addonType="append">
@@ -934,8 +946,10 @@ const NuevoMaterial = (props) => {
                             : porcentajer
                         }
                         disabled={
-                          props.placadato[0].EsPesajeParcial === 1 || pesajeparcial === 1
-                            || cantidadr > 0
+                          props.placadato[0].EsPesajeParcial === 1 ||
+                          pesajeparcial === 1 ||
+                          cantidadr > 0 ||
+                          kilosr > 0
                         }
                       />
                       <InputGroupAddon addonType="append">
@@ -1010,7 +1024,7 @@ const NuevoMaterial = (props) => {
                           placeholder="Seleccionar Subalmacen.."
                           onValueChanged={handlesubalmacen}
                           noDataText="Selecciona Material"
-                          disabled={subalmacenes.length===1}
+                          disabled={subalmacenes.length === 1}
                         />
                       </Row>
                       <Row
@@ -1023,7 +1037,7 @@ const NuevoMaterial = (props) => {
                         className="warning"
                       >
                         <span style={{ color: 'red !important' }}>
-                          {idmaterialr>1 && subalmacen===0 ? "Selecciona subalmacen":null}
+                          {idmaterialr > 1 && subalmacen === 0 ? 'Selecciona subalmacen' : null}
                         </span>
                       </Row>
                     </Col>
@@ -1036,7 +1050,9 @@ const NuevoMaterial = (props) => {
                 style={{ marginRight: '30px' }}
                 type="button"
                 className="popup-button"
-                onClick={PorcentajeSum > 100 || idmaterialr<1 || subalmacen<1? null : togglePopup2}
+                onClick={
+                  PorcentajeSum > 100 || idmaterialr < 1 || subalmacen < 1 ? null : togglePopup2
+                }
               >
                 Siguiente &gt;
               </button>
@@ -1067,8 +1083,8 @@ const NuevoMaterial = (props) => {
                 <Row className="popup-elem" style={{ marginLeft: '0px' }}>
                   {pesajeparcial === 1 || props.placadato[0].EsPesajeParcial === 1
                     ? '--'
-                    : cantidadr}
-                  &nbsp; lbs
+                    :cantidadr==='' ? 0 :kilosr>0 ? kilosr/Datosmaterial[0].PesoTeoricoKgs : cantidadr}
+                  &nbsp; {Datosmaterial ? Datosmaterial[0].NomUnidad : " "}
                 </Row>
               </Col>
               <Col>
@@ -1076,7 +1092,7 @@ const NuevoMaterial = (props) => {
                   Kilos Recibidos
                 </Row>
                 <Row className="popup-elem" style={{ marginLeft: '0px' }}>
-                  {pesajeparcial === 1 || props.placadato[0].EsPesajeParcial === 1 ? '--' : kilosr}
+                  {pesajeparcial === 1 || props.placadato[0].EsPesajeParcial === 1 ? '--' :kilosr ==='' ? 0 :cantidadr>0 ? cantidadr*Datosmaterial[0].PesoTeoricoKgs :  kilosr}
                   &nbsp; kgs
                 </Row>
               </Col>
@@ -1116,12 +1132,12 @@ const NuevoMaterial = (props) => {
                 <SelectBox
                   searchEnabled={true}
                   dataSource={props.contaminacion}
-                  defaultValue=''
+                  defaultValue=""
                   displayExpr="NomMotivoContaminacion"
-                  valueExpr={kiloscont < 1 ? "0":"ClaMotivoContaminacion"}
+                  valueExpr={kiloscont < 1 ? '0' : 'ClaMotivoContaminacion'}
                   placeholder="Seleccionar Material.."
                   onValueChanged={handlerazoncont}
-                  disabled={kiloscont< 1}
+                  disabled={kiloscont < 1}
                 />
                 <Row
                   style={{
@@ -1133,18 +1149,43 @@ const NuevoMaterial = (props) => {
                   className="warning"
                 >
                   <span style={{ color: 'red !important' }}>
-                    {kiloscont > 0 && razoncont<1 ? 'Seleccionar Motivo' : null}
+                    {kiloscont > 0 && razoncont < 1 ? 'Seleccionar Motivo' : null}
                   </span>
                 </Row>
               </Col>
             </Row>
+
+            {/* {Contaminantes.map((contaminantegrupo) => (
+              <Row>
+                {contaminantegrupo.map((contaminante) => (
+                  <Col>
+                    <div className="popup-column" key={contaminante.id}>
+                      <div>
+                        <img src={contaminante.imagen} alt="dryer" className="popup-image" />
+                        <span className="popups-kgs">{contaminante.comentario}</span>
+                      </div>
+                      <div className="popup-bote">{contaminante.nombre}</div>
+                      <div>
+                        <button type="button" className="popup-adder sum">
+                          +
+                        </button>
+                        <button type="button" className="popup-adder rest">
+                          -
+                        </button>
+                        <input defaultValue="0" className="popup-number" disabled="disabled" />
+                      </div>
+                    </div>
+                  </Col>
+                ))}
+              </Row>
+            ))} */}
           </Container>
           <div style={{ marginTop: '70px' }}>
             <button
               style={{ marginRight: '30px' }}
               type="button"
               className="popup-button"
-              onClick={kiloscont>0 && razoncont<1 ?'': handleSubmit}
+              onClick={kiloscont > 0 && razoncont < 1 ? '' : handleSubmit}
             >
               Guardar &#43;
             </button>

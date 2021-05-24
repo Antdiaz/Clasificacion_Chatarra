@@ -44,7 +44,13 @@ function Boleta({
   // Listado de servicio de Razón de Contaminación
   const [contaminacion, setcontaminacion] = useState();
   // Valor que lee cuando se abre wizard de editar Material
-  const [editOpen, seteditOpen] = useState(true);
+  const [editOpen, seteditOpen] = useState(false);
+ // Valor que lee la foto placa
+  const [Fotoplaca, setFotoplaca] = useState(0)
+  // Valor que lee Material Superior
+  const [Materialsuperior, setMaterialsuperior] = useState(0)
+   // Valor que lee Material Superior
+   const [Preregistro, setPreregistro] = useState(0)
  // Estilo de pop up/ wizard
   const customStyles = {
     content: {
@@ -54,6 +60,69 @@ function Boleta({
       bottom: '0%',
     },
   };
+
+// Función que guarda los cambios efectuados en el material
+  // Servicio JSON 14 --> SP= BasSch.BasObtieneFotografiasMaterialPro <Obtiene fotos>
+  // Servicio JSON 26 --> SP= BasSch.BasObtieneFotografiasMaterialPreRegProc <Material pre-registro>
+  useEffect(( ) => {
+    const timerID = setTimeout(() => {
+    const urlKrakenService = `${config.KrakenService}/${24}/${37}`;
+/* eslint-disable */
+    const data14 = {
+      parameters:
+        '{"ClaUbicacion":' +
+        editBoxValue +
+        ',"ClaServicioJson":' +
+        14 +
+        ',"Parametros":"@pnClaUbicacion=' +
+        editBoxValue +
+        ',@pnIdBoleta=' +
+        id +
+        ',@pnClaTipoCamaraVideo=1"}',
+      tipoEstructura: 0,
+    };
+
+    const data26 = {
+      parameters:
+        '{"ClaUbicacion":' +
+        editBoxValue +
+        ',"ClaServicioJson":' +
+        26 +
+        ',"Parametros":"@pnClaUbicacion=' +
+        editBoxValue +
+        ',@pnIdBoleta=' +
+        id +
+        ',@pnClaArticulo=-1"}',
+      tipoEstructura: 0,
+    };
+
+    const data141 = {
+      parameters:
+        '{"ClaUbicacion":' +
+        editBoxValue +
+        ',"ClaServicioJson":' +
+        14 +
+        ',"Parametros":"@pnClaUbicacion=' +
+        editBoxValue +
+        ',@pnIdBoleta=' +
+        id +
+        ',@pnClaTipoCamaraVideo=2"}',
+      tipoEstructura: 0,
+    };
+/* eslint-enable */
+    callApi(urlKrakenService, 'POST', data14, (res) => {
+      setFotoplaca(res.Result0.length>0 ? res.Result0[0].Fotografia : 0)
+    });
+
+    callApi(urlKrakenService, 'POST', data141, (res) => {
+      setMaterialsuperior(res.Result0.length>0 ? res.Result0[0].Fotografia : 0)
+    });
+
+    callApi(urlKrakenService, 'POST', data26, (res) => {
+      setPreregistro(res.Result0.length>0 ? res.Result0[0].Fotografia : 0)
+    });
+  },4000)
+  },[])
 
   useEffect(() => {
     // Servicio JSON 2 --> SP= AmpSch.AmpClaConsultaVehiculoAClasificarSel <Consultar datos placa>
@@ -127,7 +196,9 @@ function Boleta({
             <CardBody className="p-2">
               <img
                 style={{ width: '100%' }}
-                src="https://www.supraciclaje.com/wp-content/uploads/2017/06/precio-compra-metales-no-ferrosos-reciclados-mexico.jpg"
+                src={Fotoplaca !==0 ? /* eslint-disable */
+                  'data:image/jpg;base64,'+ Fotoplaca +''
+                /* eslint-enable */ : ''}
                 alt=""
               />
               <CardText className="mb-2 text-center"></CardText>
@@ -141,7 +212,9 @@ function Boleta({
             <CardBody className="p-2">
               <img
                 style={{ width: '100%' }}
-                src="https://www.supraciclaje.com/wp-content/uploads/2017/06/precio-compra-metales-no-ferrosos-reciclados-mexico.jpg"
+                src={Materialsuperior !== 0 ? /* eslint-disable */
+                'data:image/jpg;base64,'+ Materialsuperior +''
+              /* eslint-enable */ : ''}
                 alt=""
               />
               <CardText className="mb-2 text-center"></CardText>
@@ -155,7 +228,9 @@ function Boleta({
             <CardBody className="p-2">
               <img
                 style={{ width: '100%' }}
-                src="https://www.supraciclaje.com/wp-content/uploads/2017/06/precio-compra-metales-no-ferrosos-reciclados-mexico.jpg"
+                src={Preregistro !== 0 ? /* eslint-disable */
+                  'data:image/jpg;base64,'+ Preregistro +''
+                /* eslint-enable */ : ''}
                 alt=""
               />
               <CardText className="mb-2 text-center"></CardText>
@@ -207,7 +282,7 @@ function Boleta({
               <CardHeader>
                 <CardTitle style={{ margin: '10px' }}>
                   <i
-                    onClick={() => setmodaladdOpen(true)}
+                    onClick={row && placadato[0].EsPesajeParcial ===1 && (row.every(ro => ro.KilosMaterial === 0) || row.some(ro => ro.KilosMaterial===0))? ()=> setpoppesaje(true) : () => row && setmodaladdOpen(true)}
                     style={{ cursor: 'pointer' }}
                     className="fa fa-plus"
                     aria-hidden="true"

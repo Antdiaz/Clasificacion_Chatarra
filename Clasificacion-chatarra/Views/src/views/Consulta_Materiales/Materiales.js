@@ -82,12 +82,12 @@ function Materiales({
             &nbsp; {ro.NomUnidad}
           </TableCell>
           <TableCell className="table-content">
-            Enviado:&nbsp;{ro.KgsMaterialPrereg ? ro.KgsMaterialPrereg : 0}&nbsp; Kg <br />{' '}
-            Recibido:&nbsp;{ro.KilosReales ? ro.KilosReales : 0}&nbsp; Kg
+            Enviado:&nbsp;{ro.KgsMaterialPrereg ? ro.KgsMaterialPrereg : 0}&nbsp; Kgs <br />{' '}
+            Recibido:&nbsp;{ro.KilosReales ? ro.KilosReales : 0}&nbsp; Kgs
           </TableCell>
           <TableCell className="table-content">
-            Enviado:&nbsp;{kiloscont}&nbsp; Kg <br /> Recibido:&nbsp;{0}
-            &nbsp; Kg
+            Enviado:&nbsp;{kiloscont}&nbsp; Kgs <br /> Recibido:&nbsp;{0}
+            &nbsp; Kgs
           </TableCell>
           <TableCell className="table-content">
             Almacen:&nbsp;{ro.ClaAlmacen}
@@ -204,9 +204,8 @@ function Materiales({
         setrow(res.Result0);
       });
       seteditOpen(true);
-    }, 1500);
+    }, 1000);
   }, [!modaladdOpen, !editOpen,!poppesaje]);
-
 
    // Función que corre servicios antes del render cada que haya un material, solo si el porcentaje total es 100% o si se maneja por cantidad
   // Servicio JSON 13 --> SP=BasSch.BasValidacionClasEntCompraMatPrimaProc <Valida clasificación>

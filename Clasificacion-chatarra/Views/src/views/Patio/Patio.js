@@ -49,10 +49,12 @@ class Patio extends React.Component {
   // Función para Selección de patio al enter
   handleSubmit = (e) => {
     e.preventDefault();
+    if(this.state.Lugarsesion>0){
     this.setLugaradd(true)
     setSessionData({
       PatioEscogido: this.state.Lugarsesion
-    });
+    }
+    );}
   }
 
   // Función para leer patio seleccionado

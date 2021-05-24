@@ -179,14 +179,15 @@ function Consulta({ Valores, Datos, setDatos,filtropesaje,setfiltropesaje,showRe
               :!Datos && filtropesaje ? Valores.filter((lista) => 
               [lista.EsPesajeParcial].includes(1) && (transporte === 'ferrocarril' ? [lista.ClaTransporte].includes(8):transporte=== 'autotransporte'? ![lista.ClaTransporte].includes(8):[lista.ClaTransporte]) &&
               (status === 'porclasificar' ?  [lista.EsClasificado].includes(0):status === 'clasificado' ? [lista.EsClasificado].includes(1):[lista.EsClasificado])
-              ): Datos && !filtropesaje 
+              ): 
+              Datos && !filtropesaje 
               ? Valores.filter(
                 (lista) =>
                 (transporte === 'ferrocarril' ? [lista.ClaTransporte].includes(8):transporte=== 'autotransporte'? ![lista.ClaTransporte].includes(8):[lista.ClaTransporte]) &&
                 (status === 'porclasificar' ?  [lista.EsClasificado].includes(0):status === 'clasificado' ? [lista.EsClasificado].includes(1):[lista.EsClasificado]) &&
                   lista.ClaVehiculoPorClasificar.includes(Datos) ||
                   [lista.NomChofer].includes(Datos) ||
-                  lista.NomProveedor.includes(Datos) ||
+                  [lista.NomProveedor].includes(Datos) ||
                   lista.NomMotivoEntrada.includes(Datos) ||
                   lista.IdBoleta.toString().includes(Datos) ||
                   lista.IdBoleta.toString().includes(Datos) ||
