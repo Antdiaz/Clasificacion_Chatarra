@@ -88,7 +88,7 @@ function AdminNavbar({ theme, Patio, editBoxValue, seteditBoxValue }) {
                   </DropdownItem>
                 </DropdownMenu>
               </UncontrolledDropdown>
-              <Link to="/layout">
+              <Link to="/Clasificacion-Chatarra/Placas">
                 <i className="fa fa-home fa-lg" aria-hidden="true"></i>
               </Link>
             </Nav>

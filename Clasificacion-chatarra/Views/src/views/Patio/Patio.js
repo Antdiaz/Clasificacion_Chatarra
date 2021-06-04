@@ -92,7 +92,7 @@ class Patio extends React.Component {
       this.setPatio(res.Result0);
     });
 
-    if(this.state.Patio.length===1){
+    if(this.state.Patio && this.state.Patio.length===1){
       this.setLugaradd(true)
       this.setLugarsesion(this.state.Patio[0].ClaUbicacion)
     }
@@ -106,7 +106,7 @@ class Patio extends React.Component {
 
   render() {
     if (this.state.Lugarsesion >0 && this.state.Lugaradd ? this.state.Lugaradd === true :  getSessionItem('PatioEscogido')) {
-      const url = getSessionItem('url', '/layout/Placas');
+      const url = getSessionItem('url', '/Clasificacion-Chatarra/Placas');
       document.body.classList.remove('bg-default');
       // Primer componente al que se va a redirigir después de iniciar sesión
       return (
@@ -158,7 +158,7 @@ class Patio extends React.Component {
                         onClick={this.handleSubmit}
                         color="warning"
                         type="button"
-                        style={{ width: '30%' }}
+                        style={{ width: 'max-content' }}
                       >
                         Ingresar
                       </Button>

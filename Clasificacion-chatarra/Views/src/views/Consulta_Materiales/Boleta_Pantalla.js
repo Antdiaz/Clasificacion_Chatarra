@@ -15,6 +15,8 @@ import PesajeParcial from './PesajeParcial';
 import Materiales from './Materiales';
 // Detalle de Boleta
 import DetalleBoleta from './Detalle_Boleta';
+// Imagenes placa,material, etc
+import Imagenes from './Imagenes'
 
 function Boleta({
   editBoxValue,
@@ -22,6 +24,8 @@ function Boleta({
   setrow,
   material,
   setmaterial,
+  materialtodos,
+  setmaterialtodos,
   setmaterialr,
   setcantidadr,
   setkilosr,
@@ -34,6 +38,12 @@ function Boleta({
   setpoppesaje,
   warning,
   setwarning,
+  NomMotivoEntrada,
+  setNomMotivoEntrada,
+  ClaUbicacionOrigen,
+  ClaViajeOrigen,
+  ClaFabricacionViaje,
+  setClaFabricacionViaje
 }) {
    // Valores obtenidos de URL de detalle de boleta
   const { placa, id } = useParams();
@@ -45,12 +55,7 @@ function Boleta({
   const [contaminacion, setcontaminacion] = useState();
   // Valor que lee cuando se abre wizard de editar Material
   const [editOpen, seteditOpen] = useState(false);
- // Valor que lee la foto placa
-  const [Fotoplaca, setFotoplaca] = useState(0)
-  // Valor que lee Material Superior
-  const [Materialsuperior, setMaterialsuperior] = useState(0)
-   // Valor que lee Material Superior
-   const [Preregistro, setPreregistro] = useState(0)
+  const [Materialviaje, setMaterialviaje] = useState(0)
  // Estilo de pop up/ wizard
   const customStyles = {
     content: {
@@ -61,70 +66,8 @@ function Boleta({
     },
   };
 
-// Función que guarda los cambios efectuados en el material
-  // Servicio JSON 14 --> SP= BasSch.BasObtieneFotografiasMaterialPro <Obtiene fotos>
-  // Servicio JSON 26 --> SP= BasSch.BasObtieneFotografiasMaterialPreRegProc <Material pre-registro>
-  useEffect(( ) => {
-    const timerID = setTimeout(() => {
-    const urlKrakenService = `${config.KrakenService}/${24}/${37}`;
-/* eslint-disable */
-    const data14 = {
-      parameters:
-        '{"ClaUbicacion":' +
-        editBoxValue +
-        ',"ClaServicioJson":' +
-        14 +
-        ',"Parametros":"@pnClaUbicacion=' +
-        editBoxValue +
-        ',@pnIdBoleta=' +
-        id +
-        ',@pnClaTipoCamaraVideo=1"}',
-      tipoEstructura: 0,
-    };
-
-    const data26 = {
-      parameters:
-        '{"ClaUbicacion":' +
-        editBoxValue +
-        ',"ClaServicioJson":' +
-        26 +
-        ',"Parametros":"@pnClaUbicacion=' +
-        editBoxValue +
-        ',@pnIdBoleta=' +
-        id +
-        ',@pnClaArticulo=-1"}',
-      tipoEstructura: 0,
-    };
-
-    const data141 = {
-      parameters:
-        '{"ClaUbicacion":' +
-        editBoxValue +
-        ',"ClaServicioJson":' +
-        14 +
-        ',"Parametros":"@pnClaUbicacion=' +
-        editBoxValue +
-        ',@pnIdBoleta=' +
-        id +
-        ',@pnClaTipoCamaraVideo=2"}',
-      tipoEstructura: 0,
-    };
-/* eslint-enable */
-    callApi(urlKrakenService, 'POST', data14, (res) => {
-      setFotoplaca(res.Result0.length>0 ? res.Result0[0].Fotografia : 0)
-    });
-
-    callApi(urlKrakenService, 'POST', data141, (res) => {
-      setMaterialsuperior(res.Result0.length>0 ? res.Result0[0].Fotografia : 0)
-    });
-
-    callApi(urlKrakenService, 'POST', data26, (res) => {
-      setPreregistro(res.Result0.length>0 ? res.Result0[0].Fotografia : 0)
-    });
-  },4000)
-  },[])
-
   useEffect(() => {
+    let isCancelled = false;
     // Servicio JSON 2 --> SP= AmpSch.AmpClaConsultaVehiculoAClasificarSel <Consultar datos placa>
     // El timeout es para darle tiempo de respuesta
     setTimeout(()=>{
@@ -144,10 +87,8 @@ function Boleta({
         '"}',
       tipoEstructura: 0,
     };
+
     /* eslint-enable */
-    callApi(urlKrakenVal, 'POST', data5, (res) => {
-      setplacadato(res.Result0);
-    });
 
     // Servicio JSON 10 --> SP= AmpSch.AmpClaMotivoContaminacionCmb <Consultar motivo Contaminacion>
     /* eslint-disable */
@@ -163,18 +104,27 @@ function Boleta({
       tipoEstructura: 0,
     };
     /* eslint-enable */
+    if(NomMotivoEntrada===9){
     callApi(urlKrakenVal, 'POST', data10, (res) => {
       setcontaminacion(res.Result0);
     });
+  }
+    callApi(urlKrakenVal, 'POST', data5, (res) => {
+      setplacadato(res.Result0);
+    });
+     return()=> {
+        isCancelled = true
+      }
   },1000)
-  }, [poppesaje,!editOpen]);
+  }, [poppesaje]);
+
   return (
     <>
       <div className="content" style={{ marginTop: '20px' }}>
 
         {/* Pop up mensaje si material es pesaje parcial */} 
 
-        {placadato && poppesaje && placadato && placadato[0].EsPesajeParcial ===1? (
+        {row  && placadato && poppesaje && (placadato[0].EsPesajeParcial ===1 || pesajeparcial===1) && row.every(ro => ro.KilosMaterial === 0)? (
           <PesajeParcial
             placadato={placadato}
             editBoxValue={editBoxValue}
@@ -187,77 +137,11 @@ function Boleta({
         ) : null}
 
         {/* Sección Imagenes */} 
-
-        <Row style={{ alignItems: 'center', justifyContent: 'center' }}>
-          <Card className="placa-imagenes">
-            <CardHeader>
-              <CardTitle>Foto Placa</CardTitle>
-            </CardHeader>
-            <CardBody className="p-2">
-              <img
-                style={{ width: '100%' }}
-                src={Fotoplaca !==0 ? /* eslint-disable */
-                  'data:image/jpg;base64,'+ Fotoplaca +''
-                /* eslint-enable */ : ''}
-                alt=""
-              />
-              <CardText className="mb-2 text-center"></CardText>
-              <div className="text-center mt-2"></div>
-            </CardBody>
-          </Card>
-          <Card className="placa-imagenes">
-            <CardHeader>
-              <CardTitle>Material Superior</CardTitle>
-            </CardHeader>
-            <CardBody className="p-2">
-              <img
-                style={{ width: '100%' }}
-                src={Materialsuperior !== 0 ? /* eslint-disable */
-                'data:image/jpg;base64,'+ Materialsuperior +''
-              /* eslint-enable */ : ''}
-                alt=""
-              />
-              <CardText className="mb-2 text-center"></CardText>
-              <div className="text-center mt-2"></div>
-            </CardBody>
-          </Card>
-          <Card className="placa-imagenes">
-            <CardHeader>
-              <CardTitle>Pre-registro</CardTitle>
-            </CardHeader>
-            <CardBody className="p-2">
-              <img
-                style={{ width: '100%' }}
-                src={Preregistro !== 0 ? /* eslint-disable */
-                  'data:image/jpg;base64,'+ Preregistro +''
-                /* eslint-enable */ : ''}
-                alt=""
-              />
-              <CardText className="mb-2 text-center"></CardText>
-              <div className="text-center mt-2"></div>
-            </CardBody>
-          </Card>
-          <Card className="placa-imagenes">
-            <CardHeader>
-              <CardTitle>Manual Oficial</CardTitle>
-            </CardHeader>
-            <CardBody className="p-2">
-              <img
-                style={{ width: '100%' }}
-                src="https://www.supraciclaje.com/wp-content/uploads/2017/06/precio-compra-metales-no-ferrosos-reciclados-mexico.jpg"
-                alt=""
-              />
-              <CardText className="mb-2 text-center"></CardText>
-              <div className="text-center mt-2"></div>
-            </CardBody>
-          </Card>
-        </Row>
+        <Imagenes id={id} editBoxValue={editBoxValue} row={row} NomMotivoEntrada={NomMotivoEntrada} />
+        {/* Pop up para clasificar un nuevo material */} 
         <Row>
           <Col>
             <Card>
-
-              {/* Pop up para clasificar un nuevo material */} 
-
               <Modal
                 isOpen={modaladdOpen}
                 onClose={() => setmodaladdOpen(true)}
@@ -265,7 +149,9 @@ function Boleta({
                 style={customStyles}
               >
                 <NuevoMaterial
+                  Materialviaje={Materialviaje}
                   material={material}
+                  materialtodos={materialtodos}
                   modaladdOpen={modaladdOpen}
                   setmodaladdOpen={setmodaladdOpen}
                   pesajeparcial={pesajeparcial}
@@ -277,12 +163,15 @@ function Boleta({
                   contaminacion={contaminacion}
                   row={row}
                   setrow={setrow}
+                  NomMotivoEntrada={NomMotivoEntrada}
+                  ClaViajeOrigen={ClaViajeOrigen}
+                  ClaUbicacionOrigen={ClaUbicacionOrigen}
                 />
               </Modal>
               <CardHeader>
                 <CardTitle style={{ margin: '10px' }}>
                   <i
-                    onClick={row && placadato[0].EsPesajeParcial ===1 && (row.every(ro => ro.KilosMaterial === 0) || row.some(ro => ro.KilosMaterial===0))? ()=> setpoppesaje(true) : () => row && setmodaladdOpen(true)}
+                    onClick={row && placadato[0].EsPesajeParcial ===1  && (row.every(ro => ro.KilosMaterial === 0) || row.some(ro => ro.KilosMaterial===0)) || pesajeparcial===1? ()=> setpoppesaje(true) : () => row && setmodaladdOpen(true)}
                     style={{ cursor: 'pointer' }}
                     className="fa fa-plus"
                     aria-hidden="true"
@@ -290,11 +179,11 @@ function Boleta({
                   </i>
                   <span style={{ marginLeft: '3vw' }}>Clasificar Material</span>
                   <span style={{ marginLeft: '3vw' }}>Placa:&nbsp;{placa}</span>
-                  <span style={{ marginLeft: '3vw' }}>Boleta:{id}</span>
+                  <span style={{ marginLeft: '3vw' }}>Boleta:&nbsp;{id}</span>
                 </CardTitle>
               </CardHeader>
               <CardBody>
-                <Row>
+                <Row className="detalle-materiales">
                   <Col md={{ size: 12, offset: 0 }}>
                     <TableContainer component={Paper}>
 
@@ -316,6 +205,8 @@ function Boleta({
                           setrow={setrow}
                           material={material}
                           setmaterial={setmaterial}
+                          materialtodos={materialtodos}
+                          setmaterialtodos={setmaterialtodos}
                           setmaterialr={setmaterialr}
                           setcantidadr={setcantidadr}
                           setkilosr={setkilosr}
@@ -329,6 +220,12 @@ function Boleta({
                           warning={warning}
                           setwarning={setwarning}
                           modaladdOpen={modaladdOpen}
+                          NomMotivoEntrada={NomMotivoEntrada}
+                          setNomMotivoEntrada={setNomMotivoEntrada}
+                          ClaUbicacionOrigen={ClaUbicacionOrigen}
+                          ClaViajeOrigen={ClaViajeOrigen}
+                          ClaFabricacionViaje={ClaFabricacionViaje}
+                          setClaFabricacionViaje={setClaFabricacionViaje}
                         />
                       )}
                     </TableContainer>
@@ -347,8 +244,8 @@ function Boleta({
                 </CardTitle>
               </CardHeader>
               <CardBody>
-                <Row>
-                  <Col md={{ size: 12, offset: 0 }}>
+                <Row className="detalle-boleta" style={{width:"100%",margin:"0px"}}>
+                  <Col md={{ size: 12, offset: 0 }} style={{padding:"0px"}}>
 
                     {/* Sección de detalles de la boleta/placa */} 
 
@@ -359,7 +256,7 @@ function Boleta({
                         <CircularProgress color="primary" />
                       </div>
                     ) : (
-                      <DetalleBoleta listas={placadato} />
+                      <DetalleBoleta listas={placadato} editBoxValue={editBoxValue} setMaterialviaje={setMaterialviaje} setmaterial={setmaterial} NomMotivoEntrada={NomMotivoEntrada} ClaUbicacionOrigen={ClaUbicacionOrigen} ClaViajeOrigen={ClaViajeOrigen} ClaFabricacionViaje={ClaFabricacionViaje} />
                     )}
                   </Col>
                 </Row>

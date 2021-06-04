@@ -25,6 +25,7 @@ export default class ErrorHandler extends React.Component {
             {this.state.error && this.state.error.toString()}
             <br />
             {this.state.errorInfo.componentStack}
+            Intenta refrescando la página
           </details>
         </div>
       );

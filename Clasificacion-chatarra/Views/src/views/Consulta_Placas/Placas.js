@@ -5,11 +5,19 @@ import { Link } from 'react-router-dom';
 
 
 // Cascaron del mapeo de elementos
-const Items= ({listas,setpoppesaje,setrow}) => {
+const Items= ({listas,
+  setpoppesaje,
+  setrow,
+  NomMotivoEntrada,
+  setNomMotivoEntrada,
+  setClaUbicacionOrigen,
+  setClaViajeOrigen,
+  setClaFabricacionViaje,
+  setpesajeparcial,}) => {
     return (
       <div>
         {listas !==undefined && listas.map((lista) => (
-          <div key={lista.IdBoleta} style={{marginTop: "20px"}}>
+          <div key={lista.IdBoleta} className="placas-container">
             <Col className="column-items">
               <Row>
                 <Col md="12">
@@ -24,8 +32,8 @@ const Items= ({listas,setpoppesaje,setrow}) => {
                     overflowX: 'auto',
                     }}
                   >
-                    <Link style={{color:"rgb(41, 41, 41)"}} to={`/Informacion/${lista.ClaVehiculoPorClasificar ? lista.ClaVehiculoPorClasificar : "Sin dato" }/${lista.IdBoleta}`}>
-                      <i className="fa fa-info-circle fa-2x" onClick={()=>{setpoppesaje(true);setrow(0)}} aria-hidden="true"></i>
+                    <Link style={{color:"rgb(41, 41, 41)"}} to={`/Clasificacion-Chatarra/Placa:${lista.ClaVehiculoPorClasificar ? lista.ClaVehiculoPorClasificar : "Sin dato" }/Boleta:${lista.IdBoleta}`}>
+                      <i className="fa fa-info-circle fa-2x" onClick={()=>{setpoppesaje(true);setrow(0);setNomMotivoEntrada(lista.ClaMotivoEntrada);setClaUbicacionOrigen(lista.ClaUbicacionOrigen); setClaViajeOrigen(lista.ClaViajeOrigen); setpesajeparcial(0)}} aria-hidden="true"></i>
                     </Link>
                     <div className="form" style={{width: "100%"}}>
                       <div className="dx-fieldset">

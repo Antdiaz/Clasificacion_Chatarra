@@ -1,24 +1,38 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import 'devextreme-react/text-area';
-import {
-  Row,
-  Col,
-  Button,
-  Input,
-} from 'reactstrap';
+import { Row, Col, Button, Input } from 'reactstrap';
 import Items from './Placas';
 
-
-function Consulta({ Valores, Datos, setDatos,filtropesaje,setfiltropesaje,showResults,setshowResults,status,setstatus,transporte,settransporte,setpoppesaje,setrow}) {
- // Valor usado para el input de filtrado
+function Consulta({
+  Valores,
+  Datos,
+  setDatos,
+  filtropesaje,
+  setfiltropesaje,
+  showResults,
+  setshowResults,
+  status,
+  setstatus,
+  transporte,
+  settransporte,
+  setpoppesaje,
+  setrow,
+  NomMotivoEntrada,
+  setNomMotivoEntrada,
+  setClaUbicacionOrigen,
+  setClaViajeOrigen,
+  setClaFabricacionViaje,
+  setpesajeparcial
+}) {
+  // Valor usado para el input de filtrado
   const [Filtro, setFiltro] = useState(null);
 
-// Función para filtrado de Placas con Pesaje Parcial
+  // Función para filtrado de Placas con Pesaje Parcial
   const useCheckbox = (e) => {
-    setfiltropesaje(e.target.checked)
-    setDatos('')
-  }
-// Función para input de filtrado
+    setfiltropesaje(e.target.checked);
+    setDatos('');
+  };
+  // Función para input de filtrado
   const handleChange = (event) => {
     event.preventDefault();
     setFiltro(event.target.value);
@@ -28,22 +42,21 @@ function Consulta({ Valores, Datos, setDatos,filtropesaje,setfiltropesaje,showRe
   const handleinputt = (event) => {
     event.preventDefault();
     settransporte(event.target.value);
-    setDatos('')
+    setDatos('');
   };
 
   // Función para filtrado de Tipo de Status
   const handleinputs = (event) => {
     event.preventDefault();
     setstatus(event.target.value);
-    setDatos('')
+    setDatos('');
   };
 
   const handleShow = (e) => {
     setshowResults(!showResults);
   };
 
-
-// Función para Filtrado que se agregó al input
+  // Función para Filtrado que se agregó al input
   const handleSearch = (e) => {
     e.preventDefault();
 
@@ -55,7 +68,7 @@ function Consulta({ Valores, Datos, setDatos,filtropesaje,setfiltropesaje,showRe
   };
 
   return (
-    <div style={{ minHeight: '450px' }}>
+    <div className="Consulta" style={{ minHeight: '450px' }}>
       <Row>
         <Col className="input-show" style={{ position: 'absolute' }}>
           {/* Símbolo ">" cuando no se muestran los filtros */}
@@ -117,9 +130,12 @@ function Consulta({ Valores, Datos, setDatos,filtropesaje,setfiltropesaje,showRe
             <i className="fas fa-angle-right fa-2x" onClick={handleShow}></i>
           </Col>
           <Col md={{ size: 3, offset: 0 }}>
-            <form>
+            <form className="filtro-transporte">
               <>{/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}</>
-              <label type="text">Transporte:</label>&nbsp;
+              <label type="text" className="filtro-texto">
+                Transporte:
+              </label>
+              &nbsp;
               <select
                 name="vehiculo"
                 id="vehiculo"
@@ -133,10 +149,14 @@ function Consulta({ Valores, Datos, setDatos,filtropesaje,setfiltropesaje,showRe
               </select>
             </form>
           </Col>
-          <Col md={{ size: 2, offset: 0 }}>
+          <Col md={{ size: 3, offset: 0 }}>
             <form>
               <>{/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}</>
-              <label type="text"> Status:</label>&nbsp;
+              <label type="text" className="filtro-texto">
+                {' '}
+                Status:
+              </label>
+              &nbsp;
               <select
                 name="status"
                 id="status"
@@ -156,52 +176,85 @@ function Consulta({ Valores, Datos, setDatos,filtropesaje,setfiltropesaje,showRe
       {/* Placas de la Ubicación afectado por los filtros */}
       {Valores && (
         <Items
+          setpesajeparcial={setpesajeparcial}
+          setClaUbicacionOrigen={setClaUbicacionOrigen}
+          setClaViajeOrigen={setClaViajeOrigen}
+          setClaFabricacionViaje={setClaFabricacionViaje}
+          NomMotivoEntrada={NomMotivoEntrada}
+          setNomMotivoEntrada={setNomMotivoEntrada}
           setrow={setrow}
           setpoppesaje={setpoppesaje}
           listas={
             Datos && filtropesaje
               ? Valores.filter(
                   (lista) =>
-                  [lista.EsPesajeParcial].includes(1) &&
-                  (status === 'porclasificar' ?  [lista.EsClasificado].includes(0):status === 'clasificado' ? [lista.EsClasificado].includes(1):[lista.EsClasificado]) &&
-                 lista.ClaVehiculoPorClasificar.includes(Datos) ||
-                    [lista.NomChofer].includes(Datos) ||
-                    [lista.NomProveedor].includes([Datos]) ||
-                    lista.NomMotivoEntrada.includes(Datos) ||
+                    ([lista.EsPesajeParcial].includes(1) &&
+                      (status === 'porclasificar'
+                        ? [lista.EsClasificado].includes(0)
+                        : status === 'clasificado'
+                        ? [lista.EsClasificado].includes(1)
+                        : [lista.EsClasificado]) &&
+                      lista.ClaVehiculoPorClasificar.toLowerCase().includes(Datos.toLowerCase())) ||
+                    [lista.NomChofer].includes(Datos.toUpperCase()) ||
+                    [lista.NomProveedor].includes(Datos) ||
+                    lista.NomMotivoEntrada.toLowerCase().includes(Datos.toLowerCase()) ||
                     lista.IdBoleta.toString().includes(Datos) ||
-                    lista.IdBoleta.toString().includes(Datos) ||
-                    lista.PesoEntrada.toString().includes(Datos) ||
-                    lista.NomTransporte.includes(Datos) ||
-                    lista.NomTransportista.includes(Datos) ||
-                    lista.NomMotivoEntrada.includes(Datos) ||
-                    lista.PesoEntrada.toString().includes(Datos)
+                    lista.PesoEntrada.toString().includes(Datos.replace(/,/g, '')) ||
+                    lista.NomTransporte.includes(Datos.toUpperCase()) ||
+                    lista.NomTransportista.includes(Datos.toUpperCase())
                 )
-              :!Datos && filtropesaje ? Valores.filter((lista) => 
-              [lista.EsPesajeParcial].includes(1) && (transporte === 'ferrocarril' ? [lista.ClaTransporte].includes(8):transporte=== 'autotransporte'? ![lista.ClaTransporte].includes(8):[lista.ClaTransporte]) &&
-              (status === 'porclasificar' ?  [lista.EsClasificado].includes(0):status === 'clasificado' ? [lista.EsClasificado].includes(1):[lista.EsClasificado])
-              ): 
-              Datos && !filtropesaje 
+              : !Datos && filtropesaje
               ? Valores.filter(
-                (lista) =>
-                (transporte === 'ferrocarril' ? [lista.ClaTransporte].includes(8):transporte=== 'autotransporte'? ![lista.ClaTransporte].includes(8):[lista.ClaTransporte]) &&
-                (status === 'porclasificar' ?  [lista.EsClasificado].includes(0):status === 'clasificado' ? [lista.EsClasificado].includes(1):[lista.EsClasificado]) &&
-                  lista.ClaVehiculoPorClasificar.includes(Datos) ||
-                  [lista.NomChofer].includes(Datos) ||
-                  [lista.NomProveedor].includes(Datos) ||
-                  lista.NomMotivoEntrada.includes(Datos) ||
-                  lista.IdBoleta.toString().includes(Datos) ||
-                  lista.IdBoleta.toString().includes(Datos) ||
-                  lista.PesoEntrada.toString().includes(Datos) ||
-                  lista.NomTransporte.includes(Datos) ||
-                  lista.NomTransportista.includes(Datos) ||
-                  lista.NomMotivoEntrada.includes(Datos) ||
-                  lista.PesoEntrada.toString().includes(Datos)
-              ):
-               !Datos && !filtropesaje  &&
-               Valores.filter(
-                (lista) =>
-                (status === 'porclasificar' ?  [lista.EsClasificado].includes(0):status === 'clasificado' ? [lista.EsClasificado].includes(1):[lista.EsClasificado]) &&
-                (transporte === 'ferrocarril' ? [lista.ClaTransporte].includes(8):transporte=== 'autotransporte'? ![lista.ClaTransporte].includes(8):[lista.ClaTransporte]))
+                  (lista) =>
+                    [lista.EsPesajeParcial].includes(1) &&
+                    (transporte === 'ferrocarril'
+                      ? [lista.ClaTransporte].includes(8)
+                      : transporte === 'autotransporte'
+                      ? ![lista.ClaTransporte].includes(8)
+                      : [lista.ClaTransporte]) &&
+                    (status === 'porclasificar'
+                      ? [lista.EsClasificado].includes(0)
+                      : status === 'clasificado'
+                      ? [lista.EsClasificado].includes(1)
+                      : [lista.EsClasificado])
+                )
+              : Datos && !filtropesaje
+              ? Valores.filter(
+                  (lista) =>
+                    ((transporte === 'ferrocarril'
+                      ? [lista.ClaTransporte].includes(8)
+                      : transporte === 'autotransporte'
+                      ? ![lista.ClaTransporte].includes(8)
+                      : [lista.ClaTransporte]) &&
+                      (status === 'porclasificar'
+                        ? [lista.EsClasificado].includes(0)
+                        : status === 'clasificado'
+                        ? [lista.EsClasificado].includes(1)
+                        : [lista.EsClasificado]) &&
+                      lista.ClaVehiculoPorClasificar.toLowerCase().includes(Datos.toLowerCase())) ||
+                    [lista.NomChofer].includes(Datos.toUpperCase()) ||
+                    [lista.NomProveedor].includes(Datos) ||
+                    lista.NomMotivoEntrada.toLowerCase().includes(Datos.toLowerCase()) ||
+                    lista.IdBoleta.toString().includes(Datos) ||
+                    lista.PesoEntrada.toString().includes(Datos.replace(/,/g, '')) ||
+                    lista.NomTransporte.includes(Datos.toUpperCase()) ||
+                    lista.NomTransportista.includes(Datos.toUpperCase())
+                )
+              : !Datos &&
+                !filtropesaje &&
+                Valores.filter(
+                  (lista) =>
+                    (status === 'porclasificar'
+                      ? [lista.EsClasificado].includes(0)
+                      : status === 'clasificado'
+                      ? [lista.EsClasificado].includes(1)
+                      : [lista.EsClasificado]) &&
+                    (transporte === 'ferrocarril'
+                      ? [lista.ClaTransporte].includes(8)
+                      : transporte === 'autotransporte'
+                      ? ![lista.ClaTransporte].includes(8)
+                      : [lista.ClaTransporte])
+                )
           }
         />
       )}

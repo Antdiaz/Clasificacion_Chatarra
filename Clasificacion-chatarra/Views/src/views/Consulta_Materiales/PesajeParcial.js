@@ -72,7 +72,7 @@ function PesajeParcial(props) {
         };
         /* eslint-enable */
          callApi(urlKrakenService, 'POST', data12, (res) => {
-          console.log(res);
+          // console.log(res);
         })
       })
       

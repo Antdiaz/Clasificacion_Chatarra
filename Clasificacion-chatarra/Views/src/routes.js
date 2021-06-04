@@ -7,7 +7,7 @@ const routes = [
     name: 'Consultar Placas',
     icon: 'fa fa-search',
     component: Consulta,
-    layout: '/layout',
+    layout: '/Clasificacion-Chatarra',
   },
 ];
 

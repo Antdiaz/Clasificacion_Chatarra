@@ -23,6 +23,7 @@ class Admin extends React.Component {
       editBoxValue: getSessionItem('PatioEscogido'),
       row: null,
       material: null,
+      materialtodos: null,
       materialr: 0,
       cantidadr: 0,
       kilosr: 0,
@@ -36,9 +37,21 @@ class Admin extends React.Component {
       filtropesaje:false,
       showResults:false,
       transporte:'todos',
-      status:'todos'
+      status:'todos',
+      NomMotivoEntrada:0,
+      ClaUbicacionOrigen:0,
+      ClaViajeOrigen:0,
+      ClaFabricacionViaje:0,
     };
   }
+  
+  setClaUbicacionOrigen=(Val) => this.setState(() =>({ClaUbicacionOrigen: Val}))
+
+  setClaViajeOrigen=(Val) => this.setState(() =>({ClaViajeOrigen: Val}))
+
+  setClaFabricacionViaje=(Val) => this.setState(() =>({ClaFabricacionViaje: Val}))
+
+  setNomMotivoEntrada= (Val) => this.setState(() =>({NomMotivoEntrada: Val}))
 
   setwarning =(Val) => this.setState(() => ({ warning: Val}))
 
@@ -59,6 +72,8 @@ class Admin extends React.Component {
   setrow = (Val) => this.setState(() => ({ row: Val }));
 
   setmaterial = (Val) => this.setState(() => ({ material: Val }));
+
+  setmaterialtodos = (Val) => this.setState(() => ({ materialtodos: Val }));
 
   setmaterialr = (Val) => this.setState(() => ({ materialr: Val }));
 
@@ -82,6 +97,8 @@ class Admin extends React.Component {
 
   setstatus = (Val) => this.setState(() => ({status: Val }));
 
+
+  abortController = new AbortController()
 
   async componentDidMount() {
     const urlKrakenService = `${config.KrakenService}/${24}/${37}`;
@@ -124,11 +141,15 @@ class Admin extends React.Component {
       }))
   }
 
+  componentWillUnmount(){
+    this.abortController.abort();
+  }
+  
   componentDidUpdate(e, prevState) {
     if (e.history.pathname !== e.location.pathname) {
-      document.documentElement.scrollTop = 0;
-      document.scrollingElement.scrollTop = 0;
-      this.refs.mainContent.scrollTop = 0;
+      // document.documentElement. = 0;
+      // document.scrollingElement.scrollTop = 0;
+      // this.refs.mainContent.scrollTop = 0;
     }
 
     if (prevState.editBoxValue !== this.state.editBoxValue) {
@@ -151,7 +172,7 @@ class Admin extends React.Component {
       if (prop.collapse) {
         return this.getRoutes(prop.views);
       }
-      if (prop.layout === '/layout') {
+      if (prop.layout === '/Clasificacion-Chatarra') {
         if (prop.path === '/Placas') {
           return (
             <Route
@@ -165,6 +186,8 @@ class Admin extends React.Component {
                   setrow={this.setrow}
                   material={this.state.material}
                   setmaterial={this.setmaterial}
+                  pesajeparcial={this.state.pesajeparcial}
+                  setpesajeparcial={this.setpesajeparcial}
                   filtropesaje={this.state.filtropesaje}
                   setfiltropesaje={this.setfiltropesaje}
                   showResults={this.state.showResults}
@@ -174,6 +197,14 @@ class Admin extends React.Component {
                   status={this.state.status}
                   setstatus={this.setstatus}
                   setpoppesaje={this.setpoppesaje}
+                  NomMotivoEntrada={this.state.NomMotivoEntrada}
+                  setNomMotivoEntrada={this.setNomMotivoEntrada}
+                  ClaUbicacionOrigen={this.state.ClaUbicacionOrigen}
+                  ClaViajeOrigen={this.state.ClaViajeOrigen}
+                  ClaFabricacionViaje={this.state.ClaFabricacionViaje}
+                  setClaUbicacionOrigen={this.setClaUbicacionOrigen}
+                  setClaViajeOrigen={this.setClaViajeOrigen}
+                  setClaFabricacionViaje={this.setClaFabricacionViaje}
                 />
               )}
               key={key}
@@ -236,7 +267,7 @@ class Admin extends React.Component {
           />
           <Switch>{this.getRoutes(routes)}</Switch>
           <Switch>
-            <Route path="/Informacion/:placa/:id">
+            <Route path="/Clasificacion-Chatarra/Placa::placa/Boleta::id">
               <Sidebar
                 {...this.props}
                 routes={routes}
@@ -251,6 +282,8 @@ class Admin extends React.Component {
                 setrow={this.setrow}
                 material={this.state.material}
                 setmaterial={this.setmaterial}
+                materialtodos={this.state.materialtodos}
+                setmaterialtodos={this.setmaterialtodos}
                 materialr={this.state.materialr}
                 cantidadr={this.state.cantidadr}
                 kilosr={this.state.kilosr}
@@ -269,6 +302,14 @@ class Admin extends React.Component {
                 setpesajeparcial={this.setpesajeparcial}
                 poppesaje={this.state.poppesaje}
                 setpoppesaje={this.setpoppesaje}
+                NomMotivoEntrada={this.state.NomMotivoEntrada}
+                setNomMotivoEntrada={this.setNomMotivoEntrada}
+                ClaUbicacionOrigen={this.state.ClaUbicacionOrigen}
+                ClaViajeOrigen={this.state.ClaViajeOrigen}
+                ClaFabricacionViaje={this.state.ClaFabricacionViaje}
+                setClaUbicacionOrigen={this.setClaUbicacionOrigen}
+                setClaViajeOrigen={this.setClaViajeOrigen}
+                setClaFabricacionViaje={this.setClaFabricacionViaje}
               />
             </Route>
           </Switch>

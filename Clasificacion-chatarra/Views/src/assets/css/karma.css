@@ -56,6 +56,10 @@ table.scroll input {
   border-color: rgba(29, 140, 248, 0.3);
 }
 
+.placas-container{
+  margin-top: 20px;
+}
+
 body{
   overflow-x: hidden !important;
 }
@@ -67,11 +71,28 @@ body{
   width:max-content
 }
 
+.Todos-materiales{
+  color:rgb(250, 138, 10);
+  font-size:1vw;
+}
+
 .extra-filter{
   margin-top: 20px;
   margin-left: 4%;
 }
 
+.Component-root-17{
+  margin:0px;
+  margin-right:8px;
+}
+
+.MuiTypography-body1{
+  font-size:12px !important;
+}
+
+.MuiFormControlLabel-root {
+  justify-content: flex-end;
+}
 
 .Warning{
   position:fixed;
@@ -95,15 +116,24 @@ body{
   color:rgb(232, 173, 69);
 }
 
+.Consulta > .row{
+  flex-wrap:inherit !important
+}
+
 .warning-close{
   position:absolute;
   right:1.5%;
   top:1%;
 }
 
+.filtro-texto{
+  font-size: 1.3vw;
+}
+
 .extra-select{
   border-radius: 15px;
   border-color: rgb(209, 209, 209);
+  font-size:1.1vw
 }
 
 .g-sidenav-hidden  .navbar-vertical {
@@ -140,6 +170,11 @@ table.scroll tbody > tr > td {
   margin-top:70px;
   font-size:12px;
 }
+
+.mapeo-contaminantes > .row{
+  justify-content: center;
+}
+
 
 tbody td,
 thead th {
@@ -230,6 +265,10 @@ min-height:120px !important;
   position:absolute;
 }
 
+.ps__rail-x .ps--clicking{
+  visibility: hidden;
+}
+
 .table td{
   font-size:.8rem;
 }
@@ -285,7 +324,7 @@ min-height:120px !important;
 /* width */
 
 ::-webkit-scrollbar {
-  width: 15px;
+  width: 17px;
 }
 
 /* Track */
@@ -317,7 +356,7 @@ table::-webkit-scrollbar-thumb {
 /* Handle on hover */
 
 ::-webkit-scrollbar-thumb:hover {
-  border-radius: 10px;
+  border-radius: 5px;
   background: #002c6f;
 }
 
@@ -514,6 +553,7 @@ font-size:18px;
  right:7vw;
  bottom:1vw;
  margin-top:30px;
+ z-index:1;
 }
 
 .fa-home{
@@ -533,6 +573,7 @@ margin-left:25px;
   width:fit-content;
 }
 
+
 .dx-field-label p {
   text-align: right;
 }
@@ -545,19 +586,21 @@ margin-left:25px;
 }
 
 .placa-imagenes{
-  margin:10px;
+  margin:9px;
   width:23%;
   min-width:200px;
-  z-index:-1;
+  z-index:0;
+  height:unset;
 }
 
 
 
 .p-2{
   padding: 0px !important;
-  height:168px;
   background:rgb(255, 255, 255) !important;
   overflow:hidden;
+  border-radius: 10px 10px 0px 0px;
+  min-height:12vw;
 }
 
 .card .card-header:not([data-background-color]) {
@@ -568,6 +611,28 @@ margin-left:25px;
 .card-body {
   border-radius: 0px 0px 10px 10px;
   padding:0px;
+}
+
+.placa-imagenes > .card-body {
+    padding:0px !important;
+    height:128px !important;
+}
+
+.Completo_container{
+  display:flex;
+  align-items: center;
+  justify-content: center;
+  height:100%;
+}
+
+.imagen_completa{
+ vertical-align:center;
+ height:auto;
+}
+
+.imagen-pre-registro{
+    object-position: 0px -13vw;
+    width: 100%;
 }
 
 .card {
@@ -696,12 +761,31 @@ body.ReactModal__Body--open{
   color: #002c6f
 }
 
+.close-image {
+  content: 'x';
+  cursor: pointer;
+  position: absolute;
+  right: calc(5%);
+  top: calc(89vh - 85vh );
+  width: 30px;
+  height: 30px;
+  line-height: 50px;
+  text-align: center;
+  font-size: 30px;
+  color: white;
+  font-weight: 700;
+}
+
 .bote-elect{
   margin-left:22%;
    font-size:18px;
 }
 
 .popup-bote{
+  display: table-cell;
+  vertical-align: bottom;
+  width:min-content;
+  height:48px !important;
   color:#ebaf0a;
 }
 
@@ -726,8 +810,11 @@ body.ReactModal__Body--open{
   display:flex;
   flex-direction: column;
   text-align:center;
-  margin-top:20px;
-  margin-bottom:20px;
+  margin-top:0px;
+  margin-bottom:0px;
+  align-items:center;
+  margin-left:3vw;
+  margin-right:3vw;
 }
 .popup-number{
 text-align:center;
@@ -853,8 +940,46 @@ box-shadow:2px 2px 2px rgb(196, 195, 195) !important;
   width: 150px;
 }
 
+.Todos-materiales{
+  font-size:11px;
+}
+.placa-imagenes > .card-body {
+  height:18vw !important;
+}
+
+.p-2{
+  min-height:170px;
+}
+
+.card-body{
+  padding-top:0px !important;
+}
+
+.imagen-pre-registro{
+  object-position: 0px -18vw;
+}
+
+.filtro-texto{
+  font-size: 1.2vw;
+  margin-bottom:0px;
+}
+
+.extra-select{
+  font-size:1.25vw;
+}
+
+.detalle-boleta > .col-md-12{
+  padding-right: 0px !important;
+    padding-left: 0px !important;
+}
+
+.detalle-materiales > .col-md-12{
+  padding-right: 0px !important;
+    padding-left: 0px !important;
+}
+
 .pre-registro{
-  padding-top:17vh;
+  padding-top:50px;
   font-size:10px !important;
 }
 
@@ -880,15 +1005,18 @@ box-shadow:2px 2px 2px rgb(196, 195, 195) !important;
 
 }
 .card-login,.px-lg-5,.py-lg-5, .card-body{
-  /* padding:.3rem !important;
   padding-left:1rem !important;
-  padding-right:1rem !important; */
+  padding-right:1rem !important;
 }
 }
 
 @media only screen and (max-width: 850px) {
   .dx-field-value-static {
     font-size:11px
+  }
+
+  .Todos-materiales{
+    font-size:10px;
   }
 
   .container-fluid{
@@ -918,14 +1046,54 @@ margin:0px;
 
 }
 
-@media only screen and (max-width: 750px) {
+@media only screen and (max-width: 760px) { 
+
+  .p-2{
+    min-height:110px;
+  }
+
+  .Todos-materiales{
+    font-size:9px;
+  }
+  
+  .input-show{
+    margin-top: 210px;
+    width: 300px;
+    position: absolute;
+    left:0%;
+    margin-bottom:30px;
+  }
+  
+  .extra-filter{
+    margin-top:2.7%;
+  }
+
+  .filtro-transporte{
+    float:right;
+  }
+
+  .filtro-texto{
+    font-size: 13px;
+  }
+
+  .extra-select{
+    font-size:13px;
+  }
+  
+
+  .extra-filter > .fa-2x{
+    font-size:1.5em;
+  }
+
   .input-bar{
     width:70%
   }
 
   .input-parcial{
     right:0%;
-    margin-top:90px;
+    margin-top:87px;
+    padding-right:0 !important;
+    padding-left:50px;
   }
 
   .input-search{
@@ -950,8 +1118,8 @@ margin:0px;
   }
 
   .placa-imagenes{
-    width:28%;
-    margin:20px;
+    width:40%;
+    margin:15px;
   }
 
   .card-title{
@@ -979,8 +1147,23 @@ margin:0px;
     font-size:18px
 }
 
+.close-image {
+  font-size: 22px;
+}
+
+.Todos-materiales{
+  font-size:8px;
+}
+
 .warning{
   font-size: 10px;
+}
+
+.input-parcial{
+  right:0%;
+  margin-top:79px;
+  padding-right:0 !important;
+  padding-left:40px;
 }
 
 .dx-dropdowneditor.dx-dropdowneditor-field-clickable {
@@ -1041,7 +1224,7 @@ padding-right:10px !important;
 }
 
 img[alt*="deaceroLogo"] {
-  width: 100px !important;
+  width: 140px !important;
 }
 
 .placa-style .dx-texteditor-input {
@@ -1051,6 +1234,10 @@ img[alt*="deaceroLogo"] {
 
 .dx-list-item-content {
   font-size: 13px;
+}
+
+.imagen-pre-registro{
+  object-position: 0px -21vw;
 }
 
 img[alt*="avatar"] {
@@ -1072,6 +1259,11 @@ img[alt*="avatar"] {
   width:100px !important;
   left:10% !important;
 }
+
+.col-md-3{
+  padding-right:10px;
+  padding-left:1px;
+}
 }
 
 
@@ -1086,12 +1278,74 @@ img[alt*="avatar"] {
 .warning{
   font-size: 8px;
 }
+
+.col-md-3{
+  padding-right:0px;
+  padding-left:1px;
+}
+
+.placa-imagenes{
+  width:40%;
+  margin:5px;
+}
 }
 
 @media only screen and (max-width: 460px) {
 
+  .navbar-vertical.navbar-expand-xs.fixed-left {
+    left: -10px;
+}
+
+.p-2{
+  min-height:22vw;
+}
+
+.col-md-3 {
+  padding-right: 9.1vw;
+  padding-left: 4vw;
+}
+
+.row{
+  font-size:12px;
+}
+
+.close-icon{
+  font-size: 18px;
+}
+
+.close-image {
+  font-size: 18px;
+}
+
+.selector .dx-placeholder {
+font-size:12px;
+}
+
+.dx-texteditor-input {
+  font-weight:400;
+}
+
+.ajuste-subalmacen .col{
+  flex-wrap:nowrap;
+  padding-left:0px;
+}
+
+.warning {
+  padding-left:5px;
+  font-size: 10px;
+}
+
+.perfect-scrollbar-off {
+  width: 102.5% !important;
+  overflow-x: hidden !important;
+}
+
+.main-content {
+    margin-left: 45px !important;
+}
+
   img[alt*="deaceroLogo"] {
-    width: 80px !important;
+    width: 110px !important;
   }
   
   .placa-imagenes{
@@ -1099,6 +1353,7 @@ img[alt*="avatar"] {
     margin:10px;
     min-width:100px;
   }
+
 
   .dx-list-item-content {
     font-size: 10px;
@@ -1145,10 +1400,6 @@ font-size: 15px;
   .g-sidenav-hidden .navbar-vertical {
     width: 30px !important;
   }
-   .main-content{
-    margin-left:30px !important;
-  } 
-
 }
 /* .sidenav,.navbar-vertical,.navbar-expand-xs,.navbar-light,.bg-white,.fixed-left,.navbar {
   display:none;
@@ -1157,6 +1408,17 @@ font-size: 15px;
 .g-sidenav-hidden .navbar-vertical {
   width: 55px !important;
 }
- .main-content{
-  margin-left:55px !important;
-} 
+
+@media only screen and (max-width: 400px) {
+  .dx-field-label{
+font-size:9px;
+  }
+
+  .dx-field-value-static{
+    font-size:9px;
+  }
+
+  img[alt*="deaceroLogo"] {
+    width: 90px !important;
+  }
+}

@@ -1,16 +1,70 @@
-import React from 'react'
+import React,{useEffect} from 'react'
+import { config } from '../../utils/config';
+import { callApi} from '../../utils/utils';
 import 'devextreme-react/text-area';
 import { Row, Col} from 'reactstrap';
 
 
 // Elemento Cascaron para detalle de la placa
-const DetalleBoleta= ({listas}) => {
+const DetalleBoleta= ({listas,setmaterial,editBoxValue,NomMotivoEntrada,ClaUbicacionOrigen,ClaViajeOrigen,setMaterialviaje,ClaFabricacionViaje}) => {
+  // Función que corre servicios antes del render cada que haya un cambio de material
+  // Servicio JSON 5 --> SP= AmpSch.AmpClaArticulosdeProvSel <Consultar Materiales>
+  useEffect(() => {
+    const urlKrakenService = `${config.KrakenService}/${24}/${37}`;
+
+    /* eslint-disable */
+    const data5 = {
+      // parameters: "{\"IdListaPrecio\":"+ placadato[0].IdListaPrecio +",\"ClaOrdenCompra\":"+ placadato[0].ClaOrdenCompra+",\"IdAcuerdo\":"+ placadato[0].IdAcuerdo +",\"IdPedidoImportacion\":"+ placadato[0].IdPedidoImportacion +",\"IdBoleta\":"+ placadato[0].IdBoleta +"}",
+      parameters:
+        '{"ClaUbicacion":' +
+        editBoxValue +
+        ',"ClaServicioJson":' +
+        5 +
+        ',"Parametros":"@pnClaUbicacion=' +
+        editBoxValue +
+        ',@pnIdListaPrecio=' +
+        listas[0].IdListaPrecio +
+        ',@pnIdBoleta=' +
+        listas[0].IdBoleta +
+        '"}',
+      tipoEstructura: 0,
+    };
+
+    const data29 = {
+      parameters:
+        '{"ClaUbicacion":' +
+        editBoxValue +
+        ',"ClaServicioJson":29,"Parametros":"@pnClaUbicacion=' +
+        editBoxValue +
+        ',@pnClaUbicacionOrigen=' +
+        ClaUbicacionOrigen+
+        ',@pnClaViajeOrigen=' +
+        ClaViajeOrigen +
+        ',@pnClaFabricacionViaje=' +
+        ClaFabricacionViaje +
+        '"}',
+      tipoEstructura: 0,
+    };
+
+    /* eslint-enable */
+    if(NomMotivoEntrada===9){
+    callApi(urlKrakenService, 'POST', data5, (res) => {
+      setmaterial(res.Result0);
+    });
+
+  }
+  if(NomMotivoEntrada===3){
+    callApi(urlKrakenService, 'POST', data29, (res) => {
+      setMaterialviaje(res.Result0);
+    });
+  } 
+  }, []);
     return (
       <div>
         {listas !==undefined && listas.map((lista) => (
-          <div key={lista.IdBoleta}>
+          <div key={lista.IdBoleta} className="detalle-boleta">
             <Col>
-              <Row>
+              <Row style={{display:"block"}}>
                 <Col md="1block" style={{padding: "0px"}}>
                   <div
                     id="PlacasFiltradas"
@@ -51,7 +105,7 @@ const DetalleBoleta= ({listas}) => {
                         {lista.ClaProveedor ==null ? null : (
                           <div className="dx-field">
                             <div className="dx-field-label block">Proveedor:</div>
-                            <div className="dx-field-value-static block">{lista.NomProveedor}</div>
+                            <div className="dx-field-value-static block">{lista.NomProveedor.split(/\s+/).slice(0,1) + [" "] + lista.NomProveedor.split(/\s+/).slice(2,3)}</div>
                           </div>
                         )}
                         <div className="dx-field ">
