@@ -105,6 +105,42 @@ body{
   z-index:1;
 }
 
+.reporte-box .MuiTable-root{
+  margin-left:auto;
+  margin-right:auto;
+  width:80%;
+  margin-top:150px;
+}
+
+.reporte-header{
+  border: 1px black solid;
+}
+
+.reporte-box .MuiTableCell-root{
+  border-bottom: 1px black solid !important;
+}
+
+.container-reporte{
+  display:flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-right:18px;
+  margin-top:6px;
+  cursor: pointer;
+}
+
+.icono-reporte{
+  width:30px !important;
+  color:white;
+}
+
+.texto-reporte{
+  color:white;
+  font-weight: 600;
+  font-size: 10px;
+}
+
 .warning-container{
   width:100%;
   height:auto;
@@ -553,7 +589,7 @@ font-size:18px;
  right:7vw;
  bottom:1vw;
  margin-top:30px;
- z-index:1;
+ z-index:0;
 }
 
 .fa-home{
@@ -738,6 +774,21 @@ body.ReactModal__Body--open{
   width: 60%;
   margin: 0 auto;
   height: auto;
+  margin-top: calc(95vh - 85vh - 20px);
+  background: #fff;
+  border-radius: 4px;
+  padding: 0px;
+  border: 1px solid #999;
+  overflow: auto;
+  margin-bottom:20px;
+}
+
+.reporte-box {
+  z-index:1;
+  position: relative;
+  width: 70%;
+  margin: 0 auto;
+  height: 800px;
   margin-top: calc(95vh - 85vh - 20px);
   background: #fff;
   border-radius: 4px;

@@ -699,7 +699,7 @@ const NuevoMaterial = (props) => {
         ipadress +
         ',@pnClaUsuarioMod=' +
         NumbUsuario +
-        ',@pnAccionSp="}',
+        ',@pnAccionSp=1"}',
       tipoEstructura: 0,
     };
     // usage
