@@ -14,6 +14,14 @@ function Reporte({setmodalreport}) {
           </span>
           <Table className="reporte-tabla" aria-label="a dense table">
             <TableHead>
+              <TableRow> 
+                <TableCell></TableCell> 
+                <TableCell></TableCell>
+                <TableCell className="reporte-header" colSpan={3} style={{ paddingRight: '0px' }}>
+                  Fabricación
+                </TableCell>
+                <TableCell className="reporte-header" colSpan={2}>Material</TableCell>   
+              </TableRow>
               <TableRow>
                 <TableCell className="reporte-header" style={{ paddingRight: '0px' }}>
                   Fabricación

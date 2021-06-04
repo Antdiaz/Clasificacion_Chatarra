@@ -118,6 +118,8 @@ body{
 
 .reporte-box .MuiTableCell-root{
   border-bottom: 1px black solid !important;
+  padding:5px;
+  text-align: center;
 }
 
 .container-reporte{
