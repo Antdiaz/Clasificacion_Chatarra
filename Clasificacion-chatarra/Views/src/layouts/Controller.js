@@ -143,10 +143,11 @@ class Admin extends React.Component {
       this.setPatio(res.Result0);
     });
 
+    if(this.state.editBoxValue===26){
     await callApi(urlKrakenService, 'POST', data,(res) => {
       this.setValores(res.Result0);
     });
-
+    }
       fetch('https://api.ipify.org?format=json')
       .then(results => results.json())
       .then(data => setSessionData({
@@ -174,9 +175,11 @@ class Admin extends React.Component {
       };
 
       /* eslint-enable */
+      if(this.state.editBoxValue===26){
       callApi(urlKrakenService, 'POST', data, (res) => {
         this.setValores(res.Result0);
       });
+    }
     }
   }
 
