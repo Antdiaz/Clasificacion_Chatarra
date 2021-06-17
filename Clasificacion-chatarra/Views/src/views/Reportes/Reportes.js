@@ -58,6 +58,7 @@ function Consulta({
     { label: 'Materiales', key: 'Materiales' },
     { label: 'Kilos', key: 'Kilos' },
     { label: 'Contaminantes', key: 'Contaminantes' },
+    { label: 'Rechazo', key: 'Rechazo' },
     { label: 'Llantas', key: 'Llantas' },
     { label: 'Cilindros', key: 'Cilindros' },
     { label: 'Bollas', key: 'Bollas' },
@@ -71,6 +72,7 @@ function Consulta({
     { label: 'Materiales', key: 'Materiales' },
     { label: 'Kilos', key: 'Kilos' },
     { label: 'Contaminantes', key: 'Contaminantes' },
+    { label: 'Rechazo', key: 'Rechazo' },
     { label: 'LlantasChico', key: 'LlantasChico' },
     { label: 'LlantasMediano', key: 'LlantasMediano' },
     { label: 'LlantasGrande', key: 'LlantasGrande' },
@@ -89,6 +91,7 @@ function Consulta({
       Kilos: '1200',
       MotivoContaminacion: 'Tierra',
       Contaminantes: '600',
+      Rechazo: '',
       LlantasChico: '0',
       LlantasMediano:'0',
       LlantasGrande:'0',
@@ -106,6 +109,7 @@ function Consulta({
       Kilos: '9000',
       MotivoContaminacion: 'Bicicleta',
       Contaminantes: '600',
+      Rechazo:'Total',
       LlantasChico: '2',
       LlantasMediano:'1',
       LlantasGrande:'0',
@@ -187,11 +191,11 @@ function Consulta({
               >
                 <Detalles editOpen={Open} seteditOpen={setOpen} report={report} />
               </Modal>
-              <TableRow key={index}>
+              <TableRow>
                 <TableCell className="table-content" style={{ textAlign: 'center' }}>
                   {report.Boleta}
                 </TableCell>
-                <TableCell className="table-content" style={{ textAlign: 'center' }}>
+                <TableCell className="table-content" style={{ textAlign: 'center',padding: '0px' }}>
                   {report.Fecha}
                 </TableCell>
                 <TableCell
@@ -212,6 +216,9 @@ function Consulta({
                   <i className="far fa-file fa-2x" style={{ color: 'gray' }} onClick={() => setOpen(true)}></i>
                   &nbsp;&nbsp;
                   <i className="fas fa-camera" style={{ color: '#ff6a00' }}></i>
+                </TableCell>
+                <TableCell className="table-content" style={{ textAlign: 'center' }}>
+                  {report.Rechazo}
                 </TableCell>
                 <TableCell className="table-content" style={{ textAlign: 'center' }}>
                   {report.LlantasChico>0 || report.LlantasMediano>0 || report.LlantasGrande>0 ? +report.LlantasChico*25 + +report.LlantasMediano*50 + +report.LlantasGrande*100: ''}&nbsp;{report.LlantasChico>0 || report.LlantasMediano>0 || report.LlantasGrande>0 ? report.Unidad: ''}
@@ -241,7 +248,7 @@ function Consulta({
   }
 
   return (
-    <div className="content" style={{ minHeight: '450px' }}>
+    <div className="content Reportes" style={{ minHeight: '450px' }}>
       <Row>
         <Col className="input-show" style={{ position: 'absolute' }}>
           {/* Símbolo ">" cuando no se muestran los filtros */}
@@ -263,7 +270,7 @@ function Consulta({
             <Input
               onChange={handleChange}
               type="text"
-              className="kar-input-login"
+              className="kar-input-login rpt-text"
               placeholder="Boleta / Proveedor / Contaminante"
               // value=""
             />
@@ -299,7 +306,7 @@ function Consulta({
                 type="date"
                 name="desde"
                 id="desde"
-                className="extra-select"
+                className="extra-select rpts"
                 max={Hoy}
                 defaultValue={FechaDesde}
               />
@@ -317,7 +324,7 @@ function Consulta({
                 type="date"
                 name="hasta"
                 id="hasta"
-                className="extra-select"
+                className="extra-select rpts"
                 max={Hoy}
                 defaultValue={FechaHasta}
               />

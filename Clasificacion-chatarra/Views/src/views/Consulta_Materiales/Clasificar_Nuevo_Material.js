@@ -206,7 +206,7 @@ const NuevoMaterial = (props) => {
 
   const urlKrakenService = `${config.KrakenService}/${24}/${config.Servicio}`;
   /* eslint-disable */
-  if(props.row.length===1 || props.row.length===2){
+  if((props.row.length===1  || props.row.length===2) && props.row[0].ClaArticuloCompra>0 ){
   const data481 = {
     parameters:
       '{"ClaUbicacion":' +
@@ -232,7 +232,7 @@ const NuevoMaterial = (props) => {
     setLlantasGrande2(res.Result0.length ? res.Result0[5].Cantidad : 0)
   })}
 
-  if(props.row.length===2){
+  if(props.row.length===2 && props.row[1].ClaArticuloCompra>0){
     /* eslint-disable */
   const data482 = {
     parameters:
@@ -884,7 +884,6 @@ const NuevoMaterial = (props) => {
 
     async function FuncionData()  {
     await callApi(urlKrakenService, 'POST', data36, (res) => {
-     console.log("hola")
      // console.log(res);
    });
    
@@ -958,7 +957,6 @@ const NuevoMaterial = (props) => {
       ',@pnAccionSp=1"}',
     tipoEstructura: 0,
   };/* eslint-enable */
-  console.log(data371)
   callApi(urlKrakenService, 'POST', data371, (res) => {
     // console.log(res);
   });
@@ -1888,7 +1886,7 @@ const NuevoMaterial = (props) => {
                     : kilosr === ''
                     ? 0
                     : cantidadr > 0
-                    ? cantidadr * (props.NomMotivoEntrada===9 ? Datosmaterial[0].PesoTeoricoKgs !== udefined && Datosmaterial[0].PesoTeoricoKgs: props.NomMotivoEntrada===3 ? Datosmaterial[0].PesoTeoricoRecibido: 1)
+                    ? cantidadr * (props.NomMotivoEntrada===9 ? Datosmaterial[0].PesoTeoricoKgs !== undefined && Datosmaterial[0].PesoTeoricoKgs: props.NomMotivoEntrada===3 ? Datosmaterial[0].PesoTeoricoRecibido: 1)
                     : kilosr}
                   &nbsp; kgs
                 </Row>

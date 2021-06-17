@@ -54,13 +54,12 @@ const DetalleBoleta= ({listas,setmaterial,editBoxValue,NomMotivoEntrada,ClaUbica
 
   }
   if(NomMotivoEntrada===3 ){
-    console.log(data29)
-    if(Materialviaje===0)
+    if(ClaFabricacionViaje!==0)
     callApi(urlKrakenService, 'POST', data29, (res) => {
       setMaterialviaje(res.Result0);
     });
   } 
-  }, [ClaFabricacionViaje,Materialviaje]);
+  }, [ClaFabricacionViaje]);
     return (
       <div>
         {listas !==undefined && listas.map((lista) => (

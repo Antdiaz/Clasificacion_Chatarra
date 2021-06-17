@@ -10,13 +10,13 @@ const routes = [
     component: Consulta,
     layout: '/Clasificacion-Chatarra',
   },
-  // {
-  //   path: '/Reportes',
-  //   name: 'Reportes',
-  //   icon:'fa fa-clipboard-list',
-  //   component: Reportes,
-  //   layout: '/Clasificacion-Chatarra',
-  // },
+  {
+    path: '/Reportes',
+    name: 'Reportes',
+    icon:'fa fa-clipboard-list',
+    component: Reportes,
+    layout: '/Clasificacion-Chatarra',
+  },
 ];
 
 export default routes;

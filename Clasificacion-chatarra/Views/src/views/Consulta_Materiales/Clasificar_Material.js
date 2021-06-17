@@ -197,7 +197,6 @@ const Material = (props) => {
   });
   const Rowies = props.row.filter((rox)=> (props.NomMotivoEntrada===9 ? rox.ClaArticuloCompra !== props.ro.ClaArticuloCompra : props.NomMotivoEntrada===3 && rox.ClaMaterialRecibeTraspaso !== props.ro.ClaMaterialRecibeTraspaso))
 
-console.log(Rowies)
   useEffect(() => {
 
 
@@ -805,7 +804,6 @@ console.log(Rowies)
   }
 
   if(props.NomMotivoEntrada===3){
-    console.log(data37)
     callApi(urlKrakenService, 'POST', data37, (res) => {
       // console.log(res);
     });
@@ -1013,11 +1011,9 @@ console.log(Rowies)
     /* eslint-enable */
 
     if(props.NomMotivoEntrada===9){
-      console.log(data11)
     callApi(urlKrakenService, 'POST', data11, (res) => {
       // console.log(res);
     });
-console.log(data12)
     callApi(urlKrakenService, 'POST', data12, (res) => {
       // console.log(res);
     })
@@ -1222,7 +1218,6 @@ console.log(data12)
           tipoEstructura: 0,
         };
            /* eslint-enable */
-           console.log("volvi")
         callApi(urlKrakenService, 'POST', data371, (res) => {
           // console.log(res);
         });
@@ -1295,7 +1290,6 @@ console.log(data12)
           tipoEstructura: 0,
         };
            /* eslint-enable */
-           console.log("soy el final")
         callApi(urlKrakenService, 'POST', data372, (res) => {
           // console.log(res);
         });

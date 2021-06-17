@@ -180,6 +180,10 @@ width: 8rem !important;
   flex-wrap:inherit !important
 }
 
+.Reportes > .row{
+  flex-wrap:inherit !important
+}
+
 .warning-close{
   position:absolute;
   right:1.5%;
@@ -1210,6 +1214,10 @@ margin:0px;
     width:90%
   }
 
+  .placas-container {
+    width: 107%; 
+}
+
   .popup-title{
     font-size:15px;
   }
@@ -1241,7 +1249,7 @@ margin:0px;
 
 .input-parcial{
   right:0%;
-  margin-top:79px;
+  margin-top:20px;
   padding-right:0 !important;
   padding-left:40px;
 }
@@ -1376,6 +1384,15 @@ img[alt*="avatar"] {
     left: -10px;
 }
 
+.rpts {
+  font-size: 11px;
+  width:110px;
+}
+
+::-webkit-input-placeholder{
+  font-size:11.5px !important;
+}
+
 .p-2{
   min-height:22vw;
 }
@@ -1384,6 +1401,7 @@ img[alt*="avatar"] {
   padding-right: 9.1vw;
   padding-left: 4vw;
 }
+
 
 .row{
   font-size:12px;

@@ -105,6 +105,7 @@ class Sidebar extends React.Component {
           <NavItem key={key}>
             <NavLink
               href="#pablo"
+              replace
               data-toggle="collapse"
               aria-expanded={this.state[prop.state]}
               className={classnames({
@@ -137,6 +138,7 @@ class Sidebar extends React.Component {
         <NavItem className={this.activeRoute(prop.layout + prop.path)} key={key} style={{overflow: "hidden"}}>
           <NavLink
             to={prop.layout + prop.path}
+            replace
             activeClassName=""
             onClick={() => {
               this.closeSidenav();
