@@ -17,7 +17,7 @@ const Items= ({listas,
   editBoxValue}) => {
     return (
       <div>
-        {listas !==undefined && listas.map((lista) => (
+        {listas !==undefined && editBoxValue===26 && listas.map((lista) => (
           <div key={lista.IdBoleta} className="placas-container">
             <Col className="column-items">
               <Row>
