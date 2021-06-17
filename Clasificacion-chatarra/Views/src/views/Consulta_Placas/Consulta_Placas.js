@@ -22,7 +22,8 @@ function Consulta({
   setClaUbicacionOrigen,
   setClaViajeOrigen,
   setClaFabricacionViaje,
-  setpesajeparcial
+  setpesajeparcial,
+  editBoxValue
 }) {
   // Valor usado para el input de filtrado
   const [Filtro, setFiltro] = useState(null);
@@ -176,6 +177,7 @@ function Consulta({
       {/* Placas de la Ubicación afectado por los filtros */}
       {Valores && (
         <Items
+          editBoxValue={editBoxValue}
           setpesajeparcial={setpesajeparcial}
           setClaUbicacionOrigen={setClaUbicacionOrigen}
           setClaViajeOrigen={setClaViajeOrigen}

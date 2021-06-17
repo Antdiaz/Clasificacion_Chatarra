@@ -225,6 +225,7 @@ class Admin extends React.Component {
                   Hoy={this.state.Hoy}
                   ReporteFiltrado={this.state.ReporteFiltrado}
                   setReporteFiltrado={this.setReporteFiltrado}
+                  editBoxValue={this.state.editBoxValue}
                 />
               )}
               key={key}

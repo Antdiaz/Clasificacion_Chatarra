@@ -13,7 +13,8 @@ const Items= ({listas,
   setClaUbicacionOrigen,
   setClaViajeOrigen,
   setClaFabricacionViaje,
-  setpesajeparcial,}) => {
+  setpesajeparcial,
+  editBoxValue}) => {
     return (
       <div>
         {listas !==undefined && listas.map((lista) => (
