@@ -42,9 +42,22 @@ class Admin extends React.Component {
       ClaUbicacionOrigen:0,
       ClaViajeOrigen:0,
       ClaFabricacionViaje:0,
+      FechaDesde: /* eslint-disable */ getSessionItem('Año') + '-01-01'/* eslint-enable */,
+      FechaHasta:getSessionItem('Hoy'),
+      Hoy:getSessionItem('Dia'),
+      ReporteFiltrado:0,
+      Materialviaje:0
     };
   }
   
+  setFechaDesde=(Val) => this.setState(() =>({FechaDesde: Val}))
+
+  setMaterialviaje=(Val) => this.setState(() =>({Materialviaje: Val}))
+
+  setReporteFiltrado=(Val) => this.setState(() =>({ReporteFiltrado: Val}))
+
+  setFechaHasta=(Val) => this.setState(() =>({FechaHasta: Val}))
+
   setClaUbicacionOrigen=(Val) => this.setState(() =>({ClaUbicacionOrigen: Val}))
 
   setClaViajeOrigen=(Val) => this.setState(() =>({ClaViajeOrigen: Val}))
@@ -101,7 +114,7 @@ class Admin extends React.Component {
   abortController = new AbortController()
 
   async componentDidMount() {
-    const urlKrakenService = `${config.KrakenService}/${24}/${37}`;
+    const urlKrakenService = `${config.KrakenService}/${24}/${config.Servicio}`;
     const urlKrakenPlanta = `${config.KrakenService}/${24}/${36}`;
     const urlKrakenUsuario = `${config.KrakenService}/${24}/${35}`;
 
@@ -153,7 +166,7 @@ class Admin extends React.Component {
     }
 
     if (prevState.editBoxValue !== this.state.editBoxValue) {
-      const urlKrakenService = `${config.KrakenService}/${24}/${37}`;
+      const urlKrakenService = `${config.KrakenService}/${24}/${config.Servicio}`;
       /* eslint-disable */
       const data = {
         parameters: '{"ClaUbicacion":' + this.state.editBoxValue + ',"ClaServicioJson":' + 1 + ',"Parametros":"@pnClaUbicacion=' + this.state.editBoxValue +',@psValor=,@pnEsParcial=0"}',
@@ -173,7 +186,7 @@ class Admin extends React.Component {
         return this.getRoutes(prop.views);
       }
       if (prop.layout === '/Clasificacion-Chatarra') {
-        if (prop.path === '/Placas') {
+        if (prop.path === '/Placas' || prop.path === '/Reportes') {
           return (
             <Route
               path={prop.layout + prop.path}
@@ -205,6 +218,13 @@ class Admin extends React.Component {
                   setClaUbicacionOrigen={this.setClaUbicacionOrigen}
                   setClaViajeOrigen={this.setClaViajeOrigen}
                   setClaFabricacionViaje={this.setClaFabricacionViaje}
+                  FechaDesde={this.state.FechaDesde}
+                  FechaHasta={this.state.FechaHasta}
+                  setFechaDesde={this.setFechaDesde}
+                  setFechaHasta={this.setFechaHasta}
+                  Hoy={this.state.Hoy}
+                  ReporteFiltrado={this.state.ReporteFiltrado}
+                  setReporteFiltrado={this.setReporteFiltrado}
                 />
               )}
               key={key}
@@ -310,6 +330,8 @@ class Admin extends React.Component {
                 setClaUbicacionOrigen={this.setClaUbicacionOrigen}
                 setClaViajeOrigen={this.setClaViajeOrigen}
                 setClaFabricacionViaje={this.setClaFabricacionViaje}
+                Materialviaje={this.state.Materialviaje}
+                setMaterialviaje={this.setMaterialviaje}
               />
             </Route>
           </Switch>

@@ -6,11 +6,11 @@ import { Row, Col} from 'reactstrap';
 
 
 // Elemento Cascaron para detalle de la placa
-const DetalleBoleta= ({listas,setmaterial,editBoxValue,NomMotivoEntrada,ClaUbicacionOrigen,ClaViajeOrigen,setMaterialviaje,ClaFabricacionViaje}) => {
+const DetalleBoleta= ({listas,setmaterial,editBoxValue,NomMotivoEntrada,ClaUbicacionOrigen,ClaViajeOrigen,setMaterialviaje,Materialviaje,ClaFabricacionViaje}) => {
   // Función que corre servicios antes del render cada que haya un cambio de material
   // Servicio JSON 5 --> SP= AmpSch.AmpClaArticulosdeProvSel <Consultar Materiales>
   useEffect(() => {
-    const urlKrakenService = `${config.KrakenService}/${24}/${37}`;
+    const urlKrakenService = `${config.KrakenService}/${24}/${config.Servicio}`;
 
     /* eslint-disable */
     const data5 = {
@@ -53,12 +53,14 @@ const DetalleBoleta= ({listas,setmaterial,editBoxValue,NomMotivoEntrada,ClaUbica
     });
 
   }
-  if(NomMotivoEntrada===3){
+  if(NomMotivoEntrada===3 ){
+    console.log(data29)
+    if(Materialviaje===0)
     callApi(urlKrakenService, 'POST', data29, (res) => {
       setMaterialviaje(res.Result0);
     });
   } 
-  }, []);
+  }, [ClaFabricacionViaje,Materialviaje]);
     return (
       <div>
         {listas !==undefined && listas.map((lista) => (

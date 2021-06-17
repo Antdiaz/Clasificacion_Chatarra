@@ -18,7 +18,7 @@ function PesajeParcial(props) {
   // Servicio JSON 12 --> SP= BasSch.BasRegistraMaterialClasEntCompraMatPrimaProc <Registra material a clasificar>
     const handlecancel = () => {
 
-      const urlKrakenService = `${config.KrakenService}/${24}/${37}`;
+      const urlKrakenService = `${config.KrakenService}/${24}/${config.Servicio}`;
       props.row && props.row.forEach((ro)=>{
         /* eslint-disable */
         const data12 = {

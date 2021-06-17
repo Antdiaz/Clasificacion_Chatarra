@@ -43,7 +43,8 @@ function Materiales({
   ClaUbicacionOrigen,
   ClaViajeOrigen,
   ClaFabricacionViaje,
-  setClaFabricacionViaje
+  setClaFabricacionViaje,
+  idmaterialviaje
 }) {
   const NumbUsuario = getSessionItem('NumUsuario');
   const ipadress = getSessionItem('Ipaddress');
@@ -169,7 +170,7 @@ function Materiales({
   useEffect(() => {
     let isCancelled = false;
     const timeout = setTimeout(() => {
-      const urlKrakenService = `${config.KrakenService}/${24}/${37}`;
+      const urlKrakenService = `${config.KrakenService}/${24}/${config.Servicio}`;
       /* eslint-disable */
       const data3 = {
         parameters:
@@ -225,7 +226,7 @@ function Materiales({
    // Función que corre servicios antes del render cada que haya un material, solo si el porcentaje total es 100% o si se maneja por cantidad
   // Servicio JSON 13 --> SP=BasSch.BasValidacionClasEntCompraMatPrimaProc <Valida clasificación>
   useEffect(() => {
-    const urlKrakenService = `${config.KrakenService}/${24}/${37}`;
+    const urlKrakenService = `${config.KrakenService}/${24}/${config.Servicio}`;
     if (row && NomMotivoEntrada===9) {
       const PorcentajeSum = row.reduce((acc, val) => acc + val.PorcentajeMaterial, 0);
       const CantidadSum= row.reduce((acc, val) => acc + val.CantidadMaterial, 0);
@@ -260,8 +261,8 @@ function Materiales({
     }
 
     if(NomMotivoEntrada===3){
-      row && row.length>0 && setClaFabricacionViaje(row[0].ClaFabricacionViaje)
-      const urlKrakenService = `${config.KrakenService}/${24}/${37}`;
+     setClaFabricacionViaje(placadato[0].IdFabDefault)
+      const urlKrakenService = `${config.KrakenService}/${24}/${config.Servicio}`;
         const PorcentajeSum = row && row.reduce((acc, val) => acc + val.PorcentajeMaterial, 0);
         const CantidadSum= row && row.reduce((acc, val) => acc + val.CantRecibida, 0);
         if ((PorcentajeSum !== null && PorcentajeSum === 100) || (PorcentajeSum === 0 && CantidadSum>0)) {
@@ -292,9 +293,9 @@ function Materiales({
 
   useEffect(() => {
 
-    const urlKrakenService = `${config.KrakenService}/${24}/${37}`;
+    const urlKrakenService = `${config.KrakenService}/${24}/${config.Servicio}`;
     /* eslint-disable */
-    if(NomMotivoEntrada===3 && row && row.length>0){
+    if(NomMotivoEntrada===3 ){
     const data30 = {
       parameters:
         '{"ClaUbicacion":' +
@@ -302,7 +303,7 @@ function Materiales({
         ',"ClaServicioJson":' +
         30 +
         ',"Parametros":"@pnClaArticuloOrigen=' +
-        row[0].ClaArticuloRemisionado +
+        (ClaFabricacionViaje) +
         ',@EsIncluirArtOrigen=1"}',
       tipoEstructura: 0,
     };
@@ -319,14 +320,13 @@ function Materiales({
   /* eslint-enable */
       callApi(urlKrakenService, 'POST', data30, (res) => {
       setmaterial(res.Result0);
-  
       });
 
       callApi(urlKrakenService, 'POST', data39, (res) => {
         setmaterialtodos(res.Result0);
         });
     }
-  }, [row])
+  }, [idmaterialviaje])
 
    // Componente de sección de materiales con sus headers
   function Clasificacion() {
@@ -335,13 +335,12 @@ function Materiales({
         <Table className="table" aria-label="a dense table">
           <TableHead>
             <TableRow>
-              <TableCell className="table-header" style={{ paddingRight: '0px' }}>
+              <TableCell className="table-header">
                 Fabricación
               </TableCell>
               <TableCell className="table-header">Material</TableCell>
               <TableCell
                 className="table-header"
-                style={{ paddingLeft: '0px', paddingRight: '0px' }}
               >
                 Porcentaje
               </TableCell>

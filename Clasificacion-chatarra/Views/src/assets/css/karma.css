@@ -40,6 +40,11 @@ input[type=number] {
   height: 75vh;
 }
 
+.Consulta{
+  margin:30px;
+  margin-left:1vw;
+}
+
 .invisible {
   display: none;
 }
@@ -57,7 +62,7 @@ table.scroll input {
 }
 
 .placas-container{
-  margin-top: 20px;
+  margin-top: 15px;
 }
 
 body{
@@ -94,6 +99,9 @@ body{
   justify-content: flex-end;
 }
 
+.reportes .fas{
+  font-size:25px;
+}
 .Warning{
   position:fixed;
   left: 0; 
@@ -141,6 +149,20 @@ body{
   color:white;
   font-weight: 600;
   font-size: 10px;
+}
+.MuiTableCell-head{
+  text-align:center !important;
+}
+
+.reportes .MuiTableCell-head{
+  padding-left:0px;
+  padding-right:0px;
+  padding:13px !important;
+  text-align:center !important;
+}
+
+.reportes .MuiTableCell-root{
+width: 8rem !important;
 }
 
 .warning-container{
@@ -520,7 +542,7 @@ table::-webkit-scrollbar-thumb {
 }
 
 .content {
-  margin: 50px;
+  margin: 30px;
   margin-left:1vw;
   margin-right:1vw;
   background-color: transparent;
@@ -536,15 +558,15 @@ table::-webkit-scrollbar-thumb {
 }
 
 .dx-fieldset{
-  margin: 10px 20px;
+  margin: 5px 20px;
   text-align: justify;
 }
 
 .dx-fieldset-header{
   width:400px;
   font-weight:600;
-  font-size:25px;
-  margin-bottom:10px;
+  font-size:20px;
+  margin-bottom:0px;
 }
 
 .dx-placeholder {
@@ -591,7 +613,7 @@ font-size:18px;
  right:7vw;
  bottom:1vw;
  margin-top:30px;
- z-index:0;
+ z-index:1;
 }
 
 .fa-home{
@@ -703,7 +725,7 @@ body.ReactModal__Body--open{
 .kar-component {
   background-color: #fff;
   border-radius: 10px;
-  padding: 15px 30px;
+  padding: 5px 30px;
   -webkit-box-shadow:0px 1px 1px rgb(175, 173, 173);
  -moz-box-shadow:0px 1px 1px rgb(175, 173, 173);
  box-shadow:0px 1px 1px rgb(175, 173, 173);
@@ -1060,6 +1082,11 @@ box-shadow:2px 2px 2px rgb(196, 195, 195) !important;
 .card-login,.px-lg-5,.py-lg-5, .card-body{
   padding-left:1rem !important;
   padding-right:1rem !important;
+}
+
+.reportes > .card-body{
+  padding-left:0rem !important;
+  padding-right:0rem !important;
 }
 }
 

@@ -5,7 +5,7 @@ import classnames from 'classnames';
 // nodejs library to set properties for components
 import { getSessionItem, logOut } from '../../utils/utils';
 import PropTypes from 'prop-types';
-import AssignmentIcon from '@material-ui/icons/Assignment';
+
 
 // import images
 import {
@@ -24,8 +24,6 @@ import {
 import team4 from '../../assets/img/default-avatar.png';
 import logo from '../../assets/img/deaceroLogo.PNG';
 import { Link } from 'react-router-dom';
-import Modal from 'react-modal';
-import Reporte from 'views/Reporte/Reporte';
 // reactstrap components
 
 AdminNavbar.defaultProps = {
@@ -70,10 +68,6 @@ function AdminNavbar({ theme, Patio, editBoxValue, seteditBoxValue }) {
             </Nav>
             <Nav className="align-items-center ml-md-auto " navbar />
             <Nav className="align-items-center ml-auto ml-md-0" navbar>
-              <div className="container-reporte" onClick={() => {setmodalreport(true)}}>
-                <AssignmentIcon className="icono-reporte" />
-                <span className="texto-reporte">Reportes</span>
-              </div>
               <SelectBox
                 className="placa-style"
                 placeholder="Seleccionar Patio:"
@@ -101,7 +95,7 @@ function AdminNavbar({ theme, Patio, editBoxValue, seteditBoxValue }) {
                     <h6 className="text-overflow m-0">Bienvenido!</h6>
                   </DropdownItem>
                   <DropdownItem divider />
-                  <DropdownItem href="#salir" onClick={logOut}>
+                  <DropdownItem href="/" onClick={logOut}>
                     <i className="ni ni-user-run" />
                     <span>Salir</span>
                   </DropdownItem>
@@ -113,9 +107,6 @@ function AdminNavbar({ theme, Patio, editBoxValue, seteditBoxValue }) {
             </Nav>
           </Collapse>
         </Container>
-        <Modal ariaHideApp={false} isOpen={modalreport} onClose={() => modalreport(true)} style={customStyles}>
-          <Reporte setmodalreport={setmodalreport} />
-        </Modal>
       </Navbar>
     </>
   );

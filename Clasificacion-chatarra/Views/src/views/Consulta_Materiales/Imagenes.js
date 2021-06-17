@@ -28,15 +28,14 @@ function Imagenes({ id, editBoxValue, row, NomMotivoEntrada }) {
   const [Modalregistro, setModalregistro] = useState(false);
   const [Modalmanual, setModalmanual] = useState(false);
   const [Zoom, setZoom] = useState(false);
-  const Material = ( NomMotivoEntrada===9 ? row>0 && row[0].ClaArticuloCompra>0 ? row[0].ClaArticuloCompra:0:NomMotivoEntrada===3 ? row>0 && row[0].ClaMaterialRecibeTraspaso>0 ? row[0].ClaMaterialRecibeTraspaso:0:0)
+  const Material = ( NomMotivoEntrada===9 ? row && row.length>0 && row[0].ClaArticuloCompra>0 ? row[0].ClaArticuloCompra:0:NomMotivoEntrada===3 ? row>0 && row[0].ClaMaterialRecibeTraspaso>0 ? row[0].ClaMaterialRecibeTraspaso:0:0)
   // Función que guarda los cambios efectuados en el material
   // Servicio JSON 14 --> SP= BasSch.BasObtieneFotografiasMaterialPro <Obtiene fotos>
   // Servicio JSON 26 --> SP= BasSch.BasObtieneFotografiasMaterialPreRegProc <Material pre-registro>
-  console.log(row)
   useEffect(() => {
     let isCancelled = false;
     const timerID = setTimeout(() => {
-      const urlKrakenService = `${config.KrakenService}/${24}/${37}`;
+      const urlKrakenService = `${config.KrakenService}/${24}/${config.Servicio}`;
       /* eslint-disable */
       const data14 = {
         parameters:

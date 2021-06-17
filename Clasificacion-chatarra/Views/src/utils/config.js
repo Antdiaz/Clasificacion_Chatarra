@@ -4,14 +4,21 @@ const config = {
   ApiKey: 'A70F5BA0-3541-492C-802F-087FE810184A',
 
   // ** Desarrollo
-  UrlLoginServer: 'https://sweetsrv.azurewebsites.net/LoginSandbox/authenticate',
+  UrlLoginServer: 
+   'https://sweetsrv.azurewebsites.net/LoginSandbox/authenticate',
+  // 'https://sweetsrv.azurewebsites.net/Login/authenticate',
   UrlApiProject: 'http://localhost:5000/',
 
   // ** Kraken Desarrollo
-  KrakenService: 'https://krakenapi.deacero.com/SandboxServices',
-
+  KrakenService: 
+   'https://krakenapi.deacero.com/SandboxServices',
+  // 'https://krakenapi.deacero.com/KrakenServices/',
+  
   // Debugging mode
   DebuggingMode: true,
+
+  Servicio:37
+  // 3322376
 };
 
 function GetToken() {

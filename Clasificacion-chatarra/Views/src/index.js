@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { createBrowserHistory } from 'history';
+import { createHashHistory } from 'history';
 // react library for routing
 import { Router, Route, Switch } from 'react-router-dom';
 import ErrorHandler from './utils/errorHandler';
@@ -30,7 +30,7 @@ import Login from './views/Login/Login';
 import AppContext from './context/AppContext';
 import useInitialState from './hooks/useInitialState';
 
-const hist = createBrowserHistory();
+const hist = createHashHistory();
 
 const App = () => {
   const initialState = useInitialState();

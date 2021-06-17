@@ -43,7 +43,9 @@ function Boleta({
   ClaUbicacionOrigen,
   ClaViajeOrigen,
   ClaFabricacionViaje,
-  setClaFabricacionViaje
+  setClaFabricacionViaje,
+  Materialviaje,
+  setMaterialviaje
 }) {
    // Valores obtenidos de URL de detalle de boleta
   const { placa, id } = useParams();
@@ -55,7 +57,7 @@ function Boleta({
   const [contaminacion, setcontaminacion] = useState();
   // Valor que lee cuando se abre wizard de editar Material
   const [editOpen, seteditOpen] = useState(false);
-  const [Materialviaje, setMaterialviaje] = useState(0)
+  const [idmaterialviaje, setidmaterialviaje] = useState(0);
  // Estilo de pop up/ wizard
   const customStyles = {
     content: {
@@ -71,7 +73,7 @@ function Boleta({
     // Servicio JSON 2 --> SP= AmpSch.AmpClaConsultaVehiculoAClasificarSel <Consultar datos placa>
     // El timeout es para darle tiempo de respuesta
     setTimeout(()=>{
-    const urlKrakenVal = `${config.KrakenService}/${24}/${37}`;
+    const urlKrakenVal = `${config.KrakenService}/${24}/${config.Servicio}`;
 
     /* eslint-disable */
     const data5 = {
@@ -104,11 +106,9 @@ function Boleta({
       tipoEstructura: 0,
     };
     /* eslint-enable */
-    if(NomMotivoEntrada===9){
     callApi(urlKrakenVal, 'POST', data10, (res) => {
       setcontaminacion(res.Result0);
     });
-  }
     callApi(urlKrakenVal, 'POST', data5, (res) => {
       setplacadato(res.Result0);
     });
@@ -166,12 +166,14 @@ function Boleta({
                   NomMotivoEntrada={NomMotivoEntrada}
                   ClaViajeOrigen={ClaViajeOrigen}
                   ClaUbicacionOrigen={ClaUbicacionOrigen}
+                  idmaterialviaje={idmaterialviaje}
+                  setidmaterialviaje={setidmaterialviaje}
                 />
               </Modal>
               <CardHeader>
                 <CardTitle style={{ margin: '10px' }}>
                   <i
-                    onClick={row && placadato[0].EsPesajeParcial ===1  && (row.every(ro => ro.KilosMaterial === 0) || row.some(ro => ro.KilosMaterial===0)) || pesajeparcial===1? ()=> setpoppesaje(true) : () => row && setmodaladdOpen(true)}
+                    onClick={row &&  placadato[0].EsPesajeParcial!== undefined && placadato[0].EsPesajeParcial ===1  && (row.every(ro => ro.KilosMaterial === 0) || row.some(ro => ro.KilosMaterial===0)) || pesajeparcial===1? ()=> setpoppesaje(true) : () => row && setmodaladdOpen(true)}
                     style={{ cursor: 'pointer' }}
                     className="fa fa-plus"
                     aria-hidden="true"
@@ -224,8 +226,10 @@ function Boleta({
                           setNomMotivoEntrada={setNomMotivoEntrada}
                           ClaUbicacionOrigen={ClaUbicacionOrigen}
                           ClaViajeOrigen={ClaViajeOrigen}
+                          Materialviaje={Materialviaje}
                           ClaFabricacionViaje={ClaFabricacionViaje}
                           setClaFabricacionViaje={setClaFabricacionViaje}
+                          idmaterialviaje={idmaterialviaje}
                         />
                       )}
                     </TableContainer>
@@ -256,7 +260,7 @@ function Boleta({
                         <CircularProgress color="primary" />
                       </div>
                     ) : (
-                      <DetalleBoleta listas={placadato} editBoxValue={editBoxValue} setMaterialviaje={setMaterialviaje} setmaterial={setmaterial} NomMotivoEntrada={NomMotivoEntrada} ClaUbicacionOrigen={ClaUbicacionOrigen} ClaViajeOrigen={ClaViajeOrigen} ClaFabricacionViaje={ClaFabricacionViaje} />
+                      <DetalleBoleta listas={placadato} editBoxValue={editBoxValue} Materialviaje={Materialviaje} setMaterialviaje={setMaterialviaje} setmaterial={setmaterial} NomMotivoEntrada={NomMotivoEntrada} ClaUbicacionOrigen={ClaUbicacionOrigen} ClaViajeOrigen={ClaViajeOrigen} ClaFabricacionViaje={ClaFabricacionViaje} />
                     )}
                   </Col>
                 </Row>

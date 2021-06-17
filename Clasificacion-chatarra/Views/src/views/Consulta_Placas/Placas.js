@@ -33,14 +33,18 @@ const Items= ({listas,
                     }}
                   >
                     <Link style={{color:"rgb(41, 41, 41)"}} to={`/Clasificacion-Chatarra/Placa:${lista.ClaVehiculoPorClasificar ? lista.ClaVehiculoPorClasificar : "Sin dato" }/Boleta:${lista.IdBoleta}`}>
-                      <i className="fa fa-info-circle fa-2x" onClick={()=>{setpoppesaje(true);setrow(0);setNomMotivoEntrada(lista.ClaMotivoEntrada);setClaUbicacionOrigen(lista.ClaUbicacionOrigen); setClaViajeOrigen(lista.ClaViajeOrigen); setpesajeparcial(0)}} aria-hidden="true"></i>
+                      <i className="fa fa-info-circle fa-2x" onClick={()=>{setpoppesaje(true);setrow(0);setNomMotivoEntrada(lista.ClaMotivoEntrada);setClaUbicacionOrigen(lista.ClaUbicacionOrigen);setClaFabricacionViaje(0); setClaViajeOrigen(lista.ClaViajeOrigen); setpesajeparcial(0)}} aria-hidden="true"></i>
                     </Link>
                     <div className="form" style={{width: "100%"}}>
                       <div className="dx-fieldset">
-                        <div className="dx-fieldset-header"><span style={{marginRight: "30px"}}>{lista.ClaVehiculoPorClasificar}</span> <span>{lista.NomTransporte}</span> </div>
+                        <div className="dx-fieldset-header"><span style={{marginRight: "30px"}}>Boleta:&nbsp;{lista.ClaVehiculoPorClasificar}</span></div>
                         <div className="dx-field">
                           <div className="dx-field-label">Chofer :</div>
                           <div className="dx-field-value-static">{lista.NomChofer}</div>
+                        </div>
+                        <div className="dx-field">
+                          <div className="dx-field-label">Transporte :</div>
+                          <div className="dx-field-value-static">{lista.NomTransporte}</div>
                         </div>
                         <div className="dx-field">
                           <div className="dx-field-label">Transportista :</div>

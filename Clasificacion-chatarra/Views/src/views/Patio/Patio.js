@@ -48,11 +48,19 @@ class Patio extends React.Component {
 
   // Función para Selección de patio al enter
   handleSubmit = (e) => {
+    let today = new Date();
+    const dd = String(today.getDate()).padStart(2, '0');
+    const mm = String(today.getMonth() + 1).padStart(2, '0'); // January is 0!
+    const yyyy = today.getFullYear();
+    today = /* eslint-disable */ yyyy + '-' + mm + '-' + dd /* eslint-enable */;
     e.preventDefault();
     if(this.state.Lugarsesion>0){
     this.setLugaradd(true)
     setSessionData({
-      PatioEscogido: this.state.Lugarsesion
+      PatioEscogido: this.state.Lugarsesion,
+      Año: yyyy,
+      Hoy: today,
+      Dia: today
     }
     );}
   }
