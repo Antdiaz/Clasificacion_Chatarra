@@ -197,12 +197,6 @@ const NuevoMaterial = (props) => {
   // Servicio JSON 7 --> SP= AmpSch.AmpClaSubAlmacenArticuloCmb <Consultar listado Subalmacenes>
 
   useEffect(() => {
-  if(props.material.length===0){
-    setTodos(1)
-  }
-  }, [])
-
-  useEffect(() => {
 
   const urlKrakenService = `${config.KrakenService}/${24}/${config.Servicio}`;
   /* eslint-disable */
@@ -396,7 +390,8 @@ const NuevoMaterial = (props) => {
   };
 
   const onValueChangede = (e) => {
-    setidmaterialviaje(e.value);
+    props.setidmaterialviaje(e.value);
+    setidmaterialviaje(e.value)
     setnombrematerialviaje(e.component.option('text').split('-').pop());
   };
 
@@ -1614,7 +1609,7 @@ const NuevoMaterial = (props) => {
                     valueExpr={props.NomMotivoEntrada=== 9 ? "ClaArticuloCompra": props.NomMotivoEntrada=== 3 ? Todos===1 ?"ClaMaterialRecibeTraspaso": "ClaArticuloCompra" :''}
                     placeholder="Seleccionar Material.."
                     onValueChanged={onValueChangedr}
-                    disabled={idmaterialviaje<1 && props.NomMotivoEntrada=== 3}
+                    disabled={props.idmaterialviaje<1 && props.NomMotivoEntrada=== 3}
                   />
                   )}
                 </Col>

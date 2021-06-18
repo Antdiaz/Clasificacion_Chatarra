@@ -71,8 +71,6 @@ function Boleta({
   useEffect(() => {
     let isCancelled = false;
     // Servicio JSON 2 --> SP= AmpSch.AmpClaConsultaVehiculoAClasificarSel <Consultar datos placa>
-    // El timeout es para darle tiempo de respuesta
-    setTimeout(()=>{
     const urlKrakenVal = `${config.KrakenService}/${24}/${config.Servicio}`;
 
     /* eslint-disable */
@@ -106,16 +104,22 @@ function Boleta({
       tipoEstructura: 0,
     };
     /* eslint-enable */
+    async function FuncionData(){
     callApi(urlKrakenVal, 'POST', data10, (res) => {
       setcontaminacion(res.Result0);
     });
-    callApi(urlKrakenVal, 'POST', data5, (res) => {
+
+    await callApi(urlKrakenVal, 'POST', data5, (res) => {
       setplacadato(res.Result0);
-    });
+    })};
+
+    if(NomMotivoEntrada===3 || NomMotivoEntrada===9){
+      FuncionData()
+    }
+
      return()=> {
         isCancelled = true
       }
-  },1000)
   }, [poppesaje]);
 
   return (

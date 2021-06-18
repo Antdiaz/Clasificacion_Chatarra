@@ -187,11 +187,10 @@ function Consulta({
                 ariaHideApp={false}
                 onClose={() => setOpen(true)}
                 style={customStyles}
-                key={index}
               >
                 <Detalles editOpen={Open} seteditOpen={setOpen} report={report} />
               </Modal>
-              <TableRow>
+              <TableRow key={index}>
                 <TableCell className="table-content" style={{ textAlign: 'center' }}>
                   {report.Boleta}
                 </TableCell>

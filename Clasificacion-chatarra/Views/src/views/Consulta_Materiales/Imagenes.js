@@ -34,7 +34,6 @@ function Imagenes({ id, editBoxValue, row, NomMotivoEntrada }) {
   // Servicio JSON 26 --> SP= BasSch.BasObtieneFotografiasMaterialPreRegProc <Material pre-registro>
   useEffect(() => {
     let isCancelled = false;
-    const timerID = setTimeout(() => {
       const urlKrakenService = `${config.KrakenService}/${24}/${config.Servicio}`;
       /* eslint-disable */
       const data14 = {
@@ -111,7 +110,6 @@ function Imagenes({ id, editBoxValue, row, NomMotivoEntrada }) {
       return () => {
         isCancelled = true;
       };
-    }, 500);
   }, [Material]);
 
   return (

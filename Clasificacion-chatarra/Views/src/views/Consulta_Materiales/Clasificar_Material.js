@@ -260,9 +260,6 @@ const Material = (props) => {
     if(materiales.some(material => material.ClaArticuloCompra === idmaterial)){
       setTodos(0)
   }
-  else if(props.material.length===0){
-    setTodos(1)
-  }
   else{
     setTodos(1)
   }
@@ -364,6 +361,7 @@ const Material = (props) => {
     if(props.NomMotivoEntrada===9){
     if (idmaterial > 0) {
       callApi(urlKrakenService, 'POST', data6, (res) => {
+        console.log(res.Result0)
         setDatosmaterial(res.Result0);
       });
 
@@ -858,9 +856,9 @@ const Material = (props) => {
         ',@pnClaArticuloCompra=' +
         ( props.ro.ClaArticuloCompra ? props.ro.ClaArticuloCompra : idmaterial) +
         ',@pnCantidadMaterial=' +
-        (cantidad === '' ? 0 : kilos > 0 ? kilos / Datosmaterial[0].PesoTeoricoKgs : cantidad) +
+        (cantidad === '' ? 0 : kilos > 0 ? kilos / Datosmaterial[0].PesoTeoricoKgs !==undefined ? Datosmaterial[0].PesoTeoricoKgs: 1 : cantidad) +
         ',@pnKilosMaterial=' +
-        (kilos === '' ? 0 : cantidad > 0 ? cantidad * Datosmaterial[0].PesoTeoricoKgs : kilos) +
+        (kilos === '' ? 0 : cantidad > 0 ? cantidad * Datosmaterial[0].PesoTeoricoKgs !==undefined ? Datosmaterial[0].PesoTeoricoKgs:1 : kilos) +
         ',@pnKilosReales=' +
         (props.ro.KilosReales ? props.ro.KilosReales : 0) +
         ',@pnKilosContaminados=' +
@@ -1887,7 +1885,7 @@ const Material = (props) => {
                         pesajeparcial === 1 || props.ro.EsPesajeParcial === 1
                           ? 0
                           : kilos > 0 && Datosmaterial
-                          ? kilos * (props.NomMotivoEntrada===9 ? Datosmaterial[0].PesoTeoricoKgs ? Datosmaterial[0].PesoTeoricoKgs : 1 : props.NomMotivoEntrada===3 ? Datosmaterial[0].PesoTeoricoRecibido: 1)
+                          ? kilos * (props.NomMotivoEntrada===9 ? Datosmaterial[0].PesoTeoricoKgs!==undefined ? Datosmaterial[0].PesoTeoricoKgs : 1 : props.NomMotivoEntrada===3 ? Datosmaterial[0].PesoTeoricoRecibido!==undefined ? Datosmaterial[0].PesoTeoricoRecibido: 1 : 1)
                           : cantidad
                       }
                       disabled={
@@ -1924,7 +1922,7 @@ const Material = (props) => {
                         pesajeparcial === 1 || props.ro.EsPesajeParcial === 1
                           ? 0
                           : cantidad > 0 && Datosmaterial
-                          ? cantidad /(props.NomMotivoEntrada===9 ? Datosmaterial[0].PesoTeoricoKgs: props.NomMotivoEntrada===3 ? Datosmaterial[0].PesoTeoricoRecibido: 1)
+                          ? cantidad /(props.NomMotivoEntrada===9 ? Datosmaterial !== undefined ? Datosmaterial[0].PesoTeoricoKgs:1: props.NomMotivoEntrada===3 ?  Datosmaterial !== undefined ? Datosmaterial[0].PesoTeoricoRecibido :1 : 1)
                           : kilos
                       }
                       disabled={
@@ -2070,7 +2068,7 @@ const Material = (props) => {
                 type="button"
                 className="popup-button"
                 onClick={
-                  PorcentajeSum > 100 || idmaterial < 1 || subalmacen < 1 ? null : togglePopup2
+                  PorcentajeSum > 100 || idmaterial < 1 || subalmacen < 1 || Datosmaterial===0 ? null : togglePopup2
                 }
               >
                 Siguiente &gt;

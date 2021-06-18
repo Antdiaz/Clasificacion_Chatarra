@@ -169,7 +169,6 @@ function Materiales({
   // Servicio JSON 3 --> SP= AmpSch.AmpClaConsultaVehiculoMaterialClasificacionSel <Consultar Materiales Clasificados>
   useEffect(() => {
     let isCancelled = false;
-    const timeout = setTimeout(() => {
       const urlKrakenService = `${config.KrakenService}/${24}/${config.Servicio}`;
       /* eslint-disable */
       const data3 = {
@@ -206,6 +205,7 @@ function Materiales({
         tipoEstructura: 0,
       };
       /* eslint-enable */
+      async function FuncionData()  {
       if (!isCancelled && NomMotivoEntrada>0 && NomMotivoEntrada===9) {
       callApi(urlKrakenService, 'POST', data3, (res) => {
         setrow(res.Result0);
@@ -216,12 +216,15 @@ function Materiales({
           setrow(res.Result0);
         });
         seteditOpen(true);
+      }}
+
+      if(placadato){
+        FuncionData()
       }
       return()=> {
         isCancelled = true
       }
-    }, 1000);
-  }, [!modaladdOpen, !editOpen,!poppesaje]);
+    }, [!modaladdOpen, !editOpen,!poppesaje]);
 
    // Función que corre servicios antes del render cada que haya un material, solo si el porcentaje total es 100% o si se maneja por cantidad
   // Servicio JSON 13 --> SP=BasSch.BasValidacionClasEntCompraMatPrimaProc <Valida clasificación>
@@ -303,7 +306,7 @@ function Materiales({
         ',"ClaServicioJson":' +
         30 +
         ',"Parametros":"@pnClaArticuloOrigen=' +
-        (ClaFabricacionViaje) +
+        (idmaterialviaje) +
         ',@EsIncluirArtOrigen=1"}',
       tipoEstructura: 0,
     };
@@ -320,10 +323,12 @@ function Materiales({
   /* eslint-enable */
       callApi(urlKrakenService, 'POST', data30, (res) => {
       setmaterial(res.Result0);
+      console.log(res.Result0)
       });
 
       callApi(urlKrakenService, 'POST', data39, (res) => {
         setmaterialtodos(res.Result0);
+        console.log(res.Result0)
         });
     }
   }, [idmaterialviaje])

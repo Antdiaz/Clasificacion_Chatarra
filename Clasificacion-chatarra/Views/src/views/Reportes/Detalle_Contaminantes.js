@@ -125,7 +125,7 @@ const Detalles = (props) => {
                 className="popup-number"
                 style={{margin:'0px'}}
                 type="number"
-                disabled="true"
+                disabled={true}
               />
             </div>
           </div>
@@ -176,7 +176,7 @@ const Detalles = (props) => {
                   className="popup-recibidos"
                   type="number"
                   defaultValue={+props.report.Contaminantes - (+props.report.Tanques*+200+ +props.report.Cilindros*+100 + +props.report.Bollas*+50 + +props.report.LlantasChico*+25 + +props.report.LlantasMediano*+50 + +props.report.LlantasGrande*+100)}
-                  disabled="true"
+                  disabled={true}
                 />
                 <InputGroupAddon addonType="append">
                   <InputGroupText>kgs</InputGroupText>
