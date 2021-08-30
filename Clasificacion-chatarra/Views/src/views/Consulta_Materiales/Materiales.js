@@ -10,10 +10,12 @@ import { callApi, getSessionItem } from '../../utils/utils';
 import Modal from 'react-modal';
 // Wizard editar material
 import Material from './Clasificar_Material';
+import Materialpt from './Clasificar_Material_pt';
 
 function Materiales({
   placadato,
   editBoxValue,
+  TipoPatio,
   id,
   row,
   setrow,
@@ -21,6 +23,8 @@ function Materiales({
   setmaterial,
   materialtodos,
   setmaterialtodos,
+  materialpt,
+  setmaterialpt,
   setmaterialr,
   setcantidadr,
   setkilosr,
@@ -44,7 +48,18 @@ function Materiales({
   ClaViajeOrigen,
   ClaFabricacionViaje,
   setClaFabricacionViaje,
-  idmaterialviaje
+  idmaterialviaje,
+  Actualizar,
+  setActualizar,
+  TipoTraspaso,
+  Todos,
+  setTodos,
+  TodosChange,
+  setTodosChange,
+  ValidaCargo,
+  setValidaCargo,
+  Nocargo,
+  setNocargo
 }) {
   const NumbUsuario = getSessionItem('NumUsuario');
   const ipadress = getSessionItem('Ipaddress');
@@ -82,7 +97,7 @@ function Materiales({
           <TableCell className="table-content">
             Enviado:&nbsp;{NomMotivoEntrada===9 ? (ro.NomArticuloPreReg ? ro.NomArticuloPreReg.split('-').pop(): 0) : NomMotivoEntrada===3 ? ro.NomArticuloRemisionado ? ro.NomArticuloRemisionado.split('-').pop(): '0' : '0'}{' '}
             <br /> Recibido:&nbsp;{NomMotivoEntrada===9 ? (ro.NomArticuloCompra ? ro.NomArticuloCompra.split('-').pop() : 0) : NomMotivoEntrada===3 ? ro.NomMaterialRecibeTraspaso ? ro.NomMaterialRecibeTraspaso.split('-').pop(): '0' : '0'}{' '}
-            <br /> Observaciones:&nbsp;{observaciones}
+            <br /> <span style={{whiteSpace: 'pre-wrap'}}>Observaciones:&nbsp;<span style={{fontSize: "13px"}}>{placadato[0].Observaciones}</span></span>
           </TableCell>
           <TableCell className="table-content" style={{ textAlign: 'center', fontWeight: '600' }}>
             {ro.PorcentajeMaterial ? ro.PorcentajeMaterial : ro.EsPesajeParcial ? 100 : 0}&nbsp;%
@@ -94,15 +109,13 @@ function Materiales({
           </TableCell>
           <TableCell className="table-content">
             Enviado:&nbsp;{ro.KgsMaterialPrereg ? ro.KgsMaterialPrereg : 0}&nbsp; Kgs <br />{' '}
-            Recibido:&nbsp;{ro.KilosReales ? ro.KilosReales.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : 0}&nbsp; Kgs
+            Recibido:&nbsp;{NomMotivoEntrada===9 ? ro.KilosReales ? ro.KilosReales : ro.KilosMaterial :ro.PesoRecibido ? ro.PesoRecibido.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : 0}&nbsp; Kgs
           </TableCell>
           <TableCell className="table-content">
-            Enviado:&nbsp;{kiloscont}&nbsp; Kgs <br /> Recibido:&nbsp;{0}
+            Enviado:&nbsp;{ro.PesoTaraRemisionado ? ro.PesoTaraRemisionado.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : 0}&nbsp; Kgs <br /> Recibido:&nbsp;{ro.PesoTaraRecibido ? ro.PesoTaraRecibido.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : 0}
             &nbsp; Kgs
           </TableCell>
           <TableCell className="table-content">
-            Almacen:&nbsp;{ro.ClaAlmacen}
-            <br />
             Sub-Almacen:&nbsp;{NomMotivoEntrada===9 ? ro.ClaSubAlmacenCompra : NomMotivoEntrada===3 ? ro.ClaSubAlmacenTraspaso : ''}
           </TableCell>
           <TableCell className="table-content">
@@ -113,12 +126,12 @@ function Materiales({
                 () => {
                   setmodaledit(true);
                 }
-              :(row.every(ro => ro.KilosMaterial === 0)) ? (() =>{ setpoppesaje(true)}) : () => {
+              :(row.every(ro => ro.KilosMaterial === 0)|| row.every(ro => ro.PesoRecibido === 0)) ? (() =>{ setpoppesaje(true)}) : () => {
                 setmodaledit(true);
               }
               }
             >
-              <EditIcon style={{ color: ro.EsPesajeParcial && row.every(ro => ro.KilosMaterial === 0) ? 'grey':'#ff6a00' , cursor: 'pointer' }} />
+              <EditIcon style={{ color: ro.EsPesajeParcial && (row.every(ro => ro.KilosMaterial === 0)|| row.every(ro => ro.PesoRecibido === 0)) ? 'grey':'#ff6a00' , cursor: 'pointer' }} />
             </div>
           </TableCell>
           {/* Pop up para editar un material */} 
@@ -128,35 +141,79 @@ function Materiales({
             ariaHideApp={false}
             style={customStyles}
           >
-            <Material
-              row={row}
-              seteditOpen={seteditOpen}
-              editOpen={editOpen}
-              key={index}
-              ro={ro}
-              material={material}
-              materialtodos={materialtodos}
-              setmaterialr={setmaterialr}
-              setcantidadr={setcantidadr}
-              setkilosr={setkilosr}
-              setobservaciones={setobservaciones}
-              observaciones={observaciones}
-              contaminacion={contaminacion}
-              setkiloscont={setkiloscont}
-              pesajeparcial={pesajeparcial}
-              setpesajeparcial={setpesajeparcial}
-              setpoppesaje={setpoppesaje}
-              poppesaje={poppesaje}
-              warning={warning}
-              setwarning={setwarning}
-              editBoxValue={editBoxValue}
-              placadato={placadato}
-              setmodaledit={setmodaledit}
-              NomMotivoEntrada={NomMotivoEntrada}
-              setmaterial={setmaterial}
-              ClaViajeOrigen={ClaViajeOrigen}
-              ClaUbicacionOrigen={ClaUbicacionOrigen}
-            />
+            {(NomMotivoEntrada===9 || (NomMotivoEntrada===3 && TipoTraspaso===0) && placadato) ?
+              (
+                <Material
+                  row={row}
+                  setrow={setrow}
+                  seteditOpen={seteditOpen}
+                  editOpen={editOpen}
+                  key={index}
+                  ro={ro}
+                  material={material}
+                  materialtodos={materialtodos}
+                  materialpt={materialpt}
+                  setmaterialr={setmaterialr}
+                  setcantidadr={setcantidadr}
+                  setkilosr={setkilosr}
+                  setobservaciones={setobservaciones}
+                  observaciones={observaciones}
+                  contaminacion={contaminacion}
+                  setkiloscont={setkiloscont}
+                  pesajeparcial={pesajeparcial}
+                  setpesajeparcial={setpesajeparcial}
+                  setpoppesaje={setpoppesaje}
+                  poppesaje={poppesaje}
+                  warning={warning}
+                  setwarning={setwarning}
+                  editBoxValue={editBoxValue}
+                  TipoPatio={TipoPatio}
+                  placadato={placadato}
+                  setmodaledit={setmodaledit}
+                  NomMotivoEntrada={NomMotivoEntrada}
+                  setmaterial={setmaterial}
+                  ClaViajeOrigen={ClaViajeOrigen}
+                  ClaUbicacionOrigen={ClaUbicacionOrigen}
+                  Actualizar={Actualizar}
+                  setActualizar={setActualizar}
+                />
+              ):
+              (
+                <Materialpt
+                  row={row}
+                  setrow={setrow}
+                  seteditOpen={seteditOpen}
+                  editOpen={editOpen}
+                  key={index}
+                  ro={ro}
+                  material={material}
+                  materialtodos={materialtodos}
+                  materialpt={materialpt}
+                  setmaterialr={setmaterialr}
+                  setcantidadr={setcantidadr}
+                  setkilosr={setkilosr}
+                  setobservaciones={setobservaciones}
+                  observaciones={observaciones}
+                  contaminacion={contaminacion}
+                  setkiloscont={setkiloscont}
+                  pesajeparcial={pesajeparcial}
+                  setpesajeparcial={setpesajeparcial}
+                  setpoppesaje={setpoppesaje}
+                  poppesaje={poppesaje}
+                  warning={warning}
+                  setwarning={setwarning}
+                  editBoxValue={editBoxValue}
+                  TipoPatio={TipoPatio}
+                  placadato={placadato}
+                  setmodaledit={setmodaledit}
+                  NomMotivoEntrada={NomMotivoEntrada}
+                  setmaterial={setmaterial}
+                  ClaViajeOrigen={ClaViajeOrigen}
+                  ClaUbicacionOrigen={ClaUbicacionOrigen}
+                  Actualizar={Actualizar}
+                  setActualizar={setActualizar}
+                />
+              )}
           </Modal>
         </TableRow>
       </>
@@ -169,6 +226,7 @@ function Materiales({
   // Servicio JSON 3 --> SP= AmpSch.AmpClaConsultaVehiculoMaterialClasificacionSel <Consultar Materiales Clasificados>
   useEffect(() => {
     let isCancelled = false;
+    const timeout = setTimeout(() => {
       const urlKrakenService = `${config.KrakenService}/${24}/${config.Servicio}`;
       /* eslint-disable */
       const data3 = {
@@ -204,8 +262,21 @@ function Materiales({
           '"}',
         tipoEstructura: 0,
       };
+
+      const data63 = {
+        parameters:
+          '{"ClaUbicacion":' +
+          editBoxValue +
+          ',"ClaServicioJson":' +
+          63 +
+          ',"Parametros":"@pnClaUbicacion=' +
+          editBoxValue +
+          ',@pnIdBoleta=' +
+          id +
+          '"}',
+        tipoEstructura: 0,
+      };
       /* eslint-enable */
-      async function FuncionData()  {
       if (!isCancelled && NomMotivoEntrada>0 && NomMotivoEntrada===9) {
       callApi(urlKrakenService, 'POST', data3, (res) => {
         setrow(res.Result0);
@@ -216,24 +287,28 @@ function Materiales({
           setrow(res.Result0);
         });
         seteditOpen(true);
-      }}
+      }
 
-      if(placadato){
-        FuncionData()
+      else if (!isCancelled && NomMotivoEntrada>0 && NomMotivoEntrada===1) {
+        callApi(urlKrakenService, 'POST', data63, (res) => {
+          setrow(res.Result0);
+        });
+        seteditOpen(true);
       }
       return()=> {
         isCancelled = true
       }
-    }, [!modaladdOpen, !editOpen,!poppesaje]);
+    }, 1400);
+  }, [Actualizar]);
 
    // Función que corre servicios antes del render cada que haya un material, solo si el porcentaje total es 100% o si se maneja por cantidad
   // Servicio JSON 13 --> SP=BasSch.BasValidacionClasEntCompraMatPrimaProc <Valida clasificación>
   useEffect(() => {
     const urlKrakenService = `${config.KrakenService}/${24}/${config.Servicio}`;
-    if (row && NomMotivoEntrada===9) {
-      const PorcentajeSum = row.reduce((acc, val) => acc + val.PorcentajeMaterial, 0);
-      const CantidadSum= row.reduce((acc, val) => acc + val.CantidadMaterial, 0);
-      if ((PorcentajeSum !== null && PorcentajeSum === 100) || (PorcentajeSum === 0 && CantidadSum>0)) {
+    if (((row && row.length>0) || (ValidaCargo===1)) && NomMotivoEntrada===9) {
+      const PorcentajeSum =row &&  row.reduce((acc, val) => acc + val.PorcentajeMaterial, 0);
+      const CantidadSum=row &&  row.reduce((acc, val) => acc + val.CantidadMaterial, 0);
+      if ((PorcentajeSum !== null && PorcentajeSum === 100) || (PorcentajeSum === 0 && CantidadSum>0) || (ValidaCargo===1 && row && row.length>0 && (row[0].CantidadMaterial !==null || row[0].KilosMaterial!==null || row[0].PorcentajeMaterial!==null))) {
         /* eslint-disable */
         const data13 = {
           parameters:
@@ -247,7 +322,7 @@ function Materiales({
             placadato[0].ClaUbicacionProveedor +
             ',@pnClaOrdenCompra=,@pnClaTipoOrdenCompra=,@pnIdListaPrecio=' +
             placadato[0].IdListaPrecio +
-            ',@pnEsNoCargoDescargoMaterial=0,@pnClaUsuarioMod=' +
+            ',@pnEsNoCargoDescargoMaterial='+ Todos +',@pnClaUsuarioMod=' +
             NumbUsuario +
             ',@psNombrePcMod=' +
             ipadress +
@@ -263,12 +338,12 @@ function Materiales({
       }
     }
 
-    if(NomMotivoEntrada===3){
+    if( ((row && row.length>0) || (ValidaCargo===1)) && NomMotivoEntrada===3){
      setClaFabricacionViaje(placadato[0].IdFabDefault)
       const urlKrakenService = `${config.KrakenService}/${24}/${config.Servicio}`;
         const PorcentajeSum = row && row.reduce((acc, val) => acc + val.PorcentajeMaterial, 0);
         const CantidadSum= row && row.reduce((acc, val) => acc + val.CantRecibida, 0);
-        if ((PorcentajeSum !== null && PorcentajeSum === 100) || (PorcentajeSum === 0 && CantidadSum>0)) {
+        if ((PorcentajeSum !== null && PorcentajeSum === 100) || (PorcentajeSum === 0 && CantidadSum>0)|| (ValidaCargo===1 && row && row.length>0 && (row[0].CantRecibida !==null || row[0].PesoRecibido!==null || row[0].Porcentaje!==null))) {
 /* eslint-disable */
       const data38 = {
         parameters:
@@ -280,7 +355,7 @@ function Materiales({
           placadato[0].IdBoleta +
           ',@pnClaUbicacionOrigen='+ClaUbicacionOrigen+',@pnClaViajeOrigen=' +
           ClaViajeOrigen +
-          ',@pnEsNoCargoDescargoMaterial=0,@pnClaUsuarioMod=' +
+          ',@pnEsNoCargoDescargoMaterial='+ Todos +',@pnClaUsuarioMod=' +
           NumbUsuario +
           ',@psNombrePcMod=' +
           ipadress +
@@ -292,13 +367,17 @@ function Materiales({
         // console.log(res);
       });
     }}
+
+    if(Nocargo===1){
+    setNocargo(0)
+    }
   }, [row]);
 
   useEffect(() => {
 
     const urlKrakenService = `${config.KrakenService}/${24}/${config.Servicio}`;
     /* eslint-disable */
-    if(NomMotivoEntrada===3 ){
+    if(NomMotivoEntrada===3 && TipoTraspaso===0){
     const data30 = {
       parameters:
         '{"ClaUbicacion":' +
@@ -320,15 +399,16 @@ function Materiales({
         ',"Parametros":"@psValor="}',
       tipoEstructura: 0,
     };
+
   /* eslint-enable */
+  if(material===null || material.length<1)
       callApi(urlKrakenService, 'POST', data30, (res) => {
       setmaterial(res.Result0);
-      console.log(res.Result0)
       });
 
+      if(materialtodos ===null)
       callApi(urlKrakenService, 'POST', data39, (res) => {
         setmaterialtodos(res.Result0);
-        console.log(res.Result0)
         });
     }
   }, [idmaterialviaje])
