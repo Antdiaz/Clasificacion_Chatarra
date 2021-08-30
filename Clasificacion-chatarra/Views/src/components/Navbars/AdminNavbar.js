@@ -3,7 +3,7 @@ import SelectBox from 'devextreme-react/select-box';
 // nodejs library that concatenates classes
 import classnames from 'classnames';
 // nodejs library to set properties for components
-import { getSessionItem, logOut } from '../../utils/utils';
+import { getSessionItem, logOut,setSessionData } from '../../utils/utils';
 import PropTypes from 'prop-types';
 
 
@@ -38,7 +38,7 @@ AdminNavbar.propTypes = {
   theme: PropTypes.oneOf(['dark', 'light']),
 };
 
-function AdminNavbar({ theme, Patio, editBoxValue, seteditBoxValue }) {
+function AdminNavbar({ theme, Patio, editBoxValue, seteditBoxValue,TipoPatio,setTipoPatio }) {
   const [modalreport, setmodalreport] = useState(false)
   const customStyles = {
     content: {
@@ -52,7 +52,15 @@ function AdminNavbar({ theme, Patio, editBoxValue, seteditBoxValue }) {
 
   const onValueChanged = (e) => {
     seteditBoxValue(e.value);
+    setTipoPatio(e.component.option("selectedItem").ClaTipoUbicacion)
+
+    setSessionData({
+      TipoPatio: e.component.option("selectedItem").ClaTipoUbicacion,
+      PatioEscogido: e.value
+    }
+    )
   };
+
 
   return (
     <>
@@ -69,6 +77,7 @@ function AdminNavbar({ theme, Patio, editBoxValue, seteditBoxValue }) {
             <Nav className="align-items-center ml-md-auto " navbar />
             <Nav className="align-items-center ml-auto ml-md-0" navbar>
               <SelectBox
+              /* eslint-disable */
                 className="placa-style"
                 placeholder="Seleccionar Patio:"
                 dataSource={Patio}
@@ -76,6 +85,7 @@ function AdminNavbar({ theme, Patio, editBoxValue, seteditBoxValue }) {
                 displayExpr="NombreCorto"
                 valueExpr="ClaUbicacion"
                 onValueChanged={onValueChanged}
+                /* eslint-enable */
               />
               <UncontrolledDropdown nav style={{ cursor: 'pointer' }}>
                 <DropdownToggle className="nav-link pr-0" color="" tag="a">

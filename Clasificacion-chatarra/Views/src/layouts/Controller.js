@@ -21,9 +21,11 @@ class Admin extends React.Component {
       NumbUsuario: getSessionItem('NumUsuario'),
       Patio: null,
       editBoxValue: getSessionItem('PatioEscogido'),
+      TipoPatio: getSessionItem('TipoPatio'),
       row: null,
       material: null,
       materialtodos: null,
+      materialpt:null,
       materialr: 0,
       cantidadr: 0,
       kilosr: 0,
@@ -42,17 +44,39 @@ class Admin extends React.Component {
       ClaUbicacionOrigen:0,
       ClaViajeOrigen:0,
       ClaFabricacionViaje:0,
-      FechaDesde: /* eslint-disable */ getSessionItem('Año') + '-01-01'/* eslint-enable */,
+      FechaDesde: /* eslint-disable */ getSessionItem('Año') + '-05-01'/* eslint-enable */,
       FechaHasta:getSessionItem('Hoy'),
       Hoy:getSessionItem('Dia'),
       ReporteFiltrado:0,
-      Materialviaje:0
+      Materialviaje:0,
+      TipoTraspaso:0,
+      Reportes:0,
+      Refresh:false,
+      Actualizar: false,
+      FiltroReporte: null,
+      FiltroPlacas: null,
+      placadato: null
     };
+    this.timer = null;
   }
+
+  setplacadato=(Val) => this.setState(() =>({placadato: Val}))
+
+  setFiltroReporte=(Val) => this.setState(() =>({FiltroReporte: Val}))
+
+  setFiltroPlacas=(Val) => this.setState(() =>({FiltroPlacas: Val}))
+
+  setActualizar=(Val) => this.setState(() =>({Actualizar: Val}))
+
+  setRefresh=(Val) => this.setState(() =>({Refresh: Val}))
+
+  setReportes=(Val) => this.setState(() =>({Reportes: Val}))
   
   setFechaDesde=(Val) => this.setState(() =>({FechaDesde: Val}))
 
   setMaterialviaje=(Val) => this.setState(() =>({Materialviaje: Val}))
+
+  setTipoTraspaso=(Val) => this.setState(() =>({TipoTraspaso: Val}))
 
   setReporteFiltrado=(Val) => this.setState(() =>({ReporteFiltrado: Val}))
 
@@ -78,6 +102,8 @@ class Admin extends React.Component {
 
   seteditBoxValue = (Val) => this.setState(() => ({ editBoxValue: Val }));
 
+  setTipoPatio = (Val) => this.setState(() => ({ TipoPatio: Val }));
+
   setDatos = (Val) => this.setState(() => ({ Datos: Val }));
 
   setUsuario = (Val) => this.setState(() => ({ Usuario: Val }));
@@ -87,6 +113,8 @@ class Admin extends React.Component {
   setmaterial = (Val) => this.setState(() => ({ material: Val }));
 
   setmaterialtodos = (Val) => this.setState(() => ({ materialtodos: Val }));
+
+  setmaterialpt = (Val) => this.setState(() => ({ materialpt: Val }));
 
   setmaterialr = (Val) => this.setState(() => ({ materialr: Val }));
 
@@ -128,6 +156,16 @@ class Admin extends React.Component {
       parameters: '{"Usuario":' + this.state.NumbUsuario + '}',
       tipoEstructura: 0,
     };
+
+    const data50 = {
+      parameters:
+        '{"ClaUbicacion":' +
+        this.state.editBoxValue +
+        ',"ClaServicioJson":' +
+        50 +
+        ',"Parametros":"@pdFechaIni='+ this.state.FechaDesde + ',@pdFechaFin='+ this.state.FechaHasta +'"}',
+      tipoEstructura: 0,
+    };
     /* eslint-enable */
 
     await callApi(urlKrakenUsuario, 'POST', data3, (res) => {
@@ -139,11 +177,16 @@ class Admin extends React.Component {
       tipoEstructura: 0,
     };
     /* eslint-enable */
-    await callApi(urlKrakenPlanta, 'POST', data2, (res) => {
+    if(this.state.Patio===null){
+    await this.state.Usuario && callApi(urlKrakenPlanta, 'POST', data2, (res) => {
       this.setPatio(res.Result0);
     });
+  }
+    callApi(urlKrakenService, 'POST', data50, (res) => {
+      this.setReportes(res.Result0);
+    });
 
-    if(this.state.editBoxValue===26){
+    if(this.state.editBoxValue===26 || this.state.editBoxValue===96){
     await callApi(urlKrakenService, 'POST', data,(res) => {
       this.setValores(res.Result0);
     });
@@ -166,7 +209,34 @@ class Admin extends React.Component {
       // this.refs.mainContent.scrollTop = 0;
     }
 
-    if (prevState.editBoxValue !== this.state.editBoxValue) {
+    if (prevState.FechaDesde !== this.state.FechaDesde || prevState.FechaHasta !== this.state.FechaHasta) {
+
+      this.setReportes(null);
+      this.timer = setTimeout(() =>{
+      const urlKrakenService = `${config.KrakenService}/${24}/${config.Servicio}`;
+      /* eslint-disable */
+      const data50 = {
+        parameters:
+          '{"ClaUbicacion":' +
+          this.state.editBoxValue +
+          ',"ClaServicioJson":' +
+          50 +
+          ',"Parametros":"@pdFechaIni='+ this.state.FechaDesde + ',@pdFechaFin='+ this.state.FechaHasta +'"}',
+        tipoEstructura: 0,
+      };
+
+      /* eslint-enable */
+      callApi(urlKrakenService, 'POST', data50, (res) => {
+        this.setReportes(res.Result0);
+      });
+    },10);
+    }
+
+    if ((prevState.editBoxValue !== this.state.editBoxValue) || prevState.Refresh === false && this.state.Refresh=== true) {
+
+      this.setValores(null);
+      this.setmaterial(null)
+      this.timer = setTimeout(() =>{
       const urlKrakenService = `${config.KrakenService}/${24}/${config.Servicio}`;
       /* eslint-disable */
       const data = {
@@ -175,11 +245,36 @@ class Admin extends React.Component {
       };
 
       /* eslint-enable */
-      if(this.state.editBoxValue===26){
+      if(this.state.editBoxValue===26 || this.state.editBoxValue===96){
       callApi(urlKrakenService, 'POST', data, (res) => {
         this.setValores(res.Result0);
       });
     }
+  },50);
+    }
+
+    if ((prevState.editBoxValue !== this.state.editBoxValue) || prevState.Refresh === false && this.state.Refresh=== true) {
+
+      this.setReportes(null);
+
+      this.timer = setTimeout(() =>{
+        const urlKrakenService = `${config.KrakenService}/${24}/${config.Servicio}`;
+/* eslint-disable */
+      const data50 = {
+        parameters:
+          '{"ClaUbicacion":' +
+          this.state.editBoxValue +
+          ',"ClaServicioJson":' +
+          50 +
+          ',"Parametros":"@pdFechaIni='+ this.state.FechaDesde + ',@pdFechaFin='+ this.state.FechaHasta +'"}',
+        tipoEstructura: 0,
+      };
+
+      /* eslint-enable */
+      callApi(urlKrakenService, 'POST', data50, (res) => {
+        this.setReportes(res.Result0);
+      });
+  },50);
     }
   }
 
@@ -229,6 +324,18 @@ class Admin extends React.Component {
                   ReporteFiltrado={this.state.ReporteFiltrado}
                   setReporteFiltrado={this.setReporteFiltrado}
                   editBoxValue={this.state.editBoxValue}
+                  TipoPatio={this.state.TipoPatio}
+                  Reportes={this.state.Reportes}
+                  setReportes={this.setReportes}
+                  Refresh={this.state.Refresh}
+                  setRefresh={this.setRefresh}
+                  Patio={this.state.Patio}
+                  FiltroReporte={this.state.FiltroReporte}
+                  setFiltroReporte={this.setFiltroReporte}
+                  FiltroPlacas={this.state.FiltroPlacas}
+                  setFiltroPlacas={this.setFiltroPlacas}
+                  placadato={this.state.placadato}
+                  setplacadato={this.setplacadato}
                 />
               )}
               key={key}
@@ -286,6 +393,8 @@ class Admin extends React.Component {
             Patio={this.state.Patio}
             editBoxValue={this.state.editBoxValue}
             seteditBoxValue={this.seteditBoxValue}
+            TipoPatio={this.state.TipoPatio}
+            setTipoPatio={this.setTipoPatio}
             row={this.state.row}
             setrow={this.setrow}
           />
@@ -299,15 +408,20 @@ class Admin extends React.Component {
                 sidenavOpen={this.state.sidenavOpen}
               />
               <Boleta
+                placadato={this.state.placadato}
+                setplacadato={this.setplacadato}
                 warning={this.state.warning}
                 setwarning={this.setwarning}
                 editBoxValue={this.state.editBoxValue}
+                TipoPatio={this.state.TipoPatio}
                 row={this.state.row}
                 setrow={this.setrow}
                 material={this.state.material}
                 setmaterial={this.setmaterial}
                 materialtodos={this.state.materialtodos}
                 setmaterialtodos={this.setmaterialtodos}
+                materialpt={this.state.materialpt}
+                setmaterialpt={this.setmaterialpt}
                 materialr={this.state.materialr}
                 cantidadr={this.state.cantidadr}
                 kilosr={this.state.kilosr}
@@ -335,7 +449,11 @@ class Admin extends React.Component {
                 setClaViajeOrigen={this.setClaViajeOrigen}
                 setClaFabricacionViaje={this.setClaFabricacionViaje}
                 Materialviaje={this.state.Materialviaje}
+                TipoTraspaso={this.state.TipoTraspaso}
+                setTipoTraspaso={this.setTipoTraspaso}
                 setMaterialviaje={this.setMaterialviaje}
+                Actualizar={this.state.Actualizar}
+                setActualizar={this.setActualizar}
               />
             </Route>
           </Switch>

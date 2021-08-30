@@ -23,6 +23,7 @@ import {
   setSessionData,
   callApi,
   getSessionItem,
+  logOut,
 } from '../../utils/utils';
 
 class Patio extends React.Component {
@@ -33,7 +34,8 @@ class Patio extends React.Component {
       Usuario: null,
       Patio: null,
       Lugarsesion:0,
-      Lugaradd:null
+      Lugaradd:null,
+      TipoUbicacion:null
       
     };
   }
@@ -41,6 +43,8 @@ class Patio extends React.Component {
   setUsuario = (Val) => this.setState(() => ({ Usuario: Val }));
 
   setLugarsesion = (Val) => this.setState(() => ({ Lugarsesion: Val }));
+
+  setTipoUbicacion = (Val) => this.setState(() => ({ TipoUbicacion: Val }));
 
   setPatio = (Val) => this.setState(() => ({ Patio: Val }));
 
@@ -57,6 +61,7 @@ class Patio extends React.Component {
     if(this.state.Lugarsesion>0){
     this.setLugaradd(true)
     setSessionData({
+      TipoPatio: this.state.TipoUbicacion,
       PatioEscogido: this.state.Lugarsesion,
       Año: yyyy,
       Hoy: today,
@@ -65,10 +70,11 @@ class Patio extends React.Component {
     );}
   }
 
+
   // Función para leer patio seleccionado
   onValueChanged = (e) => {
-    this.setLugarsesion(e.target.value)
-
+    this.setLugarsesion(e.target.value.replace(/^\D+|\D.*$/g, ""))
+    this.setTipoUbicacion(e.target.value.replace(/.*\D(?=\d)|\D+$/g, ""))
   }
 
   // Función para correr los servicios antes del render
@@ -96,6 +102,7 @@ class Patio extends React.Component {
       tipoEstructura: 0,
     };
     /* eslint-enable */
+    if(this.state.Patio===null)
     await callApi(urlKrakenPlanta, 'POST', data2, (res) => {
       this.setPatio(res.Result0);
     });
@@ -103,6 +110,7 @@ class Patio extends React.Component {
     if(this.state.Patio && this.state.Patio.length===1){
       this.setLugaradd(true)
       this.setLugarsesion(this.state.Patio[0].ClaUbicacion)
+      this.setTipoUbicacion(this.state.Patio[0].TipoUbicacion)
     }
 
   }
@@ -150,13 +158,15 @@ class Patio extends React.Component {
                         <Input type="select" onChange={this.onValueChanged} className="kar-input-login" multiple>
                           {this.state.Patio &&
                             this.state.Patio.map((pat,index) => (
+                              /* eslint-disable */
                               <option
                                 className="options"
-                                value={pat.ClaUbicacion}
+                                value={'{"ClaUbicacion":'+ pat.ClaUbicacion +',"ClaTipoUbicacion":' +pat.ClaTipoUbicacion +'}'}
                                 key={index}
                               >
                                 {pat.NombreCorto.split("-").pop()}
                               </option>
+                              /* eslint-enable */
                             ))}
                         </Input>
                       </InputGroup>
@@ -174,6 +184,11 @@ class Patio extends React.Component {
                   </Form>
                 </CardBody>
               </Card>
+              <Col xs="6">
+                <a className="text-light" href="/" onClick={logOut}>
+                  <small>&#8592; Regresar</small>
+                </a>
+              </Col>
             </Col>
           </Row>
         </Container>

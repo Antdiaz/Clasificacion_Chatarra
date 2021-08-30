@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import 'devextreme-react/text-area';
 import { Row, Col, Button, Input } from 'reactstrap';
 import Items from './Placas';
@@ -23,12 +23,32 @@ function Consulta({
   setClaViajeOrigen,
   setClaFabricacionViaje,
   setpesajeparcial,
-  editBoxValue
+  editBoxValue,
+  Refresh,
+  setRefresh,
+  FiltroPlacas,
+  setFiltroPlacas,
+  setplacadato,
+  placadato
 }) {
   // Valor usado para el input de filtrado
-  const [Filtro, setFiltro] = useState(null);
-
+  const [Filtro, setFiltro] = useState(FiltroPlacas);
   // Función para filtrado de Placas con Pesaje Parcial
+
+
+useEffect(() => {
+  if(placadato !== null){
+    setplacadato(null)
+  }
+}, [])
+
+  const handleRefresh = () =>{
+    setRefresh(true);
+    setTimeout(() =>{
+setRefresh(false)
+    }, 50);
+  }
+
   const useCheckbox = (e) => {
     setfiltropesaje(e.target.checked);
     setDatos('');
@@ -57,11 +77,17 @@ function Consulta({
     setshowResults(!showResults);
   };
 
+  const handleKeypress = e => {
+  if (e.key === 'Enter') {
+    handleSearch();
+  }
+};
+
   // Función para Filtrado que se agregó al input
-  const handleSearch = (e) => {
-    e.preventDefault();
+  const handleSearch = () => {
 
     if (Filtro !== null) {
+      setFiltroPlacas(Filtro)
       setDatos(Filtro);
     } else if (Filtro === null) {
       setDatos(null);
@@ -103,23 +129,37 @@ function Consulta({
           <div className="popup-materiales">
             {/* Input para filtrar por lo que el usuario escriba */}
             <Input
+              onKeyPress={handleKeypress}
               onChange={handleChange}
               type="text"
               className="kar-input-login"
               placeholder="Agregar a filtrado"
-              // value=""
+              defaultValue={FiltroPlacas}
             />
           </div>
         </Col>
-        <Col className="input-search" md={{ size: 1, offset: 0 }}>
+        <Col className="input-search" md={{ size: 0, offset: 0 }}>
           <div id="formularioTickets">
             {/* Botón para hacer el filtrado */}
             <Button
               onClick={handleSearch}
               className="animation-on-hover float-right"
               color="success"
+              style={{margin:'0px'}}
             >
               <i className="fa fa-search" aria-hidden="true"></i>
+            </Button>
+          </div>
+        </Col>
+        <Col className="input-search input-refresh" md={{ size: 1, offset: 0 }}>
+          <div id="formularioTickets">
+            {/* Botón para hacer el filtrado */}
+            <Button
+              onClick={handleRefresh}
+              className="refresh"
+              style={{color: "white",background:'#5b9cff',border:'0px'}}
+            >
+              <i className="fas fa-redo" aria-hidden="true"></i>
             </Button>
           </div>
         </Col>

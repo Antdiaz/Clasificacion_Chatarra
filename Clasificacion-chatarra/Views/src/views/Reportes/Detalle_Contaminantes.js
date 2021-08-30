@@ -29,20 +29,6 @@ import { SkipPreviousRounded } from '@material-ui/icons';
 
 const Detalles = (props) => {
   // Valores dinámicos locales al editar material
-  const [cantidad, setcantidad] = useState(
-    props.NomMotivoEntrada === 9
-      ? props.ro.CantidadMaterial
-        ? props.ro.CantidadMaterial
-        : 0
-      : props.NomMotivoEntrada === 3
-      ? props.ro.CantRecibida
-        ? props.ro.CantRecibida
-        : 0
-      : 0
-  );
-  const [contaminaciones, setcontaminaciones] = useState(props.contaminacion);
-  const disabled = true;
-  const [Datosmaterial, setDatosmaterial] = useState(0);
   const prev = useRef();
   // Arreglo valores Contaminantes
   const [Contaminantes, setContaminantes] = useState([
@@ -63,24 +49,7 @@ const Detalles = (props) => {
       { nombre: 'Llantas Grande', comentario: '100kgs', imagen: LlantaG, id: 6 },
     ],
   ]);
-  // Valores dinámicos contaminantes
-
-  const [Bollas, setBollas] = useState(0);
-  const [Cilindro, setCilindro] = useState(0);
-  const [Tanque, setTanque] = useState(0);
-  const [LlantasChico, setLlantasChico] = useState(0);
-  const [LlantasMediano, setLlantasMediano] = useState(0);
-  const [LlantasGrande, setLlantasGrande] = useState(0);
-  const [kiloscont, setkiloscont] = useState(0);
-  const Llantas = +LlantasChico * +25 + +LlantasMediano * +50 + +LlantasGrande * +100;
-  const [NantCont, setNantCont] = useState();
-  const Tanques = +Tanque * 200;
-  const Otros = +Cilindro * +100 + +Bollas * +50;
-  const Totales = +Llantas + +Otros + +Tanques;
-  const ContaminacionTotal = +Totales + +kiloscont;
-
-  // Función para cambiar del paso 1 (Clasificación de Material) & paso 2 (Contaminación)
-
+  
   // Componente de botes y electrodomésticos para el respectivo material
   function Contelements({ contaminante }) {
     const [valor, setvalor] = useState(0);
@@ -99,28 +68,28 @@ const Detalles = (props) => {
               <input
                 value={
                   contaminante.id === 4
-                    ? props.report.LlantasChico === 0
+                    ? props.report.LlantasCh === 0 || props.report.LlantasCh === null
                       ? ''
-                      : props.report.LlantasChico
+                      : props.report.LlantasCh/25
                     : contaminante.id === 1
-                    ? props.report.Bollas === 0
+                    ? props.report.Boyas === 0 || props.report.Boyas === null
                       ? ''
-                      : props.report.Bollas
+                      : props.report.Boyas/50
                     : contaminante.id === 2
-                    ? props.report.Cilindros === 0
+                    ? props.report.Cilindro === 0 || props.report.Cilindro === null
                       ? ''
-                      : props.report.Cilindros
+                      : props.report.Cilindro/100
                     : contaminante.id === 3
-                    ? props.report.Tanques === 0
+                    ? props.report.Tanque === 0 || props.report.Tanque === null
                       ? ''
-                      : props.report.Tanques
+                      : props.report.Tanque/200
                     : contaminante.id === 5
-                    ? props.report.LlantasMediano === 0
+                    ? props.report.LlantasM === 0 || props.report.LlantasM === null
                       ? ''
-                      : props.report.LlantasMediano
-                    : props.report.LlantasGrande === 0
+                      : props.report.LlantasM/50
+                    : props.report.LlantasG === 0 || props.report.LlantasG === null
                     ? ''
-                    : props.report.LlantasGrande
+                    : props.report.LlantasG/100
                 }
                 className="popup-number"
                 style={{margin:'0px'}}
@@ -144,21 +113,21 @@ const Detalles = (props) => {
           <div className="bote-elect">
             <Row>
               <Col>Llanta:</Col>
-              <Col>{+props.report.LlantasChico*+25 + +props.report.LlantasMediano*+50 + +props.report.LlantasGrande*+100}</Col>
+              <Col>{+props.report.LlantasCh + +props.report.LlantasM + +props.report.LlantasG}</Col>
               <Col>Total:</Col>
-              <Col>{+props.report.Contaminantes}</Col>
+              <Col>{+props.report.KilosContaminados ? +props.report.KilosContaminados : +props.report.Tanque + +props.report.Cilindro + +props.report.Boyas +props.report.LlantasCh + +props.report.LlantasM + +props.report.LlantasG}</Col>
               <Col></Col>
             </Row>
             <Row>
               <Col>Tanque:</Col>
-              <Col>{+props.report.Tanques}</Col>
+              <Col>{+props.report.Tanque + +props.report.Cilindro + +props.report.Boyas}</Col>
               <Col></Col>
               <Col></Col>
               <Col></Col>
             </Row>
             <Row>
               <Col>Otros:</Col>
-              <Col>{+props.report.Bollas*+50 + +props.report.Cilindros*+100 + (+props.report.Contaminantes - (+props.report.Tanques*+200+ +props.report.Cilindros*+100 + +props.report.Bollas*+50 + +props.report.LlantasChico*+25 + +props.report.LlantasMediano*+50 + +props.report.LlantasGrande*+100))}</Col>
+              <Col>{+props.report.KilosContaminados <0 ? (+props.report.KilosContaminados - (+props.report.Tanque + +props.report.Cilindro+ +props.report.Boyas + +props.report.LlantasCh + +props.report.LlantasM + +props.report.LlantasG)):0}</Col>
               <Col></Col>
               <Col></Col>
               <Col></Col>
@@ -175,7 +144,7 @@ const Detalles = (props) => {
                 <Input
                   className="popup-recibidos"
                   type="number"
-                  defaultValue={+props.report.Contaminantes - (+props.report.Tanques*+200+ +props.report.Cilindros*+100 + +props.report.Bollas*+50 + +props.report.LlantasChico*+25 + +props.report.LlantasMediano*+50 + +props.report.LlantasGrande*+100)}
+                  defaultValue={+props.report.KilosContaminados<0 ? +props.report.KilosContaminados - (+props.report.Tanque+ +props.report.Cilindro + +props.report.Boyas + +props.report.LlantasCh + +props.report.LlantasM + +props.report.LlantasG):0}
                   disabled={true}
                 />
                 <InputGroupAddon addonType="append">
@@ -208,11 +177,6 @@ const Detalles = (props) => {
                 ))}
               </Row>
             ))}
-          </div>
-          <div style={{ marginTop: '50px', position: 'absolute' }}>
-            <span style={{ color: 'red' }}>
-              {Totales > 500 ? 'El máximo de Kilos es de 500kgs' : null}
-            </span>
           </div>
         </Container>
         <div style={{ marginTop: '70px' }}></div>

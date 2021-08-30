@@ -112,6 +112,10 @@ function Imagenes({ id, editBoxValue, row, NomMotivoEntrada }) {
       };
   }, [Material]);
 
+  if(row && row.length<1 && Manual!== 0){
+    setManual(0)
+  }
+
   return (
     <div className="Imagenes">
       <Row style={{ alignItems: 'center', justifyContent: 'center' }}>
@@ -302,6 +306,8 @@ function Imagenes({ id, editBoxValue, row, NomMotivoEntrada }) {
             </CardTitle>
           </CardHeader>
           <CardBody className="p-2">
+            {row && row.length>0  &&
+            (
             <img
               style={{ width: '100%' }}
               src={
@@ -311,6 +317,7 @@ function Imagenes({ id, editBoxValue, row, NomMotivoEntrada }) {
               }
               alt=""
             />
+            )}
           </CardBody>
           <Modal isOpen={Modalmanual} onClose="" ariaHideApp={false} style={customStyles}>
             <div className="Completo_container">

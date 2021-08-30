@@ -10,7 +10,7 @@ import {
   Row,
   Col,
   Button,
-  Input,
+  Input as Inputs,
 } from 'reactstrap';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -22,6 +22,17 @@ import Paper from '@material-ui/core/Paper';
 import { CommonSeriesSettingsHoverStyle } from 'devextreme-react/chart';
 import Detalles from './Detalle_Contaminantes';
 import Modal from 'react-modal';
+import { callApi, getSessionItem } from '../../utils/utils';
+import { config } from '../../utils/config';
+import Listas from './Renglon_Reporte';
+import { makeStyles } from '@material-ui/core/styles';
+import Input from '@material-ui/core/Input';
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormControl from '@material-ui/core/FormControl';
+import ListItemText from '@material-ui/core/ListItemText';
+import Select from '@material-ui/core/Select';
+import Checkbox from '@material-ui/core/Checkbox';
 
 function Consulta({
   Valores,
@@ -50,9 +61,16 @@ function Consulta({
   Hoy,
   ReporteFiltrado,
   setReporteFiltrado,
+  editBoxValue,
+  Reportes,
+  setReportes,
+  Patio,
+  FiltroReporte,
+  setFiltroReporte,
 }) {
   const [Headers, setstate] = useState([
-    { label: 'Boleta', key: 'Boleta' },
+    { label: 'Patio', key: 'Patio' },
+    { label: 'Boleta', key: 'IdBoleta' },
     { label: 'Fecha', key: 'Fecha' },
     { label: 'Proveedor', key: 'Proveedor' },
     { label: 'Materiales', key: 'Materiales' },
@@ -60,78 +78,68 @@ function Consulta({
     { label: 'Contaminantes', key: 'Contaminantes' },
     { label: 'Rechazo', key: 'Rechazo' },
     { label: 'Llantas', key: 'Llantas' },
-    { label: 'Cilindros', key: 'Cilindros' },
-    { label: 'Bollas', key: 'Bollas' },
-    { label: 'Tanques', key: 'Tanques' },
+    { label: 'Tanque', key: 'Tanques' },
     { label: 'Otros', key: 'Otros' },
   ]);
   const [HeaderTable, setHeaderTable] = useState([
-    { label: 'Boleta', key: 'Boleta' },
-    { label: 'Fecha', key: 'Fecha' },
-    { label: 'Proveedor', key: 'Proveedor' },
+    { label: 'Patio', key: 'NombreUbicacion' },
+    { label: 'Boleta', key: 'IdBoleta' },
+    { label: 'Fecha', key: 'FechaGeneracion' },
+    { label: 'Clave Proveedor', key: 'ClaProveedor' },
+    { label: 'Proveedor', key: 'NombreCompleto' },
     { label: 'Materiales', key: 'Materiales' },
-    { label: 'Kilos', key: 'Kilos' },
-    { label: 'Contaminantes', key: 'Contaminantes' },
+    { label: 'Kilos', key: 'PesoNeto' },
+    { label: 'Contaminantes', key: 'KilosContaminados' },
     { label: 'Rechazo', key: 'Rechazo' },
-    { label: 'LlantasChico', key: 'LlantasChico' },
-    { label: 'LlantasMediano', key: 'LlantasMediano' },
-    { label: 'LlantasGrande', key: 'LlantasGrande' },
-    { label: 'Cilindros', key: 'Cilindros' },
-    { label: 'Bollas', key: 'Bollas' },
-    { label: 'Tanques', key: 'Tanques' },
-    { label: 'Otros', key: 'Otros' },
-  ]);
-  const [Reportes, setReportes] = useState([
-    {
-      Boleta: '123456',
-      Fecha: '2021-03-01',
-      Unidad: 'kgs',
-      Proveedor: 'ANGEL',
-      Materiales: 'Placas',
-      Kilos: '1200',
-      MotivoContaminacion: 'Tierra',
-      Contaminantes: '600',
-      Rechazo: '',
-      LlantasChico: '0',
-      LlantasMediano:'0',
-      LlantasGrande:'0',
-      Cilindros: '0',
-      Bollas: '0',
-      Tanques: '2',
-      id: 1,
-    },
-    {
-      Boleta: '789012',
-      Fecha: '2021-02-01',
-      Unidad: 'kgs',
-      Proveedor: 'CARLOS',
-      Materiales: 'Mixto',
-      Kilos: '9000',
-      MotivoContaminacion: 'Bicicleta',
-      Contaminantes: '600',
-      Rechazo:'Total',
-      LlantasChico: '2',
-      LlantasMediano:'1',
-      LlantasGrande:'0',
-      Cilindros: '1',
-      Bollas: '2',
-      Tanques: '0',
-      id: 2,
-    },
+    { label: 'LlantasChico (kgs)', key: 'LlantasCh' },
+    { label: 'LlantasMediano (kgs)', key: 'LlantasM' },
+    { label: 'LlantasGrande (kgs)', key: 'LlantasG' },
+    { label: 'Cilindros (kgs)', key: 'Cilindro' },
+    { label: 'Bollas (kgs)', key: 'Boyas' },
+    { label: 'Tanques (kgs)', key: 'Tanque' },
+    { label: 'Otros (kgs)', key: 'Otros' },
   ]);
   // Valor usado para el input de filtrado
-  const [Filtro, setFiltro] = useState(null);
-  const customStyles = {
-    content: {
-      background: 'rgba(128, 128, 128, 0.212)',
-      top: '0%',
-      right: '-.5%',
-      bottom: '0%',
+  const [Filtro, setFiltro] = useState(FiltroReporte);
+
+  const useStyles = makeStyles((theme) => ({
+    formControl: {
+      margin: 0,
+      minWidth: 120,
+      maxWidth: 200,
+    },
+    chips: {
+      display: 'flex',
+      flexWrap: 'wrap',
+    },
+    chip: {
+      margin: 2,
+    },
+    noLabel: {
+      marginTop: theme.spacing(3),
+    },
+  }));
+
+  const ITEM_HEIGHT = 48;
+  const ITEM_PADDING_TOP = 8;
+  const MenuProps = {
+    PaperProps: {
+      style: {
+        maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+        width: 250,
+      },
     },
   };
+
+  const classes = useStyles();
+  const [personName, setPersonName] = React.useState([]);
+
+  const handlePatio = (event) => {
+    setPersonName(event.target.value);
+  };
+
   // Función para input de filtrado
   const handleChange = (event) => {
-    event.preventDefault();
     setFiltro(event.target.value);
   };
 
@@ -143,108 +151,56 @@ function Consulta({
     setshowResults(!showResults);
   };
 
-  // Función para Filtrado que se agregó al input
-  const handleSearch = (e) => {
+  const handleFiltro = (e) => {
     e.preventDefault();
-    setFechaDesde(document.getElementById("desde").value)
-    setFechaHasta(document.getElementById("hasta").value)
+    setFechaDesde(document.getElementById('desde').value);
+    setFechaHasta(document.getElementById('hasta').value);
+  };
+  const handleKeypress = e => {
+    if (e.key === 'Enter') {
+      handleSearch();
+    }
+  };
 
+  // Función para Filtrado que se agregó al input
+  const handleSearch = () => {
     if (Filtro !== null) {
+      setFiltroReporte(Filtro)
       setDatos(Filtro);
     } else if (Filtro === null) {
       setDatos(null);
     }
   };
-  
 
-  const Filtracion =
-    Reportes && Datos
+  const Filtracion = Reportes
+    ? Datos
       ? Reportes.filter(
           (report) =>
-            (report.Fecha >= FechaDesde &&
-              report.Fecha <= FechaHasta &&
-              report.Boleta.includes(Datos)) ||
-            report.Proveedor.includes(Datos.toUpperCase())
+            (report.FechaGeneracion >= FechaDesde &&
+              report.FechaGeneracion <= FechaHasta &&
+              report.IdBoleta.toString().includes(Datos)) ||
+            report.NombreCompleto.includes(Datos.toUpperCase()) ||
+            report.ClaProveedor.toString().includes(Datos) ||
+            (report.ListadoContaminante !== null
+              ? report.ListadoContaminante.toString().includes(Datos)
+              : null)
         )
       : !Datos &&
-        Reportes.filter((report) => report.Fecha >= FechaDesde && report.Fecha <= FechaHasta);
+        Reportes.filter(
+          (report) => report.FechaGeneracion >= FechaDesde && report.FechaGeneracion <= FechaHasta
+        )
+    : 0;
 
-  const csvReport = {
-    data: Filtracion,
-    headers: HeaderTable,
-    filename: 'Reporte.csv',
-  };
-  function List({ Reportes }) {
-    const [Open, setOpen] = useState(false);
-    // Componente cascarón de cada material mostrado
-    return (
-      <>
-        {Reportes !== undefined &&
-          Reportes.map((report, index) => (
-            <>
-              <Modal
-                isOpen={Open}
-                ariaHideApp={false}
-                onClose={() => setOpen(true)}
-                style={customStyles}
-              >
-                <Detalles editOpen={Open} seteditOpen={setOpen} report={report} />
-              </Modal>
-              <TableRow key={index}>
-                <TableCell className="table-content" style={{ textAlign: 'center' }}>
-                  {report.Boleta}
-                </TableCell>
-                <TableCell className="table-content" style={{ textAlign: 'center',padding: '0px' }}>
-                  {report.Fecha}
-                </TableCell>
-                <TableCell
-                  className="table-content"
-                  style={{ textAlign: 'center', fontWeight: '600' }}
-                >
-                  {report.Proveedor}
-                </TableCell>
-                <TableCell className="table-content" style={{ textAlign: 'center' }}>
-                  {report.Materiales}
-                </TableCell>
-                <TableCell className="table-content" style={{ textAlign: 'center' }}>
-                  {report.Kilos}&nbsp;{report.Unidad}
-                </TableCell>
-                <TableCell className="table-content" style={{ textAlign: 'center' }}>
-                  {report.Contaminantes}&nbsp;{report.Unidad}
-                  <br />
-                  <i className="far fa-file fa-2x" style={{ color: 'gray' }} onClick={() => setOpen(true)}></i>
-                  &nbsp;&nbsp;
-                  <i className="fas fa-camera" style={{ color: '#ff6a00' }}></i>
-                </TableCell>
-                <TableCell className="table-content" style={{ textAlign: 'center' }}>
-                  {report.Rechazo}
-                </TableCell>
-                <TableCell className="table-content" style={{ textAlign: 'center' }}>
-                  {report.LlantasChico>0 || report.LlantasMediano>0 || report.LlantasGrande>0 ? +report.LlantasChico*25 + +report.LlantasMediano*50 + +report.LlantasGrande*100: ''}&nbsp;{report.LlantasChico>0 || report.LlantasMediano>0 || report.LlantasGrande>0 ? report.Unidad: ''}
-                  <br />{report.LlantasChico>0 || report.LlantasMediano>0 || report.LlantasGrande>0 ? +report.LlantasChico + +report.LlantasMediano + +report.LlantasGrande : ''}&nbsp;{report.LlantasChico>0 || report.LlantasMediano>0 || report.LlantasGrande>0 ? "pieza(s)":''}
-                </TableCell>
-                <TableCell className="table-content" style={{ textAlign: 'center' }}>
-                  {report.Cilindros>0 ? +report.Cilindros* +100: ''}&nbsp;{report.Cilindros>0 ? report.Unidad: ''}
-                  <br />{report.Cilindros>0 ? +report.Cilindros:''}&nbsp;{report.Cilindros>0 ? "pieza(s)": ''}
-                </TableCell>
-                <TableCell className="table-content" style={{ textAlign: 'center' }}>
-                  {report.Bollas>0 ? +report.Bollas*+50 : ''}&nbsp;{report.Bollas>0 ? report.Unidad: ''}
-                  <br />{report.Bollas>0 ? +report.Bollas:''}&nbsp;{report.Bollas>0 ? "pieza(s)":''}
-                </TableCell>
-                <TableCell className="table-content" style={{ textAlign: 'center' }}>
-                  {report.Tanques>0 ? +report.Tanques* +200: ''}&nbsp;{report.Tanques>0 ? report.Unidad:''}
-                  <br />{report.Tanques>0 ? +report.Tanques: ''}&nbsp;{report.Tanques>0 ? "pieza(s)":''}
-                </TableCell>
-                <TableCell className="table-content" style={{ textAlign: 'center' }}>
-                  {+report.Contaminantes - (+report.Bollas*+50 + +report.Tanques* +200 + +report.Cilindros* +100 + +report.LlantasChico*+25 + +report.LlantasMediano*+50 + +report.LlantasGrande*+100)}&nbsp;{report.Unidad}
-                </TableCell>
-                {/* Pop up para editar un material */}
-              </TableRow>
-            </>
-          ))}
-      </>
-    );
-  }
+
+  const csvReport = Reportes
+    ? {
+        data: Filtracion,
+        headers: HeaderTable,
+        filename: 'Reporte.csv',
+      }
+    : 0;
+
+
 
   return (
     <div className="content Reportes" style={{ minHeight: '450px' }}>
@@ -266,16 +222,48 @@ function Consulta({
         <Col className="input-bar" md={{ size: 4, offset: 0 }}>
           <div className="popup-materiales">
             {/* Input para filtrar por lo que el usuario escriba */}
-            <Input
+            <Inputs
+              onKeyPress={handleKeypress}
               onChange={handleChange}
               type="text"
               className="kar-input-login rpt-text"
               placeholder="Boleta / Proveedor / Contaminante"
-              // value=""
+              defaultValue={FiltroReporte}
             />
           </div>
         </Col>
-        <Col className="input-search" md={{ size: 1, offset: 0 }}>
+        {editBoxValue === 6 ? (
+          <Col className="Patios input-search" md={{ size: 0, offset: 0 }}>
+            {Patio ? (
+              <FormControl className={classes.formControl}>
+                <InputLabel shrink={false} id="demo-mutiple-checkbox-label">
+                  Patios
+                </InputLabel>
+                <Select
+                  disableUnderline={true}
+                  labelId="demo-mutiple-checkbox-label"
+                  id="demo-mutiple-checkbox"
+                  multiple
+                  value={personName}
+                  onChange={handlePatio}
+                  input={<Input />}
+                  renderValue={(selected) => selected.join(', ')}
+                  MenuProps={MenuProps}
+                >
+                  {Patio.map((name) => (
+                    <MenuItem key={name.ClaUbicacion} value={name.ClaUbicacion}>
+                      <Checkbox checked={personName.indexOf(name.ClaUbicacion) > -1} />
+                      <ListItemText primary={name.NombreCorto} />
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            ) : (
+              Headers[0].label
+            )}
+          </Col>
+        ) : null}
+        <Col className="input-search" md={{ size: 0, offset: 0 }}>
           <div id="formularioTickets">
             {/* Botón para hacer el filtrado */}
             <Button
@@ -294,7 +282,7 @@ function Consulta({
           <Col md={{ size: 0, offset: 3 }}>
             <i className="fas fa-angle-right fa-2x" onClick={handleShow}></i>
           </Col>
-          <Col md={{ size: 3, offset: 0 }}>
+          <Col md={{ size: 2.9, offset: 0 }} style={{ marginLeft: '2%' }}>
             <form className="filtro-transporte">
               <>{/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}</>
               <label type="text" className="filtro-texto">
@@ -311,7 +299,7 @@ function Consulta({
               />
             </form>
           </Col>
-          <Col md={{ size: 3, offset: 0 }}>
+          <Col md={{ size: 2.9, offset: 0 }} style={{ marginLeft: '1%' }}>
             <form>
               <>{/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}</>
               <label type="text" className="filtro-texto">
@@ -329,6 +317,9 @@ function Consulta({
               />
             </form>
           </Col>
+          <Col>
+            <i className="fas fa-filter" onClick={handleFiltro} style={{ cursor: 'pointer' }}></i>
+          </Col>
         </Row>
       )}
       {/* Placas de la Ubicación afectado por los filtros */}
@@ -340,42 +331,84 @@ function Consulta({
           >
             <CardHeader>
               <CardTitle style={{ margin: '10px', textAlign: 'end' }}>
-                <CSVLink {...csvReport} style={{ color: 'white' }}>
-                  <i className="fas fa-file-download" style={{ cursor: 'pointer' }}></i>
-                  &nbsp;&nbsp;
-                  <span style={{ cursor: 'pointer' }}>Exportar Excel</span>
-                </CSVLink>
+                {Reportes ? (
+                  <CSVLink {...csvReport} style={{ color: 'white' }}>
+                    <i className="fas fa-file-download" style={{ cursor: 'pointer' }}></i>
+                    &nbsp;&nbsp;
+                    <span style={{ cursor: 'pointer' }}>Exportar Excel</span>
+                  </CSVLink>
+                ) : null}
               </CardTitle>
             </CardHeader>
             <CardBody>
               <TableContainer component={Paper}>
-                <TableHead>
-                  <TableRow>
-                    {Headers.map((header, index) => (
-                      <TableCell className="table-header" key={index}>
-                        {header.label}
+                <Table stickyHeader>
+                  <TableHead>
+                    <TableRow>
+                      <div style={{ width:'1vw'}}>
+                        <TableCell style={{ height:'51px'}}></TableCell>
+                      </div>
+                      {editBoxValue===6 ? (
+                        <TableCell className="table-header" style={{ minWidth: '3vw' }}>
+                          {Headers[0].label}
+                        </TableCell>
+                      ): null }
+                      <TableCell className="table-header" style={{ minWidth: '2vw'}}>
+                        {Headers[1].label}
                       </TableCell>
-                    ))}
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  <List
-                    Reportes={
-                      Datos
-                        ? Reportes.filter(
-                            (report) =>
-                              (report.Fecha >= FechaDesde &&
-                                report.Fecha <= FechaHasta &&
-                                report.Boleta.includes(Datos)) ||
-                              report.Proveedor.includes(Datos.toUpperCase())
-                          )
-                        : !Datos &&
-                          Reportes.filter(
-                            (report) => report.Fecha >= FechaDesde && report.Fecha <= FechaHasta
-                          )
-                    }
-                  />
-                </TableBody>
+                      <TableCell className="table-header" style={{ minWidth: '7vw' }}>
+                        {Headers[2].label}
+                      </TableCell>
+                      <TableCell className="table-header" style={{ minWidth: '16vw' }}>
+                        {Headers[3].label}
+                      </TableCell>
+                      <TableCell className="table-header" style={{ minWidth: '10vw' }}>
+                        {Headers[4].label}
+                      </TableCell>
+                      <TableCell className="table-header">{Headers[5].label}</TableCell>
+                      <TableCell className="table-header" style={{ minWidth: '4vw' }}>{Headers[6].label}</TableCell>
+                      <TableCell className="table-header" style={{ minWidth: '3vw' }}>{Headers[7].label}</TableCell>
+                      <TableCell className="table-header">{Headers[8].label}</TableCell>
+                      <TableCell className="table-header">{Headers[9].label}</TableCell>
+                      <TableCell className="table-header">{Headers[10].label}</TableCell>
+                    </TableRow>
+                  </TableHead>
+                </Table>
+                <Table>
+                  <TableBody>
+                    {Reportes ? (
+                      <Listas
+                        editBoxValue={editBoxValue}
+                        Reportes={
+                          Datos
+                            ? Reportes.filter(
+                                (report) =>
+                                  (report.FechaGeneracion >= FechaDesde &&
+                                    report.FechaGeneracion <= FechaHasta &&
+                                    report.IdBoleta.toString().includes(Datos)) ||
+                                  report.NombreCompleto.includes(Datos.toUpperCase()) ||
+                                  report.ClaProveedor.toString().includes(Datos) ||
+                                  (report.ListadoContaminante !== null
+                                    ? report.ListadoContaminante.toString().includes(
+                                        Datos[0].toUpperCase() + Datos.substring(1).toLowerCase()
+                                      )
+                                    : null) &&
+                                    (personName.length!==0 ? personName.includes(report.ClaUbicacion):!personName.includes(report.ClaUbicacion))
+                              )
+                            : !Datos &&
+                              Reportes.filter(
+                                (report) =>
+                                  report.FechaGeneracion >= FechaDesde &&
+                                  report.FechaGeneracion <= FechaHasta &&
+                                  (personName.length!==0 ? personName.includes(report.ClaUbicacion):!personName.includes(report.ClaUbicacion))
+                              )
+                        }
+                      />
+                    ) : (
+                      ''
+                    )}
+                  </TableBody>
+                </Table>
               </TableContainer>
             </CardBody>
           </Card>

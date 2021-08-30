@@ -70,14 +70,140 @@ function PesajeParcial(props) {
             ',@pnAccionSp=3"}',
           tipoEstructura: 0,
         };
+
+        const data37 = {
+          parameters:
+            '{"ClaUbicacion":' +
+            props.editBoxValue +
+            ',"ClaServicioJson":37,"Parametros":"@pnClaUbicacion=' +
+            props.editBoxValue +
+            ',@pnIdBoleta=' +
+            props.placadato[0].IdBoleta +
+            ',@pnClaViajeOrigen='+
+            props.placadato[0].ClaViajeOrigen +
+            ',@pnClaUbicacionOrigen='+
+            props.placadato[0].ClaUbicacionOrigen +
+            ',@pnIdRenglonRecepcion=1,@pnIdFabricacion=' +
+            ro.IdFabricacion +
+            ',@pnIdFabricacionDet=' +
+             1 +
+            ',@pnClaArticuloRemisionado=' +
+            ro.ClaArticuloRemisionado +
+            ',@pnCantRemisionada=' +
+            ro.CantRemisionada+
+            ',@pnClaMaterialRecibeTraspaso=' +
+            ro.ClaMaterialRecibeTraspaso +
+            ',@pnCantRecibida=' +
+            ro.CantRecibida +
+            ',@pnPesoRecibido=' +
+            ro.PesoRecibido +
+            ',@pnPorcentajeMaterial=' +
+            ro.PorcentajeMaterial +
+            ',@pnPesoTaraRecibido=' +
+            ro.PesoTaraRecibido +
+            ',@pnClaAlmacen=' +
+            (1) +
+            ',@pnClaSubAlmacenTraspaso=' +
+            ro.ClaSubAlmacenTraspaso +
+            ',@pnClaSubSubAlmacen=' +
+            ro.ClaSubSubAlmacen +
+            ',@pnClaSeccion=' +
+            0 +
+            ',@psReferencia1=0,@psReferencia2=0,@psReferencia3=0,@psReferencia4=0,@psReferencia5=0,@pnEsPesajeParcial=' +
+            ro.EsPesajeParcial  +
+            ',@pnKilosReales='+(0)+
+            ',@pnKilosContaminados='+
+            ro.KilosContaminados+
+            ',@pnClaMotivoContaminacion='+
+            ro.ClaMotivoContaminacion +
+            ',@pnClaReferenciaTraspaso=' +
+            0 +
+            ',@pnEsNoCargoDescargoMaterial=' +
+            props.placadato[0].EsNoCargoDescargoMaterial +
+            ',@psNombrePcMod=' +
+            ipadress +
+            ',@pnClaUsuarioMod=' +
+            NumbUsuario +
+            ',@pnAccionSp=3"}',
+          tipoEstructura: 0,
+        };
+
+        const data65 = {
+          parameters:
+            '{"ClaUbicacion":' +
+            props.editBoxValue +
+            ',"ClaServicioJson":65,"Parametros":"@pnClaUbicacion=' +
+            props.editBoxValue +
+            ',@pnIdBoleta=' +
+            props.placadato[0].IdBoleta +
+            ',@psClaVehiculoPorClasificar=' +
+            props.placadato[0].IdTagVehiculoPorClasificar +
+            ',@psPlacas=' +
+            props.placadato[0].Placas +
+            ',@pnClaPlanCarga=' +  props.placadato[0].ClaPlanCarga + ',@pnOrdenAcomodo=' +
+            ro.OrdenAcomodo +
+            ',@pnIdFabricacion=' +
+            ro.IdFabricacion +
+            ',@pnIdFabricacionDet=' +
+            ro.IdFabricacionDet +
+            ',@pnIdRenglon=1,@pnClaArticuloPlanCarga=' +
+            ro.ClaArticuloPlanCarga +
+            ',@pnClaAlmacen=1,@pnClaSubAlmacen='+ ro.ClaSubAlmacen +',@psClaReferencia='+ ro.ClaReferencia +',@pnClaTipoReferencia=' +ro.ClaTipoReferencia + ',@pnCantEmbarcada=' +
+            ro.CantEmbarcada +
+            ',@pnKilogramosEmbarcados=' +
+            ro.KilogramosEmbarcados +
+            ',@pnPorcentaje=' +
+            100 +
+            ',@pnCantEmbarcar='+
+            ro.CantEmbarcar+
+            ',@pnKilogramosEmbarcar='+
+            ro.KilogramosEmbarcar+
+            ',@pnEsPesajeParcial=' +
+            0 +
+            ',@pnEsOrdenMaquilaInterna=' +
+            ro.EsOrdenMaquilaInterna +
+            ',@pnIdOrdenMaquila='+
+            ro.IdOrdenMaquila +
+            ',@pnKilogramosReales='+
+            (ro.KilogramosReales === null ? 0 : ro.KilogramosReales) +
+            ',@psComentarios=' + 
+            ro.Comentarios + 
+            ',@pnEsNoCargoDescargoMaterial='+
+            props.placadato[0].EsNoCargoDescargoMaterial +
+            ',@pnPesoAtriles=' + 
+            ro.PesoAtriles +
+            ',@psNombrePcMod=' +
+            ipadress +
+            ',@pnClaUsuarioMod=' +
+            NumbUsuario +
+            ',@pnAccionSp=2"}',
+          tipoEstructura: 0,
+        };
         /* eslint-enable */
+        if(props.NomMotivoEntrada===9){
          callApi(urlKrakenService, 'POST', data12, (res) => {
           // console.log(res);
         })
+      }
+
+      if(props.NomMotivoEntrada===3){
+        callApi(urlKrakenService, 'POST', data37, (res) => {
+          // console.log(res);
+        })}
+
+      if(props.NomMotivoEntrada===1){
+        callApi(urlKrakenService, 'POST', data65, (res) => {
+          // console.log(res);
+        })}
       })
       
       props.setpesajeparcial(0)
       props.setpoppesaje(!props.poppesaje)
+
+      props.setActualizar(true);
+    setTimeout(() =>{
+props.setActualizar(false)
+    }, 50);
       }
 
   // Elemento pop up visual

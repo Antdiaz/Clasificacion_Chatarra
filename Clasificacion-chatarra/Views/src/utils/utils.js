@@ -24,12 +24,13 @@ async function callApi(url, method, data = {}, callBack, multipart = false) {
   };
 
   if (config.DebuggingMode) {
-   // console.log(`Url: ${url}`);
+   console.log(`Url: ${url}`);
   }
 
     const response = await fetch(url, {
       method,
       headers,
+      mode: 'cors',
       body: method === 'GET' ? null : !multipart ? JSON.stringify(data): data,
       dataType: !multipart ? 'json' : null,
     });
@@ -37,7 +38,7 @@ async function callApi(url, method, data = {}, callBack, multipart = false) {
     if (response.status === 200) {
       const res = await response.json();
       if (config.DebuggingMode) {
-       // console.log(`Url: ${url}, Response: `, res);
+       console.log(`Url: ${url}, Response: `, res);
       }
       callBack(res);
     } else {

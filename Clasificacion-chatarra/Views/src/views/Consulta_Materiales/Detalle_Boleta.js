@@ -1,4 +1,4 @@
-import React,{useEffect} from 'react'
+import React,{useEffect,useState} from 'react'
 import { config } from '../../utils/config';
 import { callApi} from '../../utils/utils';
 import 'devextreme-react/text-area';
@@ -6,7 +6,12 @@ import { Row, Col} from 'reactstrap';
 
 
 // Elemento Cascaron para detalle de la placa
-const DetalleBoleta= ({listas,setmaterial,editBoxValue,NomMotivoEntrada,ClaUbicacionOrigen,ClaViajeOrigen,setMaterialviaje,Materialviaje,ClaFabricacionViaje}) => {
+const DetalleBoleta= ({listas,material,setmaterial,editBoxValue,NomMotivoEntrada,ClaUbicacionOrigen,ClaViajeOrigen,setMaterialviaje,TipoTraspaso,setTipoTraspaso,Materialviaje,ClaFabricacionViaje}) => {
+  const [showResults, setshowResults] = useState(false);
+
+    const handleShow = (e) => {
+      setshowResults(!showResults);
+    };
   // Función que corre servicios antes del render cada que haya un cambio de material
   // Servicio JSON 5 --> SP= AmpSch.AmpClaArticulosdeProvSel <Consultar Materiales>
   useEffect(() => {
@@ -47,7 +52,8 @@ const DetalleBoleta= ({listas,setmaterial,editBoxValue,NomMotivoEntrada,ClaUbica
     };
 
     /* eslint-enable */
-    if(NomMotivoEntrada===9){
+
+    if(NomMotivoEntrada===9 && material === null){
     callApi(urlKrakenService, 'POST', data5, (res) => {
       setmaterial(res.Result0);
     });
@@ -57,9 +63,11 @@ const DetalleBoleta= ({listas,setmaterial,editBoxValue,NomMotivoEntrada,ClaUbica
     if(ClaFabricacionViaje!==0)
     callApi(urlKrakenService, 'POST', data29, (res) => {
       setMaterialviaje(res.Result0);
+      setTipoTraspaso(res.Result0[0].EsPT);
     });
   } 
   }, [ClaFabricacionViaje]);
+
     return (
       <div>
         {listas !==undefined && listas.map((lista) => (
@@ -85,7 +93,7 @@ const DetalleBoleta= ({listas,setmaterial,editBoxValue,NomMotivoEntrada,ClaUbica
                       <div className="dx-fieldset">
                         <div className="dx-field">
                           <div className="dx-field-label block">Placa :</div>
-                          <div className="dx-field-value-static block">{lista.ClaVehiculoPorClasificar}</div>
+                          <div className="dx-field-value-static block">{lista.ClaVehiculoPorClasificar || lista.Placas}</div>
                         </div>
                         <div className="dx-field">
                           <div className="dx-field-label block">Transporte :</div>
@@ -129,7 +137,7 @@ const DetalleBoleta= ({listas,setmaterial,editBoxValue,NomMotivoEntrada,ClaUbica
                         )}
                         <div className="dx-field">
                           <div className="dx-field-label block">Observaciones:</div>
-                          <div className="dx-field-value-static block">{lista.Observaciones==null ||lista.Observaciones==="" ?"Ninguna" : lista.Observaciones}</div>
+                          <div className="dx-field-value-static block" style={{witdh: '60%'}} onClick={handleShow}> {lista.Observaciones==null ||lista.Observaciones==="" ?"" : !showResults ? <i className="fas fa-ellipsis-h" style={{ cursor: 'pointer' }}></i>: lista.Observaciones}</div>
                         </div>
                       </div>
                     </div>

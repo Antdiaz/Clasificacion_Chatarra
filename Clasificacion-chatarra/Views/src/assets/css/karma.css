@@ -161,8 +161,50 @@ body{
   text-align:center !important;
 }
 
+
+.refresh{
+  height:43px;
+  text-align:center;
+}
+
 .reportes .MuiTableCell-root{
-width: 8rem !important;
+width: 8vw !important;
+}
+
+.MuiSelect-selectMenu  {
+  overflow:hidden;
+  opacity:0 !important;
+  width: 80px !important;
+  overflow-x:hidden;
+}
+
+ .MuiPopover-paper{
+  transform-origin: unset !important;
+  top:7vw!important;
+  left: 70% !important;
+}
+
+.reportes .MuiInput-underline{
+  opacity:1;
+}
+
+.reportes .MuiInputLabel-root{
+  color:#002c6f;
+  font-size:1vw;
+  font-weight: 500;
+}
+
+.reportes .MuiSelect-icon{
+ color: #002c6f !important;
+ opacity:1;
+}
+
+.reportes .MuiInputBase-input{
+  color:#002c6f !important;
+}
+
+.Reportes .MuiInput-root{
+  width: 80px !important;
 }
 
 .warning-container{
@@ -208,6 +250,32 @@ table.scroll tbody,
 table.scroll thead {
   display: block;
 
+}
+
+.plan-carga{
+  height:20px !important;
+  width:5%;
+  background-color: transparent;
+  border:0px;
+  border-bottom: 2px solid white;
+  border-radius: 0px;
+  display: inline-flex;
+  padding: 0px;
+  color:white;
+}
+
+.content .form-control:focus{
+  background-color: transparent;
+  border-color: white;
+  color:white;
+}
+
+.Reportes .MuiPaper-root {
+  min-height: 545px !important;
+}
+
+.Titulo_boleta .MuiSwitch-root{
+  width:15% !important;
 }
 
 table.scroll tbody {
@@ -320,6 +388,23 @@ min-height:120px !important;
   font-size:1vw !important;
 }
 
+.pre-regist_mensaje{
+  position:absolute;
+  width:36%;
+  height:5;
+  background: rgb(255, 243, 205);
+  border-radius: 10px;
+  border: 1px solid rgba(243, 186, 81, 0.452);
+  z-index:1;
+  margin-left:4%;
+  text-align: center;
+  color: rgb(232, 173, 69);
+  font-weight: 400;
+  line-height: 3;
+  font-size: 1rem;
+  margin-top:-35px;
+}
+
 .pre-registro{
   color: rgba(255, 106, 0, 0.842) !important;
   opacity:.8;
@@ -401,7 +486,7 @@ min-height:120px !important;
 /* Handle */
 
 ::-webkit-scrollbar-thumb {
-  background: transparent;
+  background: grey;
   border-radius: 10px;
 }
 
@@ -547,8 +632,8 @@ table::-webkit-scrollbar-thumb {
 
 .content {
   margin: 30px;
-  margin-left:1vw;
-  margin-right:1vw;
+  margin-left:2vw;
+  margin-right:2vw;
   background-color: transparent;
   height: 100%;
 }
@@ -657,7 +742,31 @@ margin-left:25px;
   height:unset;
 }
 
+.pt-imagenes{
+  margin:9px;
+  width:93%;
+  min-width:200px;
+  z-index:0;
+  height:unset;
+}
 
+.pt-imagenes > .card-body {
+  padding: 0px !important;
+  height: 128px !important;
+}
+
+.slick-list{
+  background-color: rgb(255, 255, 255) !important;
+  margin-bottom: 30px !important;
+}
+
+.slick-prev:before {
+  color: #002c6f !important;
+}
+
+.slick-next:before {
+  color: #002c6f !important;
+}
 
 .p-2{
   padding: 0px !important;
@@ -705,7 +814,11 @@ margin-left:25px;
 
 .ReactModal__Overlay .ReactModal__Overlay--after-open{
 
-  overflow:scroll !important
+  overflow:scroll !important;
+}
+
+.ReactModal__Overlay{
+  z-index:2 !important;
 }
 
 body.ReactModal__Body--open{
@@ -795,6 +908,8 @@ body.ReactModal__Body--open{
 .selector .dx-dropdowneditor.dx-dropdowneditor-field-clickable {
   width: 100% !important;
 }
+
+
  
 .box {
   z-index:1;
@@ -1402,6 +1517,9 @@ img[alt*="avatar"] {
   padding-left: 4vw;
 }
 
+.input-refresh{
+  padding-left:0px;
+}
 
 .row{
   font-size:12px;
