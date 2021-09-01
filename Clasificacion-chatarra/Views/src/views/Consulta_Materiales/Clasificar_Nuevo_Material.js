@@ -846,7 +846,6 @@ const NuevoMaterial = (props) => {
      // console.log(res);
    });
    
-   console.log(data37)
      callApi(urlKrakenService, 'POST', data37, (res) => {
      // console.log(res);
    });

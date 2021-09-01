@@ -90,23 +90,23 @@ function Imagenes({ id, editBoxValue, row, NomMotivoEntrada }) {
         tipoEstructura: 0,
       };
       /* eslint-enable */
-      callApi(urlKrakenService, 'POST', data14, (res) => {
-        setFotoplaca(res.Result0.length > 0 ? res.Result0[0].Fotografia : 0);
-      });
+    //   callApi(urlKrakenService, 'POST', data14, (res) => {
+    //     setFotoplaca(res.Result0.length > 0 ? res.Result0[0].Fotografia : 0);
+    //   });
 
-      callApi(urlKrakenService, 'POST', data141, (res) => {
-        setMaterialsuperior(res.Result0.length > 0 ? res.Result0[0].Fotografia : 0);
-      });
+    //   callApi(urlKrakenService, 'POST', data141, (res) => {
+    //     setMaterialsuperior(res.Result0.length > 0 ? res.Result0[0].Fotografia : 0);
+    //   });
 
-      callApi(urlKrakenService, 'POST', data26, (res) => {
-        setPreregistro(res.Result0.length > 0 ? res.Result0[0].FotoMaterial : 0);
-      });
+    //   callApi(urlKrakenService, 'POST', data26, (res) => {
+    //     setPreregistro(res.Result0.length > 0 ? res.Result0[0].FotoMaterial : 0);
+    //   });
 
-      if(Material>0){
-      callApi(urlKrakenService, 'POST', data40, (res) => {
-        setManual(res.Result0.length > 0 ? res.Result0[0].Imagen : 0);
-      });
-    }
+    //   if(Material>0){
+    //   callApi(urlKrakenService, 'POST', data40, (res) => {
+    //     setManual(res.Result0.length > 0 ? res.Result0[0].Imagen : 0);
+    //   });
+    // }
       return () => {
         isCancelled = true;
       };
@@ -306,18 +306,18 @@ function Imagenes({ id, editBoxValue, row, NomMotivoEntrada }) {
             </CardTitle>
           </CardHeader>
           <CardBody className="p-2">
-            {row && row.length>0  &&
+            {row && row.length>0  ?
             (
-            <img
-              style={{ width: '100%' }}
-              src={
+              <img
+                style={{ width: '100%' }}
+                src={
                 Manual !== 0 /* eslint-disable */
                   ? 'data:image/jpg;base64,' + Manual + ''
                   : /* eslint-enable */ ''
-              }
-              alt=""
-            />
-            )}
+                }
+                alt=""
+              />
+            ):''}
           </CardBody>
           <Modal isOpen={Modalmanual} onClose="" ariaHideApp={false} style={customStyles}>
             <div className="Completo_container">

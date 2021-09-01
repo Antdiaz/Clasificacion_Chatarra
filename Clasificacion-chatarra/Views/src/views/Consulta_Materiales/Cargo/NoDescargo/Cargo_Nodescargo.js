@@ -113,7 +113,7 @@ if(NomMotivoEntrada===9 && TodosChange===1){
   if(NomMotivoEntrada===9 && TodosChange===1 && Todos===1){
     setTimeout(() =>{
       setrow('')
-          }, 1400);
+          }, 1000);
   }
 }
 

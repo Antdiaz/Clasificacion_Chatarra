@@ -182,11 +182,11 @@ class Admin extends React.Component {
       this.setPatio(res.Result0);
     });
   }
-    callApi(urlKrakenService, 'POST', data50, (res) => {
-      this.setReportes(res.Result0);
-    });
+    // callApi(urlKrakenService, 'POST', data50, (res) => {
+    //   this.setReportes(res.Result0);
+    // });
 
-    if(this.state.editBoxValue===26 || this.state.editBoxValue===96){
+    if(this.state.editBoxValue===27 || this.state.editBoxValue===96 ||this.state.editBoxValue===30 || this.state.editBoxValue===196){
     await callApi(urlKrakenService, 'POST', data,(res) => {
       this.setValores(res.Result0);
     });
@@ -245,7 +245,7 @@ class Admin extends React.Component {
       };
 
       /* eslint-enable */
-      if(this.state.editBoxValue===26 || this.state.editBoxValue===96){
+      if(this.state.editBoxValue===27 || this.state.editBoxValue===96 ||this.state.editBoxValue===30 || this.state.editBoxValue===196){
       callApi(urlKrakenService, 'POST', data, (res) => {
         this.setValores(res.Result0);
       });
@@ -271,9 +271,9 @@ class Admin extends React.Component {
       };
 
       /* eslint-enable */
-      callApi(urlKrakenService, 'POST', data50, (res) => {
-        this.setReportes(res.Result0);
-      });
+      // callApi(urlKrakenService, 'POST', data50, (res) => {
+      //   this.setReportes(res.Result0);
+      // });
   },50);
     }
   }
