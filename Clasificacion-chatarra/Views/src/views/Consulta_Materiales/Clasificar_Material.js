@@ -86,14 +86,14 @@ const Material = (props) => {
   const [nomsubalmacen, setnomsubalmacen] = useState(
     props.NomMotivoEntrada===9 ? props.ro.NomSubAlmacenCompra ? props.ro.NomSubAlmacenCompra : 0 :props.NomMotivoEntrada===3 ? props.ro.NomSubAlmacenTraspaso ? props.ro.NomSubAlmacenTraspaso : 0 : 0
   );
-  const [subalmacenes, setsubalmacenes] = useState(0);
+  const [subalmacenes, setsubalmacenes] = useState('');
   const Diferencia = props.ro.PorcentajeMaterial;
   const PorcentajeSum = props.row
     ? +props.row.reduce((acc, val) => acc + val.PorcentajeMaterial, 0) + +porcentajer - +Diferencia
     : 0;
   const almacen = 1;
-  const [materiales, setmateriales] = useState(props.material);
-  const [contaminaciones, setcontaminaciones] = useState(props.contaminacion);
+  const [materiales, setmateriales] = useState(props.material ? props.material : 0);
+  const [contaminaciones, setcontaminaciones] = useState(props.contaminacion ? props.contaminacion : '');
   const disabled = true;
   const [Datosmaterial, setDatosmaterial] = useState(0);
   const prev = useRef()
@@ -197,6 +197,14 @@ const Material = (props) => {
   });
   const Rowies = props.row.filter((rox)=> (props.NomMotivoEntrada===9 ? rox.ClaArticuloCompra !== props.ro.ClaArticuloCompra : props.NomMotivoEntrada===3 && rox.ClaMaterialRecibeTraspaso !== props.ro.ClaMaterialRecibeTraspaso))
 
+  useEffect(() => {
+    if(props.NomMotivoEntrada===3){
+    props.setClaArticuloRemisionado(props.ro.ClaArticuloRemisionado)
+    }
+  }, [])
+
+  console.log(props.ClaArticuloRemisionado)
+  console.log(props.material)
 
   useEffect(() => {
 
@@ -814,6 +822,7 @@ const Material = (props) => {
     props.setpoppesaje(true);
     props.setmodaledit(false);
     props.seteditOpen(false);
+    props.setClaArticuloRemisionado(0)
     props.setrow('')
     props.setActualizar(true);
     setTimeout(() =>{
@@ -1256,6 +1265,7 @@ props.setActualizar(false)
     }
 
     props.seteditOpen(false);
+    props.setClaArticuloRemisionado(0)
     props.setpesajeparcial(pesajeparcial);
     props.setmodaledit(false);
     props.setrow('')
@@ -1821,10 +1831,10 @@ props.setActualizar(false)
                       </FormGroup>
                     </Col>
                   </Row>
-                  {(materiales || materialtodos) &&
+                  {(props.material) &&
                   (
                   <SelectBox
-                    dataSource={props.NomMotivoEntrada=== 9 ? materiales:props.NomMotivoEntrada=== 3 ? Todos===1 ? props.materialpt : materiales : ''}
+                    dataSource={props.NomMotivoEntrada=== 9 ? props.material ? props.material : '':props.NomMotivoEntrada=== 3 ? Todos===1 ? props.materialtodos : props.material : ''}
                     searchEnabled={true}
                     defaultValue={idmaterial}
                     displayExpr={props.NomMotivoEntrada=== 9 ? "NomArticuloCompra": props.NomMotivoEntrada=== 3 ? Todos===1 ? "NomMaterialRecibeTraspaso":"NomArticuloCompra" :''}
@@ -1993,19 +2003,20 @@ props.setActualizar(false)
                     <Col>Subalmacén</Col>
                     <Col>
                       <Row>
-                        {subalmacenes &&
+                        {subalmacenes ?
                         (
-                        <SelectBox
-                          dataSource={subalmacenes}
-                          defaultValue={subalmacen}
-                          displayExpr={props.NomMotivoEntrada===9 ? "NomSubAlmacenCompra": props.NomMotivoEntrada===3 ? "NomSubAlmacenTraspaso":0}
-                          valueExpr={props.NomMotivoEntrada===9 ? "ClaSubAlmacenCompra": props.NomMotivoEntrada===3 ? "ClaSubAlmacenTraspaso":0}
-                          placeholder="Seleccionar Subalmacen.."
-                          onValueChanged={handlesubalmacen}
-                          noDataText="Selecciona Material"
-                          disabled={subalmacenes.length === 1 || props.ro.EsPesajeParcial === 1 && props.ro.KilosMaterial !== 0}
-                        />
-                        )}
+                          <SelectBox
+                            dataSource={subalmacenes}
+                            defaultValue={subalmacen}
+                            displayExpr={props.NomMotivoEntrada===9 ? "NomSubAlmacenCompra": props.NomMotivoEntrada===3 ? "NomSubAlmacenTraspaso":0}
+                            valueExpr={props.NomMotivoEntrada===9 ? "ClaSubAlmacenCompra": props.NomMotivoEntrada===3 ? "ClaSubAlmacenTraspaso":0}
+                            placeholder="Seleccionar Subalmacen.."
+                            onValueChanged={handlesubalmacen}
+                            noDataText="Selecciona Material"
+                            disabled={subalmacenes.length === 1 || props.ro.EsPesajeParcial === 1 && props.ro.KilosMaterial !== 0}
+                          />
+                        ):
+                          ''}
                       </Row>
                       <Row
                         style={{
@@ -2153,18 +2164,19 @@ props.setActualizar(false)
                 <Row className="popup-title" style={{ marginLeft: '0px', marginTop: '20px' }}>
                   Motivo Contaminacion
                 </Row>
-                {contaminaciones &&
+                {contaminaciones ?
                 (
-                <SelectBox
-                  dataSource={contaminaciones}
-                  searchEnabled={true}
-                  defaultValue={props.ro.ClaMotivoContaminacion}
-                  displayExpr="NomMotivoContaminacion"
-                  valueExpr="ClaMotivoContaminacion"
-                  onValueChanged={handlerazoncont}
-                  disabled={kiloscont < 1 && NantCont<1}
-                />
-                )}
+                  <SelectBox
+                    dataSource={contaminaciones}
+                    searchEnabled={true}
+                    defaultValue={props.ro.ClaMotivoContaminacion}
+                    displayExpr="NomMotivoContaminacion"
+                    valueExpr="ClaMotivoContaminacion"
+                    onValueChanged={handlerazoncont}
+                    disabled={kiloscont < 1 && NantCont<1}
+                  />
+                ):
+                  ''}
                 <Row
                   style={{
                     color: 'red',

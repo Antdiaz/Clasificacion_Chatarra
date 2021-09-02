@@ -63,9 +63,9 @@ function Materiales({
 }) {
   const NumbUsuario = getSessionItem('NumUsuario');
   const ipadress = getSessionItem('Ipaddress');
-  
+  const [ClaArticuloRemisionado, setClaArticuloRemisionado] = useState(0)
 
-  function List({ ro, index, editOpen, seteditOpen }) {
+  function List({ ro, index, editOpen, seteditOpen,ClaArticuloRemisionado,setClaArticuloRemisionado }) {
     // Valor de elemento individual al querer editar material
     
     
@@ -176,6 +176,8 @@ function Materiales({
                   ClaUbicacionOrigen={ClaUbicacionOrigen}
                   Actualizar={Actualizar}
                   setActualizar={setActualizar}
+                  setClaArticuloRemisionado={setClaArticuloRemisionado}
+                  ClaArticuloRemisionado={ClaArticuloRemisionado}
                 />
               ):
               (
@@ -316,7 +318,7 @@ function Materiales({
     if (((row && row.length>0) || (ValidaCargo===1)) && NomMotivoEntrada===9) {
       const PorcentajeSum =row &&  row.reduce((acc, val) => acc + val.PorcentajeMaterial, 0);
       const CantidadSum=row &&  row.reduce((acc, val) => acc + val.CantidadMaterial, 0);
-      if ((PorcentajeSum !== null && PorcentajeSum === 100) || (PorcentajeSum === 0 && CantidadSum>0) || (ValidaCargo===1 && row && row.length>0 && (row[0].CantidadMaterial !==null || row[0].KilosMaterial!==null || row[0].PorcentajeMaterial!==null))) {
+      if ((PorcentajeSum !== null && PorcentajeSum === 100) || (PorcentajeSum === 0 && CantidadSum>0) || (ValidaCargo===1 && row && row.length>0 && (row[0].CantidadMaterial !==null || row[0].KilosMaterial!==null || row[0].PorcentajeMaterial!==null)&& (PorcentajeSum !== null && PorcentajeSum === 100) || (PorcentajeSum === 0 && CantidadSum>0))) {
         /* eslint-disable */
         const data13 = {
           parameters:
@@ -351,7 +353,7 @@ function Materiales({
       const urlKrakenService = `${config.KrakenService}/${24}/${config.Servicio}`;
         const PorcentajeSum = row && row.reduce((acc, val) => acc + val.PorcentajeMaterial, 0);
         const CantidadSum= row && row.reduce((acc, val) => acc + val.CantRecibida, 0);
-        if (Todos===0 && (PorcentajeSum !== null && PorcentajeSum === 100) || (PorcentajeSum === 0 && CantidadSum>0)|| (ValidaCargo===1 && row && row.length>0 && (row[0].CantRecibida !==null || row[0].PesoRecibido!==null || row[0].Porcentaje!==null))) {
+        if (Todos===0 && (PorcentajeSum !== null && PorcentajeSum === 100) || (PorcentajeSum === 0 && CantidadSum>0)|| (ValidaCargo===1 && row && row.length>0 && (row[0].CantRecibida !==null || row[0].PesoRecibido!==null || row[0].Porcentaje!==null) && (PorcentajeSum !== null && PorcentajeSum === 100) || (PorcentajeSum === 0 && CantidadSum>0))) {
           /* eslint-disable */
       const data38 = {
         parameters:
@@ -386,6 +388,7 @@ function Materiales({
     const urlKrakenService = `${config.KrakenService}/${24}/${config.Servicio}`;
     /* eslint-disable */
     if(NomMotivoEntrada===3 && TipoTraspaso===0){
+      console.log(data30)
     const data30 = {
       parameters:
         '{"ClaUbicacion":' +
@@ -393,7 +396,7 @@ function Materiales({
         ',"ClaServicioJson":' +
         30 +
         ',"Parametros":"@pnClaArticuloOrigen=' +
-        (idmaterialviaje) +
+        (idmaterialviaje !==0 ? idmaterialviaje:ClaArticuloRemisionado) +
         ',@EsIncluirArtOrigen=1"}',
       tipoEstructura: 0,
     };
@@ -419,7 +422,8 @@ function Materiales({
         setmaterialtodos(res.Result0);
         });
     }
-  }, [idmaterialviaje])
+  }, [idmaterialviaje,ClaArticuloRemisionado])
+
 
    // Componente de sección de materiales con sus headers
   function Clasificacion() {
@@ -447,7 +451,7 @@ function Materiales({
           <TableBody>
             {row
               ? row.map((ro, index) => (
-                <List ro={ro} key={index} editOpen={editOpen} seteditOpen={seteditOpen} />
+                <List ro={ro} key={index} editOpen={editOpen} ClaArticuloRemisionado={ClaArticuloRemisionado} setClaArticuloRemisionado={setClaArticuloRemisionado} seteditOpen={seteditOpen} />
                 ))
               : null}
           </TableBody>

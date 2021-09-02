@@ -15,7 +15,7 @@ const config = {
   // 'https://krakenapi.deacero.com/KrakenServices/',
   
   // Debugging mode
-  DebuggingMode: true,
+  DebuggingMode: false,
 
   Servicio:37
   // 3322376
