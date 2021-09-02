@@ -620,9 +620,7 @@ const NuevoMaterial = (props) => {
         props.placadato[0].EsRevisionEfectuada +
         ',@pnClaTipoClasificacion=' +
         props.placadato[0].ClaTipoClasificacion +
-        ',@pnEsNoCargoDescargoMaterial=' +
-        props.placadato[0].EsNoCargoDescargoMaterial +
-        ',@psNombrePcMod=' +
+        ',@pnEsNoCargoDescargoMaterial=0,@psNombrePcMod=' +
         ipadress +
         ',@pnClaUsuarioMod=' +
         NumbUsuario +
@@ -702,9 +700,7 @@ const NuevoMaterial = (props) => {
         (props.placadato[0].EsRevisionEfectuada ? props.placadato[0].EsRevisionEfectuada : 0) +
         ',@pnClaTipoClasificacion=' +
         props.placadato[0].ClaTipoClasificacion +
-        ',@pnEsNoCargoDescargoMaterial=' +
-        props.placadato[0].EsNoCargoDescargoMaterial +
-        ',@psNombrePcMod=' +
+        ',@pnEsNoCargoDescargoMaterial=0,@psNombrePcMod=' +
         ipadress +
         ',@pnClaUsuarioMod=' +
         NumbUsuario +

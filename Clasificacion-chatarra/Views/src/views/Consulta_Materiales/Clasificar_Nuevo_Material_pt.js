@@ -120,7 +120,7 @@ const NuevoMaterial = (props) => {
     if (e.fullName === "text") {
 
       const urlKrakenService = `${config.KrakenService}/${24}/${config.Servicio}`;
-      console.log(e.value); // Prints the current value of 'text'
+       // Prints the current value of 'text' console.log(e.value);
 
   /* eslint-disable */
   const data58 = {
@@ -383,9 +383,7 @@ const NuevoMaterial = (props) => {
         (props.placadato[0].EsRevisionEfectuada ? props.placadato[0].EsRevisionEfectuada : 0)  +
         ',@pnClaTipoClasificacion=' +
         props.placadato[0].ClaTipoClasificacion +
-        ',@pnEsNoCargoDescargoMaterial=' +
-        props.placadato[0].EsNoCargoDescargoMaterial +
-        ',@psNombrePcMod=' +
+        ',@pnEsNoCargoDescargoMaterial=0,@psNombrePcMod=' +
         ipadress +
         ',@pnClaUsuarioMod=' +
         NumbUsuario +

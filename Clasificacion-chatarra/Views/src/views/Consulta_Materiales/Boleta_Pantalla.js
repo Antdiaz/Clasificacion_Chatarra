@@ -194,7 +194,6 @@ function Boleta({
     tipoEstructura: 0,
   };
   /* eslint-enable */
-  console.log(row)
     if(EsValido !==null && EsValido=== 1 && (row.length<1 || row===0)){
     callApi(urlKrakenService, 'POST', data63, (res) => {
     setrow(res.Result0);

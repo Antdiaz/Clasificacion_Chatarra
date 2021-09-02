@@ -119,7 +119,7 @@ const DetalleBoleta= ({listas,material,setmaterial,editBoxValue,NomMotivoEntrada
                         )}
                         <div className="dx-field ">
                           <div className="dx-field-label block">Peso :</div>
-                          <div className="dx-field-value-static block">{lista.PesoEntrada}{lista.NomCortoUnidadEntrada}</div>
+                          <div className="dx-field-value-static block">{lista.PesoEntrada.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}{lista.NomCortoUnidadEntrada}</div>
                         </div>
                         <div className="dx-field">
                           <div className="dx-field-label block">Documentado :</div>

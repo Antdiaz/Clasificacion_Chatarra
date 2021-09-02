@@ -29,7 +29,9 @@ function Consulta({
   FiltroPlacas,
   setFiltroPlacas,
   setplacadato,
-  placadato
+  placadato,
+  setmaterial,
+  material
 }) {
   // Valor usado para el input de filtrado
   const [Filtro, setFiltro] = useState(FiltroPlacas);
@@ -39,6 +41,9 @@ function Consulta({
 useEffect(() => {
   if(placadato !== null){
     setplacadato(null)
+  }
+  if(material !== null){
+setmaterial(null)
   }
 }, [])
 

@@ -1097,7 +1097,6 @@ props.setActualizar(false)
 
       async function FuncionData(){
       await
-      console.log(data36)
        callApi(urlKrakenService, 'POST', data36, (res) => {
         // console.log(res);
       });

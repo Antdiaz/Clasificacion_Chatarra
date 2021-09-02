@@ -279,12 +279,20 @@ function Materiales({
       /* eslint-enable */
       if (!isCancelled && NomMotivoEntrada>0 && NomMotivoEntrada===9) {
       callApi(urlKrakenService, 'POST', data3, (res) => {
-        setrow(res.Result0);
+        if(Todos===0){
+         setrow(res.Result0);}
+         else if(Todos===1){
+           setrow('')
+         }
       });
       seteditOpen(true);}
       else if (!isCancelled && NomMotivoEntrada>0 && NomMotivoEntrada===3) {
         callApi(urlKrakenService, 'POST', data27, (res) => {
-          setrow(res.Result0);
+          if(Todos===0){
+            setrow(res.Result0);}
+            else if(Todos===1){
+              setrow('')
+            }
         });
         seteditOpen(true);
       }
@@ -343,8 +351,8 @@ function Materiales({
       const urlKrakenService = `${config.KrakenService}/${24}/${config.Servicio}`;
         const PorcentajeSum = row && row.reduce((acc, val) => acc + val.PorcentajeMaterial, 0);
         const CantidadSum= row && row.reduce((acc, val) => acc + val.CantRecibida, 0);
-        if ((PorcentajeSum !== null && PorcentajeSum === 100) || (PorcentajeSum === 0 && CantidadSum>0)|| (ValidaCargo===1 && row && row.length>0 && (row[0].CantRecibida !==null || row[0].PesoRecibido!==null || row[0].Porcentaje!==null))) {
-/* eslint-disable */
+        if (Todos===0 && (PorcentajeSum !== null && PorcentajeSum === 100) || (PorcentajeSum === 0 && CantidadSum>0)|| (ValidaCargo===1 && row && row.length>0 && (row[0].CantRecibida !==null || row[0].PesoRecibido!==null || row[0].Porcentaje!==null))) {
+          /* eslint-disable */
       const data38 = {
         parameters:
           '{"ClaUbicacion":' +
