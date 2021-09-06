@@ -42,6 +42,7 @@ const MaterialesXCargar = (props) => {
   const [nombrematerialr, setnombrematerialr] = useState(0);
   const [idmaterialviaje, setidmaterialviaje] = useState(0);
   const [nombrematerialviaje, setnombrematerialviaje] = useState(0);
+  const [almacen, setalmacen] = useState(0)
   const [subalmacen, setsubalmacen] = useState(0);
   const [nomsubalmacen, setnomsubalmacen] = useState(0);
   const [subalmacenes, setsubalmacenes] = useState(0);
@@ -170,9 +171,40 @@ const MaterialesXCargar = (props) => {
 
   useEffect(() => {
     const urlKrakenService = `${config.KrakenService}/${24}/${config.Servicio}`;
-
+    
     /* eslint-disable */
-   const data33 = {
+
+    const data33 = {
+      parameters:
+        '{"ClaUbicacion":' +
+        props.editBoxValue +
+        ',"ClaServicioJson":33,"Parametros":"@pnClaUbicacion=' +
+        props.editBoxValue +
+        ',@pnClaMaterialRecibeTraspaso=' +
+        props.ro.ClaArticuloPlanCarga +
+        ',@pnClaSubAlmacenTraspaso=' +
+        subalmacen +
+        ',@psNomSubAlmacenTraspaso=' +
+        nomsubalmacen +
+        ',@pnIdBoleta=' +
+        props.placadato[0].IdBoleta +
+        '"}',
+      tipoEstructura: 0,
+    };
+    /* eslint-enable */
+    if (subalmacen > 0 && nomsubalmacen) {
+
+      callApi(urlKrakenService, 'POST', data33, (res) => {
+        setalmacen(res.Result0[0].ClaAlmacen);
+      });
+    }
+  }, [nomsubalmacen, subalmacen, subalmacenes]);
+
+
+  useEffect(() => {
+    const urlKrakenService = `${config.KrakenService}/${24}/${config.Servicio}`;
+    /* eslint-disable */
+    const data34 = {
       parameters:
         '{"ClaUbicacion":' +
         props.editBoxValue +
@@ -180,19 +212,21 @@ const MaterialesXCargar = (props) => {
         props.editBoxValue +
         ',@pnClaMaterialRecibeTraspaso=' +
         props.ro.ClaArticuloPlanCarga +
-        ',@pnClaAlmacen=1,@pnClaSubAlmacenTraspaso=' +
+        ',@pnClaAlmacen='+
+        almacen +
+        ',@pnClaSubAlmacenTraspaso=' +
         subalmacen +
         ',@psReferencia="}',
       tipoEstructura: 0,
     };
     /* eslint-enable */
-    if (subalmacen > 0 && nomsubalmacen) {
-      callApi(urlKrakenService, 'POST', data33, (res) => {
-        setReferencia(res.Result0[0].ClaReferencia);
-        setTipoReferencia(res.Result0[0].ClaTipoReferencia)
-      });
-    }
-  }, [nomsubalmacen, subalmacen, subalmacenes]);
+    if (almacen!==0) {
+    callApi(urlKrakenService, 'POST', data34, (res) => {
+      setReferencia(res.Result0[0].ClaReferencia);
+      setTipoReferencia(res.Result0[0].ClaTipoReferencia)
+    });
+  }
+  }, [almacen])
   // Función que pone valor determinado de subalmacén si es único
 
   useEffect(() => {
@@ -202,20 +236,6 @@ const MaterialesXCargar = (props) => {
     }
   }, [subalmacenes]);
 
-  // Función para cambio de material en el wizard
-  const onValueChangedr = (e) => {
-    setidmaterialr(e.value);
-    setsubalmacen(0);
-    setnombrematerialr(e.component.option('text').split('-').pop());
-  };
-
-  const onValueChangede = (e) => {
-    props.setidmaterialviaje(e.value);
-    setidmaterialviaje(e.value);
-    setnombrematerialviaje(e.component.option('text').split('-').pop());
-  };
-
-  // Operaciones para obtener los kilos de botes/electrodomésticos
 
   // Funciones para obtener las cantidades/opciones individuales que el usuario ingrese
 
@@ -247,9 +267,6 @@ const MaterialesXCargar = (props) => {
     setporcentajer(event.target.value);
   };
 
-  const handlealmacen = (event) => {
-    setalmacen(event.target.value);
-  };
 
   const handlesubalmacen = (event) => {
     setsubalmacen(event.value);
@@ -327,7 +344,9 @@ const MaterialesXCargar = (props) => {
         props.ro.IdFabricacionDet +
         ',@pnIdRenglon=1,@pnClaArticuloPlanCarga=' +
         props.ro.ClaArticuloPlanCarga +
-        ',@pnClaAlmacen=1,@pnClaSubAlmacen='+ subalmacen +',@psClaReferencia='+ Referencia +',@pnClaTipoReferencia=' +TipoReferencia + ',@pnCantEmbarcada=' +
+        ',@pnClaAlmacen='+
+        almacen +
+        ',@pnClaSubAlmacen='+ subalmacen +',@psClaReferencia='+ Referencia +',@pnClaTipoReferencia=' +TipoReferencia + ',@pnCantEmbarcada=' +
         (kilosr > 0 && Datosmaterial
         ? kilosr /Datosmaterial[0].PesoTeoricoRecibido
             : cantidadr==='' ? 0 : cantidadr) +
@@ -360,7 +379,6 @@ const MaterialesXCargar = (props) => {
       await callApi(urlKrakenService, 'POST', data64, (res) => {
         // console.log(res);
       });
-
       callApi(urlKrakenService, 'POST', data65, (res) => {
         // console.log(res);
       });

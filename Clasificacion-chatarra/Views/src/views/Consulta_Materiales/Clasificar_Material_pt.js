@@ -23,83 +23,27 @@ const Material = (props) => {
   const [Todos, setTodos] = useState(0);
 
   // Valores dinámicos locales al editar material
-  const [cantidad, setcantidad] = useState(
-    props.NomMotivoEntrada === 9
-      ? props.ro.CantidadMaterial
-        ? props.ro.CantidadMaterial
-        : 0
-      : props.NomMotivoEntrada === 3
-      ? props.ro.CantRecibida
-        ? props.ro.CantRecibida
-        : 0
-      : 0
-  );
+  const [cantidad, setcantidad] = useState(props.ro.CantRecibida? props.ro.CantRecibida : 0);
   const [Referencia, setReferencia] = useState(0);
   const [kilos, setkilos] = useState(props.ro.KilosReales !== null ? props.ro.KilosReales : 0);
-  const [observaciones, setobservaciones] = useState(
-    props.placadato[0].Observaciones ? props.placadato[0].Observaciones : 'Ninguna'
-  );
-  const [kilosTara, setkilosTara] = useState(
-    props.ro.PesoTaraRecibido !== null ? props.ro.PesoTaraRecibido : 0
-  );
-  const [idmaterial, setidmaterial] = useState(
-    props.NomMotivoEntrada === 9
-      ? props.ro.ClaArticuloCompra
-        ? props.ro.ClaArticuloCompra
-        : 0
-      : props.NomMotivoEntrada === 3
-      ? props.ro.ClaMaterialRecibeTraspaso
-        ? props.ro.ClaMaterialRecibeTraspaso
-        : 0
-      : 0
-  );
-  const [nombrematerial, setnombrematerial] = useState(
-    props.NomMotivoEntrada === 9
-      ? props.ro.NomArticuloCompra
-      : props.NomMotivoEntrada === 3
-      ? props.ro.NomMaterialRecibeTraspaso
-      : ''
-  );
+  const [observaciones, setobservaciones] = useState(props.placadato[0].Observaciones ? props.placadato[0].Observaciones : 'Ninguna');
+  const [kilosTara, setkilosTara] = useState(props.ro.PesoTaraRecibido !== null ? props.ro.PesoTaraRecibido : 0);
+  const [idmaterial, setidmaterial] = useState(props.ro.ClaMaterialRecibeTraspaso ? props.ro.ClaMaterialRecibeTraspaso : 0);
+  const [nombrematerial, setnombrematerial] = useState(props.ro.NomMaterialRecibeTraspaso ? props.ro.NomMaterialRecibeTraspaso: '');
   const [kiloscont, setkiloscont] = useState(0);
-  const [razoncont, setrazoncont] = useState(
-    props.ro.ClaMotivoContaminacion ? props.ro.ClaMotivoContaminacion : 0
-  );
-  const [porcentajer, setporcentajer] = useState(
-    props.ro.PorcentajeMaterial ? props.ro.PorcentajeMaterial : 0
-  );
-  const [pesajeparcial, setpesajeparcial] = useState(
-    props.ro.EsPesajeParcial ? props.ro.EsPesajeParcial : 0
-  );
+  const [razoncont, setrazoncont] = useState(props.ro.ClaMotivoContaminacion ? props.ro.ClaMotivoContaminacion : 0);
+  const [porcentajer, setporcentajer] = useState(props.ro.PorcentajeMaterial ? props.ro.PorcentajeMaterial : 0);
+  const [pesajeparcial, setpesajeparcial] = useState(props.ro.EsPesajeParcial ? props.ro.EsPesajeParcial : 0);
   const ipadress = getSessionItem('Ipaddress');
   const NumbUsuario = getSessionItem('NumUsuario');
-  const [subalmacen, setsubalmacen] = useState(
-    props.NomMotivoEntrada === 9
-      ? props.ro.ClaSubAlmacenCompra
-        ? props.ro.ClaSubAlmacenCompra
-        : 0
-      : props.NomMotivoEntrada === 3
-      ? props.ro.ClaSubAlmacenTraspaso
-        ? props.ro.ClaSubAlmacenTraspaso
-        : 0
-      : 0
-  );
-  const [nomsubalmacen, setnomsubalmacen] = useState(
-    props.NomMotivoEntrada === 9
-      ? props.ro.NomSubAlmacenCompra
-        ? props.ro.NomSubAlmacenCompra
-        : 0
-      : props.NomMotivoEntrada === 3
-      ? props.ro.NomSubAlmacenTraspaso
-        ? props.ro.NomSubAlmacenTraspaso
-        : 0
-      : 0
-  );
+  const [almacen, setalmacen] = useState(props.ro.ClaAlmacen ? props.ro.ClaAlmacen :0)
+  const [subalmacen, setsubalmacen] = useState( props.ro.ClaSubAlmacenTraspaso? props.ro.ClaSubAlmacenTraspaso: 0 );
+  const [nomsubalmacen, setnomsubalmacen] = useState( props.ro.NomSubAlmacenTraspaso ? props.ro.NomSubAlmacenTraspaso: 0);
   const [subalmacenes, setsubalmacenes] = useState(0);
   const Diferencia = props.ro.PorcentajeMaterial;
   const PorcentajeSum = props.row
     ? +props.row.reduce((acc, val) => acc + val.PorcentajeMaterial, 0) + +porcentajer - +Diferencia
     : 0;
-  const almacen = 1;
   const [materiales, setmateriales] = useState(props.material);
   const [Datosmaterial, setDatosmaterial] = useState(0);
   // Valores dinámicos contaminantes
@@ -262,12 +206,14 @@ const Material = (props) => {
   const onValueChanged = (e) => {
     setidmaterial(e.value);
     setsubalmacen(0);
+    setalmacen(0);
     setnombrematerial(e.component.option('text').split('-').pop());
   };
 
   const handleTodos = (event) => {
     setTodos(event.target.checked ? 1 : 0);
     setidmaterial(0);
+    setalmacen(0)
     setsubalmacen(0);
   };
 
@@ -323,27 +269,40 @@ const Material = (props) => {
 
   useEffect(() => {
     const urlKrakenService = `${config.KrakenService}/${24}/${config.Servicio}`;
-
+    
     /* eslint-disable */
-    const data8 = {
+
+    const data33 = {
       parameters:
         '{"ClaUbicacion":' +
         props.editBoxValue +
-        ',"ClaServicioJson":8,"Parametros":"@pnClaUbicacion=' +
+        ',"ClaServicioJson":33,"Parametros":"@pnClaUbicacion=' +
         props.editBoxValue +
-        ',@pnClaArticuloCompra=' +
+        ',@pnClaMaterialRecibeTraspaso=' +
         idmaterial +
-        ',@pnClaSubAlmacenCompra=' +
+        ',@pnClaSubAlmacenTraspaso=' +
         subalmacen +
-        ',@psNomSubAlmacenCompra=' +
+        ',@psNomSubAlmacenTraspaso=' +
         nomsubalmacen +
         ',@pnIdBoleta=' +
         props.placadato[0].IdBoleta +
         '"}',
       tipoEstructura: 0,
     };
+    /* eslint-enable */
+    if (subalmacen > 0 && nomsubalmacen) {
 
-    const data33 = {
+      callApi(urlKrakenService, 'POST', data33, (res) => {
+        setalmacen(res.Result0[0].ClaAlmacen);
+      });
+    }
+  }, [nomsubalmacen, subalmacen, subalmacenes]);
+
+
+  useEffect(() => {
+    const urlKrakenService = `${config.KrakenService}/${24}/${config.Servicio}`;
+    /* eslint-disable */
+    const data34 = {
       parameters:
         '{"ClaUbicacion":' +
         props.editBoxValue +
@@ -351,28 +310,23 @@ const Material = (props) => {
         props.editBoxValue +
         ',@pnClaMaterialRecibeTraspaso=' +
         idmaterial +
-        ',@pnClaAlmacen=1,@pnClaSubAlmacenTraspaso=' +
+        ',@pnClaAlmacen='+
+        almacen +
+        ',@pnClaSubAlmacenTraspaso=' +
         subalmacen +
         ',@psReferencia="}',
       tipoEstructura: 0,
     };
     /* eslint-enable */
-
-    if (subalmacen > 0 && nomsubalmacen) {
-      if (props.NomMotivoEntrada === 9) {
-        callApi(urlKrakenService, 'POST', data8, (res) => {
-          setReferencia(res.Result0[0].ClaReferenciaCompra);
-        });
-      } else if (props.NomMotivoEntrada === 3) {
-        callApi(urlKrakenService, 'POST', data33, (res) => {
-          setReferencia(res.Result0[0].ClaReferenciaTraspaso || res.Result0[0].ClaReferencia );
-
-        });
-      }
-    }
-  }, [nomsubalmacen, subalmacen, subalmacenes]);
-
+    if (almacen!==0) {
+    callApi(urlKrakenService, 'POST', data34, (res) => {
+      setReferencia(res.Result0[0].ClaReferencia);
+      setTipoReferencia(res.Result0[0].ClaTipoReferencia)
+    });
+  }
+  }, [almacen])
   // Función que pone valor determinado de subalmacén si es único
+  
   useEffect(() => {
     if (subalmacenes.length === 1) {
       if (props.NomMotivoEntrada === 9) {
@@ -391,56 +345,6 @@ const Material = (props) => {
   const handledelete = () => {
     const urlKrakenService = `${config.KrakenService}/${24}/${config.Servicio}`;
     /* eslint-disable */
-
-    const data12 = {
-      parameters:
-        '{"ClaUbicacion":' +
-        props.editBoxValue +
-        ',"ClaServicioJson":12,"Parametros":"@pnClaUbicacion=' +
-        props.editBoxValue +
-        ',@pnIdBoleta=' +
-        props.placadato[0].IdBoleta +
-        ',@pnClaArticuloCompra=' +
-        props.ro.ClaArticuloCompra +
-        ',@pnCantidadMaterial=' +
-        props.ro.CantidadMaterial +
-        ',@pnKilosMaterial=' +
-        props.ro.KilosMaterial +
-        ',@pnKilosReales=' +
-        kilos +
-        ',@pnKilosContaminados=' +
-        kiloscont +
-        ',@pnKilosDocumentados=' +
-        props.ro.KilosDocumentados +
-        ',@pnPorcentajeMaterial=' +
-        porcentajer +
-        ',@pnEsPesajeParcial=' +
-        (props.ro.EsPesajeParcial ? props.ro.EsPesajeParcial : pesajeparcial) +
-        ',@pnClaAlmacen=' +
-        (props.ro.ClaAlmacen ? props.ro.ClaAlmacen : 0) +
-        ',@pnClaSubAlmacenCompra=' +
-        [props.placadato[0].ClaSubAlmacenCompra] +
-        ',@pnClaMotivoContaminacion=' +
-        razoncont +
-        ',@pnEsNoCargoDescargoMaterial=' +
-        props.placadato[0].EsNoCargoDescargoMaterial +
-        ',@pnClaProveedor=' +
-        props.placadato[0].ClaProveedor +
-        ',@pnIdListaPrecio=' +
-        props.placadato[0].IdListaPrecio +
-        ',@pnClaTipoOrdenCompra=,@pnClaOrdenCompra=,@pnClaUbicacionProveedor=' +
-        props.placadato[0].ClaUbicacionProveedor +
-        ',@psClaReferenciaCompra=' +
-        props.ro.ClaReferenciaCompra +
-        ',@pnIdRenglon=' +
-        props.ro.IdRenglon +
-        ',@psNombrePcMod=' +
-        ipadress +
-        ',@pnClaUsuarioMod=' +
-        NumbUsuario +
-        ',@pnAccionSp=3"}',
-      tipoEstructura: 0,
-    };
 
     const data37 = {
       parameters:
@@ -509,17 +413,10 @@ const Material = (props) => {
     };
     /* eslint-enable */
 
-    if (props.NomMotivoEntrada === 9) {
-      callApi(urlKrakenService, 'POST', data12, (res) => {
-        // console.log(res);
-      });
-    }
 
-    if (props.NomMotivoEntrada === 3) {
       callApi(urlKrakenService, 'POST', data37, (res) => {
         // console.log(res);
       });
-    }
 
     props.setpoppesaje(true);
     props.setmodaledit(false);
@@ -607,15 +504,15 @@ const Material = (props) => {
         ',@pnClaMaterialRecibeTraspaso=' +
         idmaterial +
         ',@pnCantRecibida=' +
-        (cantidad === '' ? 0 : kilos > 0 ? kilos / props.ro.PesoTeoricoRecibido : cantidad) +
+        (kilos > 0 ? kilos / props.ro.PesoTeoricoRecibido :cantidad === '' ? 0 : cantidad) +
         ',@pnPesoRecibido=' +
-        (kilos === '' ? 0 : cantidad > 0 ? cantidad * props.ro.PesoTeoricoRecibido : kilos) +
+        (cantidad > 0 ? cantidad * props.ro.PesoTeoricoRecibido :kilos === '' ? 0 : kilos) +
         ',@pnPorcentajeMaterial=' +
         (porcentajer === '' ? 0 : porcentajer) +
         ',@pnPesoTaraRecibido=' +
         kilosTara +
         ',@pnClaAlmacen=' +
-        (props.ro.ClaAlmacen ? props.ro.ClaAlmacen : 1) +
+        (almacen) +
         ',@pnClaSubAlmacenTraspaso=' +
         (props.ro.ClaSubAlmacenTraspaso !== null ? props.ro.ClaSubAlmacenTraspaso : subalmacen) +
         ',@pnClaSubSubAlmacen=' +
@@ -655,7 +552,7 @@ const Material = (props) => {
         // console.log(res);
       });
 
-
+     
       callApi(urlKrakenService, 'POST', data37, (res) => {
         // console.log(res);
       });
@@ -928,11 +825,11 @@ const Material = (props) => {
               <Row>
                 {props.NomMotivoEntrada === 9
                   ? props.ro.KgsMaterialPrereg
-                    ? props.ro.KgsMaterialPrereg
+                    ? props.ro.KgsMaterialPrereg.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
                     : '0'
                   : props.NomMotivoEntrada === 3
                   ? props.ro.CantRemisionada
-                    ? props.ro.CantRemisionada
+                    ? props.ro.CantRemisionada.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
                     : '0'
                   : '0'}
                 &nbsp;{Datosmaterial ? Datosmaterial[0].NomUnidad : ' '}
@@ -993,11 +890,11 @@ const Material = (props) => {
               <Row>
                 {props.NomMotivoEntrada === 9
                   ? props.ro.KgsMaterialPrereg
-                    ? props.ro.KgsMaterialPrereg
+                    ? props.ro.KgsMaterialPrereg.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
                     : '0'
                   : props.NomMotivoEntrada === 3
                   ? props.ro.PesoRemisionado
-                    ? props.ro.PesoRemisionado
+                    ? props.ro.PesoRemisionado.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
                     : '0'
                   : '0'}
                 &nbsp; kgs

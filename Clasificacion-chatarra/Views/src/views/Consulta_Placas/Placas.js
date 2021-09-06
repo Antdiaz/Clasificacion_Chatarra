@@ -146,7 +146,7 @@ const Items = ({
   };
 
   return (
-    <div>{listas !== undefined && (editBoxValue ===26 || editBoxValue===96 || editBoxValue===282 || editBoxValue===30 || editBoxValue===94 || editBoxValue===47 || editBoxValue===86 || editBoxValue===196)&& listas.map((lista,index) => <Placas lista={lista} key={index} />)}</div>
+    <div>{listas !== undefined && (editBoxValue ===27 || editBoxValue===96 || editBoxValue===282 || editBoxValue===30 || editBoxValue===94 || editBoxValue===47 || editBoxValue===86 || editBoxValue===196)&& listas.map((lista,index) => <Placas lista={lista} key={index} />)}</div>
   );
 };
 

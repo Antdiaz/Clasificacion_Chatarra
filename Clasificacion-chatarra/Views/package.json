@@ -74,6 +74,7 @@
     "eslint-plugin-flowtype": "5.2.0",
     "gulp": "4.0.2",
     "gulp-append-prepend": "1.0.8",
+    "hint": "^6.1.4",
     "prettier": "^2.3.0"
   }
 }

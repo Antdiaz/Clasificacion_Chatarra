@@ -72,6 +72,7 @@ const NuevoMaterial = (props) => {
   const [nombrematerialr, setnombrematerialr] = useState(0);
   const [idmaterialviaje, setidmaterialviaje] = useState(0);
   const [nombrematerialviaje, setnombrematerialviaje] = useState(0);
+  const [almacen, setalmacen] = useState(0)
   const [subalmacen, setsubalmacen] = useState(0);
   const [nomsubalmacen, setnomsubalmacen] = useState(0);
   const [subalmacenes, setsubalmacenes] = useState(0);
@@ -358,11 +359,38 @@ const NuevoMaterial = (props) => {
         '"}',
       tipoEstructura: 0,
     };
+
+    const data33 = {
+      parameters:
+        '{"ClaUbicacion":' +
+        props.editBoxValue +
+        ',"ClaServicioJson":33,"Parametros":"@pnClaUbicacion=' +
+        props.editBoxValue +
+        ',@pnClaMaterialRecibeTraspaso=' +
+        idmaterialr +
+        ',@pnClaSubAlmacenTraspaso=' +
+        subalmacen +
+        ',@psNomSubAlmacenTraspaso=' +
+        nomsubalmacen +
+        ',@pnIdBoleta=' +
+        props.placadato[0].IdBoleta +
+        '"}',
+      tipoEstructura: 0,
+    };
     /* eslint-enable */
     if (subalmacen > 0 && nomsubalmacen) {
-      callApi(urlKrakenService, 'POST', data8, (res) => {
-        setReferencia(res.Result0[0].ClaReferenciaCompra);
-      });
+      if(props.NomMotivoEntrada===9){
+        callApi(urlKrakenService, 'POST', data8, (res) => {
+          setReferencia(res.Result0[0].ClaReferenciaCompra);
+          setalmacen(res.Result0[0].ClaAlmacen);
+        });
+      }
+        else if(props.NomMotivoEntrada===3){
+        callApi(urlKrakenService, 'POST', data33, (res) => {
+          setReferencia(res.Result0[0].ClaReferenciaTraspaso);
+          setalmacen(res.Result0[0].ClaAlmacen);
+        });
+      }
     }
   }, [nomsubalmacen, subalmacen, subalmacenes]);
 
@@ -385,6 +413,7 @@ const NuevoMaterial = (props) => {
   const onValueChangedr = (e) => {
     setidmaterialr(e.value);
     setsubalmacen(0);
+    setalmacen(0)
     setnombrematerialr(e.component.option('text').split('-').pop());
   };
 
@@ -440,9 +469,7 @@ const NuevoMaterial = (props) => {
     setporcentajer(event.target.value);
   };
 
-  const handlealmacen = (event) => {
-    setalmacen(event.target.value);
-  };
+
 
   const handlesubalmacen = (event) => {
     setsubalmacen(event.value);
@@ -639,16 +666,18 @@ const NuevoMaterial = (props) => {
         ',@pnClaArticuloCompra=' +
         idmaterialr +
         ',@pnCantidadMaterial=' +
-        (cantidadr === '' ? 0 : kilosr > 0 ? kilosr / (Datosmaterial!==0 ? Datosmaterial[0].PesoTeoricoKgs:1) : cantidadr) +
+        (((idmaterialr === 30152200) || (idmaterialr===52422500)) ? ((+botes + +electrodomestico)/Datosmaterial[0].PesoTeoricoKgs):(kilosr > 0 ? kilosr /(Datosmaterial!==0 ? Datosmaterial[0].PesoTeoricoKgs : 1) : (cantidadr === '' ? 0 : cantidadr ))) +
         ',@pnKilosMaterial=' +
-        (kilosr === '' ? 0 : cantidadr > 0 ? cantidadr * (Datosmaterial!==0 ? Datosmaterial[0].PesoTeoricoKgs: 1) : kilosr) +
+        (((idmaterialr === 30152200) || (idmaterialr===52422500)) ? (+botes + +electrodomestico):(cantidadr > 0 ? cantidadr * (Datosmaterial!==0 ? Datosmaterial[0].PesoTeoricoKgs:1) : (kilosr === '' ? 0 : kilosr))) +
         ',@pnKilosReales=0,@pnKilosContaminados=' +
         (+Totales + +kiloscont) +
         ',@pnKilosDocumentados=0,@pnPorcentajeMaterial=' +
         (porcentajer ==='' ? 0 : pesajeparcial===1 ? 100 : porcentajer) +
         ',@pnEsPesajeParcial=' +
         pesajeparcial +
-        ',@pnClaAlmacen=1,@pnClaSubAlmacenCompra=' +
+        ',@pnClaAlmacen='+
+        almacen +
+        ',@pnClaSubAlmacenCompra=' +
         subalmacen +
         ',@pnClaMotivoContaminacion=' +
         (Totales>0 && kiloscont<1 ? 6 : razoncont) +
@@ -731,15 +760,15 @@ const NuevoMaterial = (props) => {
         ',@pnClaMaterialRecibeTraspaso=' +
         (idmaterialr) +
         ',@pnCantRecibida=' +
-        (cantidadr === '' ? 0 : kilosr > 0 ? kilosr / (Datosmaterial!==0 ? Datosmaterial[0].PesoTeoricoRecibido:1) : cantidadr) +
+        (((idmaterialr === 30152200) || (idmaterialr===52422500)) ? ((+botes + +electrodomestico)/Datosmaterial[0].PesoTeoricoRecibido):(kilosr > 0 ? kilosr /(Datosmaterial!==0 ? Datosmaterial[0].PesoTeoricoRecibido : 1) : (cantidadr === '' ? 0 : cantidadr ))) +
         ',@pnPesoRecibido=' +
-        (kilosr === '' ? 0 : cantidadr > 0 ? cantidadr * (Datosmaterial!==0 ? Datosmaterial[0].PesoTeoricoRecibido:1): kilosr) +
+        (((idmaterialr === 30152200) || (idmaterialr===52422500)) ? (+botes + +electrodomestico):(cantidadr > 0 ? cantidadr * (Datosmaterial!==0 ? Datosmaterial[0].PesoTeoricoRecibido:1) : (kilosr === '' ? 0 : kilosr)))+
         ',@pnPorcentajeMaterial=' +
         (porcentajer ==='' ? 0 : pesajeparcial===1 ? 100 : porcentajer) +
         ',@pnPesoTaraRecibido=' +
         (0) +
         ',@pnClaAlmacen=' +
-        (1) +
+        (almacen) +
         ',@pnClaSubAlmacenTraspaso=' +
         (subalmacen) +
         ',@pnClaSubSubAlmacen=' +
@@ -800,7 +829,9 @@ const NuevoMaterial = (props) => {
           element.PorcentajeMaterial +
           ',@pnEsPesajeParcial=' +
           element.EsPesajeParcial +
-          ',@pnClaAlmacen=1,@pnClaSubAlmacenCompra=' +
+          ',@pnClaAlmacen='+
+          element.ClaAlmacen +
+          ',@pnClaSubAlmacenCompra=' +
           element.ClaSubAlmacenCompra +
           ',@pnClaMotivoContaminacion=' +
           (element.ClaMotivoContaminacion ? element.ClaMotivoContaminacion : '') +
@@ -842,6 +873,7 @@ const NuevoMaterial = (props) => {
      // console.log(res);
    });
    
+   console.log(data37)
      callApi(urlKrakenService, 'POST', data37, (res) => {
      // console.log(res);
    });
@@ -879,7 +911,7 @@ const NuevoMaterial = (props) => {
          ',@pnPesoTaraRecibido=' +
          (0) +
          ',@pnClaAlmacen=' +
-         (1) +
+         props.row[0].ClaAlmacen +
          ',@pnClaSubAlmacenTraspaso=' +
          props.row[0].ClaSubAlmacenTraspaso +
          ',@pnClaSubSubAlmacen=' +
@@ -947,7 +979,7 @@ const NuevoMaterial = (props) => {
         ',@pnPesoTaraRecibido=' +
         (0) +
         ',@pnClaAlmacen=' +
-        (1) +
+        props.row[1].ClaAlmacen +
         ',@pnClaSubAlmacenTraspaso=' +
         props.row[1].ClaSubAlmacenTraspaso +
         ',@pnClaSubSubAlmacen=' +
@@ -1340,7 +1372,7 @@ props.setActualizar(false)
                   <img src={oven} alt="dryer" className="popup-image" />
                   <span className="popups-kgs">50kgs</span>
                 </div>
-                <div className="popup-bote">Oven</div>
+                <div className="popup-bote">Estufa</div>
                 <div>
                   <button type="button" className="popup-adder sum" onClick={handleSum7}>
                     +
@@ -1482,9 +1514,14 @@ props.setActualizar(false)
             style={{ marginRight: '30px' }}
             type="button"
             className="popup-button"
-            onClick={safebote}
+            onClick={
+              (electrodomestico>1 || botes>1) ? togglePopup2 :null
+            }
           >
-            GUARDAR
+            Siguiente &gt;
+          </button>
+          <button type="button" className="popup-button" onClick={() => setidmaterialr(0)}>
+            &#60; Regresar
           </button>
         </div>
       </div>
@@ -1496,7 +1533,7 @@ props.setActualizar(false)
   return (
     <div>
       {!isNext ? (
-        idmaterialr === 10000 ? (
+        ((idmaterialr === 301522) || (idmaterialr ===524225)) ? (
           <Botes />
         ) : (
           <div className="box">
@@ -1582,7 +1619,7 @@ props.setActualizar(false)
               <Row className="popup-row">
                 <Col>
                   <Row className="popup-title">Cantidad Enviada</Row>
-                  <Row>{cantidade}</Row>
+                  <Row>-</Row>
                 </Col>
                 <Col>
                   <Row className="popup-title" style={{ marginLeft: '0px' }}>
@@ -1619,7 +1656,7 @@ props.setActualizar(false)
               <Row className="popup-row">
                 <Col>
                   <Row className="popup-title">Kilos Enviados</Row>
-                  <Row>{kilose}</Row>
+                  <Row>-</Row>
                 </Col>
                 <Col>
                   <Row className="popup-title" style={{ marginLeft: '0px' }}>
@@ -1794,21 +1831,21 @@ props.setActualizar(false)
             <div className="bote-elect">
               <Row>
                 <Col>Llanta:</Col>
-                <Col>{Llantas}</Col>
+                <Col>{Llantas.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} Kg</Col>
                 <Col>Total:</Col>
-                <Col>{+Totales + +kiloscont}</Col>
+                <Col>{(+Totales + +kiloscont).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} Kg</Col>
                 <Col></Col>
               </Row>
               <Row>
                 <Col>Tanque:</Col>
-                <Col>{Tanques}</Col>
+                <Col>{Tanques.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} Kg</Col>
                 <Col></Col>
                 <Col></Col>
                 <Col></Col>
               </Row>
               <Row>
                 <Col>Otros:</Col>
-                <Col>{Otros}</Col>
+                <Col>{Otros.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} Kg</Col>
                 <Col></Col>
                 <Col></Col>
                 <Col></Col>
@@ -1831,25 +1868,34 @@ props.setActualizar(false)
                     : cantidadr === ''
                     ? 0
                     : kilosr > 0
-                    ? kilosr / (props.NomMotivoEntrada===9 ? Datosmaterial=== 0 ? 1 : Datosmaterial[0].PesoTeoricoKgs: props.NomMotivoEntrada===3 ? Datosmaterial=== 0 ? 1 : Datosmaterial[0].PesoTeoricoRecibido: 1)
-                    : cantidadr}
-                  &nbsp; {Datosmaterial ? Datosmaterial[0].NomUnidad : ' '}
+                    ? (kilosr / (props.NomMotivoEntrada===9 ? Datosmaterial=== 0 ? 1 : Datosmaterial[0].PesoTeoricoKgs: props.NomMotivoEntrada===3 ? Datosmaterial=== 0 ? 1 : Datosmaterial[0].PesoTeoricoRecibido: 1)).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                    : cantidadr.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                  &nbsp; {Datosmaterial ? (Datosmaterial[0].NomUnidad || Datosmaterial[0].NomUnidadRecibido) : ' '}
                 </Row>
               </Col>
               <Col style={{height:"100%"}}>
                 <Row className="popup-title" style={{ marginLeft: '0px' }}>
                   Kilos Recibidos
                 </Row>
-                <Row className="popup-elem" style={{ marginLeft: '0px' }}>
-                  {pesajeparcial === 1 || props.placadato[0].EsPesajeParcial === 1
-                    ? '--'
-                    : kilosr === ''
-                    ? 0
-                    : cantidadr > 0
-                    ? cantidadr * (props.NomMotivoEntrada===9 ? Datosmaterial=== 0 ? 1 : Datosmaterial[0].PesoTeoricoKgs: props.NomMotivoEntrada===3 ? Datosmaterial=== 0 ? 1 : Datosmaterial[0].PesoTeoricoRecibido: 1)
-                    : kilosr}
-                  &nbsp; kgs
-                </Row>
+                {((idmaterialr === 30152200) || (idmaterialr===52422500)) ?
+                (
+                  <Row className="popup-elem" style={{ marginLeft: '0px' }}>
+                    {(+electrodomestico + +botes).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                    &nbsp; Kg
+                  </Row>
+                ):
+                (
+                  <Row className="popup-elem" style={{ marginLeft: '0px' }}>
+                    {pesajeparcial === 1 || props.placadato[0].EsPesajeParcial === 1
+                      ? '--'
+                      : kilosr === ''
+                      ? 0
+                      : cantidadr > 0
+                      ? (cantidadr * (props.NomMotivoEntrada===9 ? Datosmaterial=== 0 ? 1 : Datosmaterial[0].PesoTeoricoKgs: props.NomMotivoEntrada===3 ? Datosmaterial=== 0 ? 1 : Datosmaterial[0].PesoTeoricoRecibido: 1)).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                      : kilosr.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                    &nbsp; Kg
+                  </Row>
+                )}
               </Col>
               <Col style={{height:"100%"}}>
                 <Row className="popup-title" style={{ marginLeft: '0px' }}>

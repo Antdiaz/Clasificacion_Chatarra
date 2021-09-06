@@ -42,6 +42,7 @@ const NuevoMaterial = (props) => {
   const [nombrematerialr, setnombrematerialr] = useState(0);
   const [idmaterialviaje, setidmaterialviaje] = useState(0);
   const [nombrematerialviaje, setnombrematerialviaje] = useState(0);
+  const [almacen, setalmacen] = useState(0)
   const [subalmacen, setsubalmacen] = useState(0);
   const [nomsubalmacen, setnomsubalmacen] = useState(0);
   const [subalmacenes, setsubalmacenes] = useState(0);
@@ -234,9 +235,39 @@ const NuevoMaterial = (props) => {
 
   useEffect(() => {
     const urlKrakenService = `${config.KrakenService}/${24}/${config.Servicio}`;
-
+    
     /* eslint-disable */
-   const data33 = {
+
+    const data33 = {
+      parameters:
+        '{"ClaUbicacion":' +
+        props.editBoxValue +
+        ',"ClaServicioJson":33,"Parametros":"@pnClaUbicacion=' +
+        props.editBoxValue +
+        ',@pnClaMaterialRecibeTraspaso=' +
+        idmaterialr +
+        ',@pnClaSubAlmacenTraspaso=' +
+        subalmacen +
+        ',@psNomSubAlmacenTraspaso=' +
+        nomsubalmacen +
+        ',@pnIdBoleta=' +
+        props.placadato[0].IdBoleta +
+        '"}',
+      tipoEstructura: 0,
+    };
+    /* eslint-enable */
+    if (subalmacen > 0 && nomsubalmacen) {
+      callApi(urlKrakenService, 'POST', data33, (res) => {
+        setalmacen(res.Result0[0].ClaAlmacen);
+      });
+    }
+  }, [nomsubalmacen, subalmacen, subalmacenes]);
+
+
+  useEffect(() => {
+    const urlKrakenService = `${config.KrakenService}/${24}/${config.Servicio}`;
+    /* eslint-disable */
+    const data34 = {
       parameters:
         '{"ClaUbicacion":' +
         props.editBoxValue +
@@ -244,18 +275,21 @@ const NuevoMaterial = (props) => {
         props.editBoxValue +
         ',@pnClaMaterialRecibeTraspaso=' +
         idmaterialr +
-        ',@pnClaAlmacen=1,@pnClaSubAlmacenTraspaso=' +
+        ',@pnClaAlmacen='+
+        almacen +
+        ',@pnClaSubAlmacenTraspaso=' +
         subalmacen +
         ',@psReferencia="}',
       tipoEstructura: 0,
     };
     /* eslint-enable */
-    if (subalmacen > 0 && nomsubalmacen) {
-      callApi(urlKrakenService, 'POST', data33, (res) => {
-        setReferencia(res.Result0[0].ClaReferencia);
-      });
-    }
-  }, [nomsubalmacen, subalmacen, subalmacenes]);
+    if (almacen!==0) {
+    callApi(urlKrakenService, 'POST', data34, (res) => {
+      setReferencia(res.Result0[0].ClaReferencia);
+      setTipoReferencia(res.Result0[0].ClaTipoReferencia)
+    });
+  }
+  }, [almacen])
 
   // Función que pone valor determinado de subalmacén si es único
 
@@ -271,10 +305,13 @@ const NuevoMaterial = (props) => {
     }
   }, [subalmacenes]);
 
+  console.log(nomsubalmacen)
+
   // Función para cambio de material en el wizard
   const onValueChangedr = (e) => {
     setidmaterialr(e.value);
     setsubalmacen(0);
+    setalmacen(0)
     setnombrematerialr(e.component.option('text').split('-').pop());
   };
 
@@ -434,7 +471,7 @@ const NuevoMaterial = (props) => {
         ',@pnPesoTaraRecibido=' +
         kilosTara +
         ',@pnClaAlmacen=' +
-        1 +
+        almacen +
         ',@pnClaSubAlmacenTraspaso=' +
         subalmacen +
         ',@pnClaSubSubAlmacen=' +
@@ -465,6 +502,7 @@ const NuevoMaterial = (props) => {
       await  callApi(urlKrakenService, 'POST', data36, (res) => {
         // console.log(res);
       });
+
       callApi(urlKrakenService, 'POST', data37, (res) => {
         // console.log(res);
       });
@@ -505,7 +543,7 @@ const NuevoMaterial = (props) => {
             ',@pnPesoTaraRecibido=' +
             props.row[0].PesoTaraRecibido +
             ',@pnClaAlmacen=' +
-            1 +
+            props.row[0].ClaAlmacen +
             ',@pnClaSubAlmacenTraspaso=' +
             props.row[0].ClaSubAlmacenTraspaso +
             ',@pnClaSubSubAlmacen=' +
@@ -577,7 +615,7 @@ const NuevoMaterial = (props) => {
             ',@pnPesoTaraRecibido=' +
             props.row[1].PesoTaraRecibido +
             ',@pnClaAlmacen=' +
-            1 +
+            props.row[1].ClaAlmacen +
             ',@pnClaSubAlmacenTraspaso=' +
             props.row[1].ClaSubAlmacenTraspaso +
             ',@pnClaSubSubAlmacen=' +

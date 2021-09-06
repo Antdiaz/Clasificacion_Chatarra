@@ -13948,6 +13948,8 @@ a.btn-icon-only {
   vertical-align: middle;
   text-decoration: none;
   -moz-appearance: none;
+  -webkit-appearance:none;
+  appearance:none;
   cursor: pointer;
   width: 100%;
   margin: 0.5rem 0;

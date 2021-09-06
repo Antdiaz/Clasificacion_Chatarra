@@ -119,7 +119,7 @@ function Materiales({
             &nbsp; Kgs
           </TableCell>
           <TableCell className="table-content">
-            Sub-Almacen:&nbsp;{NomMotivoEntrada===9 ? ro.ClaSubAlmacenCompra : NomMotivoEntrada===3 ? ro.ClaSubAlmacenTraspaso : ''}
+            Sub-Almacen:&nbsp;{ro.ClaSubAlmacen ? ro.ClaSubAlmacen : ''}
           </TableCell>
           <TableCell className="table-content">
             <div
@@ -263,7 +263,7 @@ function Materiales({
       return()=> {
         isCancelled = true
       }
-    }, 1400);
+    }, 1600);
   }, [Actualizar, EsValido]);
 
 

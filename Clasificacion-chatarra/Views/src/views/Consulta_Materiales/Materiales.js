@@ -108,12 +108,12 @@ function Materiales({
             &nbsp; {NomMotivoEntrada===9 ? ro.NomUnidad: NomMotivoEntrada===3 ? ro.NomUnidadRecibido: ''}
           </TableCell>
           <TableCell className="table-content">
-            Enviado:&nbsp;{ro.KgsMaterialPrereg ? ro.KgsMaterialPrereg : 0}&nbsp; Kgs <br />{' '}
-            Recibido:&nbsp;{NomMotivoEntrada===9 ? ro.KilosReales ? ro.KilosReales : ro.KilosMaterial :ro.PesoRecibido ? ro.PesoRecibido.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : 0}&nbsp; Kgs
+            Enviado:&nbsp;{ro.KgsMaterialPrereg ? ro.KgsMaterialPrereg.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : 0}&nbsp; Kg <br />{' '}
+            Recibido:&nbsp;{NomMotivoEntrada===9 ? ro.KilosReales ? ro.KilosReales.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : ro.KilosMaterial ? ro.KilosMaterial.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","):0 :ro.PesoRecibido ? ro.PesoRecibido.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : 0}&nbsp; Kg
           </TableCell>
           <TableCell className="table-content">
-            Enviado:&nbsp;{ro.PesoTaraRemisionado ? ro.PesoTaraRemisionado.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : 0}&nbsp; Kgs <br /> Recibido:&nbsp;{ro.PesoTaraRecibido ? ro.PesoTaraRecibido.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : 0}
-            &nbsp; Kgs
+            Enviado:&nbsp;{ro.PesoTaraRemisionado ? ro.PesoTaraRemisionado.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : 0}&nbsp; Kg <br /> Recibido:&nbsp;{ro.PesoTaraRecibido ? ro.PesoTaraRecibido.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : 0}
+            &nbsp; Kg
           </TableCell>
           <TableCell className="table-content">
             Sub-Almacen:&nbsp;{NomMotivoEntrada===9 ? ro.ClaSubAlmacenCompra : NomMotivoEntrada===3 ? ro.ClaSubAlmacenTraspaso : ''}
@@ -388,7 +388,6 @@ function Materiales({
     const urlKrakenService = `${config.KrakenService}/${24}/${config.Servicio}`;
     /* eslint-disable */
     if(NomMotivoEntrada===3 && TipoTraspaso===0){
-      console.log(data30)
     const data30 = {
       parameters:
         '{"ClaUbicacion":' +

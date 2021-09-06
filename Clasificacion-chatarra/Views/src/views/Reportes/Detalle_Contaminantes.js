@@ -29,7 +29,6 @@ import { SkipPreviousRounded } from '@material-ui/icons';
 
 const Detalles = (props) => {
   // Valores dinámicos locales al editar material
-  const prev = useRef();
   // Arreglo valores Contaminantes
   const [Contaminantes, setContaminantes] = useState([
     [
