@@ -1,7 +1,9 @@
 import swal from 'sweetalert';
 import notify from 'devextreme/ui/notify';
 import { config } from './config';
+import { Cookies } from 'react-cookie';
 
+const cookies = new Cookies();
 require('./prototypes');
 
 /**
@@ -17,7 +19,7 @@ async function callApi(url, method, data = {}, callBack, multipart = false) {
 
   const headers = {
     'x-api-key': config.ApiKey,
-    'x-access-token': getSessionItem('Token', ''),
+    'x-access-token': cookies.get('Token', ''),
     ...(!multipart && {
       'Content-Type': 'application/json',
     }),
@@ -86,9 +88,9 @@ function setSessionData(params) {
       const element = params[key];
 
       if (typeof element === 'object') {
-        localStorage.setItem(key, JSON.stringify(element));
+        cookies.set(key, JSON.stringify(element), { path: '/' });
       } else {
-        localStorage.setItem(key, element);
+        cookies.set(key, element, { path: '/' });
       }
     }
   }
@@ -105,9 +107,9 @@ function getSessionItem(key, def) {
   let value;
 
   try {
-    value = JSON.parse(localStorage.getItem(key));
+    value = JSON.parse(cookies.get(key));
   } catch (error) {
-    value = localStorage.getItem(key);
+    value = cookies.get(key);
   }
 
   if (!value) {
@@ -122,7 +124,7 @@ function getSessionItem(key, def) {
  * @returns {Number} NumUsuario
  */
 function getCliente() {
-  return localStorage.getItem('NumUsuario');
+  return cookies.get('NumUsuario');
 }
 
 /**
@@ -130,7 +132,12 @@ function getCliente() {
  *
  */
 function logOut() {
-  localStorage.clear();
+  cookies.remove('Token');
+  cookies.remove('NomUsuario');
+  cookies.remove('NumUsuario');
+  cookies.remove('PruebaToken');
+  cookies.remove('PatioEscogido');
+  cookies.remove('TipoPatio');
 }
 
 /**
@@ -160,7 +167,7 @@ function decodeToken(token) {
  * @returns {boolean} retorna si el token es valido o no
  */
 function sessionAlive() {
-  const jwtToken = localStorage.getItem('Token');
+  const jwtToken = cookies.get('Token');
   let resp = false;
 
   if (jwtToken) {

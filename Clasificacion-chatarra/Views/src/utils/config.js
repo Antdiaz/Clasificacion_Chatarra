@@ -5,19 +5,19 @@ const config = {
 
   // ** Desarrollo
   UrlLoginServer: 
-  // 'https://sweetsrv.azurewebsites.net/LoginSandbox/authenticate',
-   'https://sweetsrv.azurewebsites.net/Login/authenticate',
+   'https://sweetsrv.azurewebsites.net/LoginSandbox/authenticate',
+  // 'https://sweetsrv.azurewebsites.net/Login/authenticate',
   UrlApiProject: 'http://localhost:5000/',
 
   // ** Kraken Desarrollo
   KrakenService: 
-  // 'https://krakenapi.deacero.com/SandboxServices',
-   'https://krakenapi.deacero.com/KrakenServices/',
+   'https://krakenapi.deacero.com/SandboxServices',
+  // 'https://krakenapi.deacero.com/KrakenServices/',
   
   // Debugging mode
-  DebuggingMode: false,
+  DebuggingMode: true,
 
-  Servicio:34
+  Servicio:37
   // 3322376
 };
 

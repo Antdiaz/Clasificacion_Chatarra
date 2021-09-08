@@ -636,7 +636,7 @@ const MaterialesXCargar = (props) => {
             style={{ marginRight: '30px' }}
             type="button"
             className="popup-button"
-            onClick={PorcentajeSum>100 ||  subalmacen<1 || Datosmaterial===0 || ((kilosr===0 || kilosr==='')&& (cantidadr===0 || cantidadr==='') && (porcentajer===0 || porcentajer==='') && (pesajeparcial===0)) ? null: handleSubmit} 
+            onClick={PorcentajeSum>100 ||  subalmacen<1 || Datosmaterial===0 || ((kilosr===0 || kilosr==='')&& (cantidadr===0 || cantidadr==='') && (porcentajer===0 || porcentajer==='') && (pesajeparcial===0)) ? null: almacen !==0 ? handleSubmit:null} 
           >
             GUARDAR
           </button>

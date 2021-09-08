@@ -1123,7 +1123,7 @@ const Material = (props) => {
                 (porcentajer === 0 || porcentajer === '') &&
                 pesajeparcial === 0)
                 ? null
-                : handleClose
+                :almacen !==0 ? handleClose : null
             }
           >
             GUARDAR

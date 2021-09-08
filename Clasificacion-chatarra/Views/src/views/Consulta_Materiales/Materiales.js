@@ -11,6 +11,7 @@ import Modal from 'react-modal';
 // Wizard editar material
 import Material from './Clasificar_Material';
 import Materialpt from './Clasificar_Material_pt';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 function Materiales({
   placadato,
@@ -80,7 +81,7 @@ function Materiales({
         bottom: '0%',
       },
     };
-
+    console.log(modaledit)
     // Componente cascarón de cada material mostrado
     return (
       <>
@@ -124,7 +125,7 @@ function Materiales({
                 row &&
                 ro.EsPesajeParcial !==1 ? 
                 () => {
-                  setmodaledit(true);
+                  setmodaledit(true)
                 }
               :(row.every(ro => ro.KilosMaterial === 0)|| row.every(ro => ro.PesoRecibido === 0)) ? (() =>{ setpoppesaje(true)}) : () => {
                 setmodaledit(true);
@@ -137,7 +138,7 @@ function Materiales({
           {/* Pop up para editar un material */} 
           <Modal
             isOpen={modaledit}
-            onClose={() => modaledit(true)}
+            onClose={() => modaledit(false)}
             ariaHideApp={false}
             style={customStyles}
           >
@@ -308,7 +309,7 @@ function Materiales({
       return()=> {
         isCancelled = true
       }
-    }, 1400);
+    }, 1000);
   }, [Actualizar]);
 
    // Función que corre servicios antes del render cada que haya un material, solo si el porcentaje total es 100% o si se maneja por cantidad
@@ -353,7 +354,7 @@ function Materiales({
       const urlKrakenService = `${config.KrakenService}/${24}/${config.Servicio}`;
         const PorcentajeSum = row && row.reduce((acc, val) => acc + val.PorcentajeMaterial, 0);
         const CantidadSum= row && row.reduce((acc, val) => acc + val.CantRecibida, 0);
-        if (Todos===0 && (PorcentajeSum !== null && PorcentajeSum === 100) || (PorcentajeSum === 0 && CantidadSum>0)|| (ValidaCargo===1 && row && row.length>0 && (row[0].CantRecibida !==null || row[0].PesoRecibido!==null || row[0].Porcentaje!==null) && (PorcentajeSum !== null && PorcentajeSum === 100) || (PorcentajeSum === 0 && CantidadSum>0))) {
+        if (Todos===0 && ((PorcentajeSum !== null && PorcentajeSum === 100) || (PorcentajeSum === 0 && CantidadSum>0)|| (ValidaCargo===1 && row && row.length>0 && (row[0].CantRecibida !==null || row[0].PesoRecibido!==null || row[0].Porcentaje!==null) && (PorcentajeSum !== null && PorcentajeSum === 100) || (PorcentajeSum === 0 && CantidadSum>0)))) {
           /* eslint-disable */
       const data38 = {
         parameters:
@@ -428,33 +429,41 @@ function Materiales({
   function Clasificacion() {
     return (
       <div>
-        <Table className="table" aria-label="a dense table">
-          <TableHead>
-            <TableRow>
-              <TableCell className="table-header">
-                Fabricación
-              </TableCell>
-              <TableCell className="table-header">Material</TableCell>
-              <TableCell
-                className="table-header"
-              >
-                Porcentaje
-              </TableCell>
-              <TableCell className="table-header">Cantidad</TableCell>
-              <TableCell className="table-header">Kilos</TableCell>
-              <TableCell className="table-header">Atril/Tarima</TableCell>
-              <TableCell className="table-header">Inventario</TableCell>
-              <TableCell> </TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {row
-              ? row.map((ro, index) => (
-                <List ro={ro} key={index} editOpen={editOpen} ClaArticuloRemisionado={ClaArticuloRemisionado} setClaArticuloRemisionado={setClaArticuloRemisionado} seteditOpen={seteditOpen} />
-                ))
-              : null}
-          </TableBody>
-        </Table>
+        {row!==null && row!=='' && row!==0 ?
+        (
+          <Table className="table" aria-label="a dense table">
+            <TableHead>
+              <TableRow>
+                <TableCell className="table-header">
+                  Fabricación
+                </TableCell>
+                <TableCell className="table-header">Material</TableCell>
+                <TableCell
+                  className="table-header"
+                >
+                  Porcentaje
+                </TableCell>
+                <TableCell className="table-header">Cantidad</TableCell>
+                <TableCell className="table-header">Kilos</TableCell>
+                <TableCell className="table-header">Atril/Tarima</TableCell>
+                <TableCell className="table-header">Inventario</TableCell>
+                <TableCell> </TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {row
+                ? row.map((ro, index) => (
+                  <List ro={ro} key={index} editOpen={editOpen} ClaArticuloRemisionado={ClaArticuloRemisionado} setClaArticuloRemisionado={setClaArticuloRemisionado} seteditOpen={seteditOpen} />
+                  ))
+                : null}
+            </TableBody>
+          </Table>
+          ):
+          Todos !==1 && (
+            <div style={{ textAlign: 'center', paddingTop: '40px' }}>
+              <CircularProgress />
+            </div>
+          )}
       </div>
     );
   }

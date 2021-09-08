@@ -29,6 +29,7 @@ import Login from './views/Login/Login';
 // Context
 import AppContext from './context/AppContext';
 import useInitialState from './hooks/useInitialState';
+import { CookiesProvider } from 'react-cookie';
 
 const hist = createHashHistory();
 
@@ -47,4 +48,4 @@ const App = () => {
   );
 };
 
-ReactDOM.render(<App />, document.getElementById('root'));
+ReactDOM.render(<CookiesProvider><App /></CookiesProvider>, document.getElementById('root'));

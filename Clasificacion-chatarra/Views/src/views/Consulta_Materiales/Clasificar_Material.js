@@ -87,13 +87,16 @@ const Material = (props) => {
   const [nomsubalmacen, setnomsubalmacen] = useState(
     props.NomMotivoEntrada===9 ? props.ro.NomSubAlmacenCompra ? props.ro.NomSubAlmacenCompra : 0 :props.NomMotivoEntrada===3 ? props.ro.NomSubAlmacenTraspaso ? props.ro.NomSubAlmacenTraspaso : 0 : 0
   );
-  const [subalmacenes, setsubalmacenes] = useState('');
+  const [subalmacenes, setsubalmacenes] = useState(0);
   const Diferencia = props.ro.PorcentajeMaterial;
   const PorcentajeSum = props.row
     ? +props.row.reduce((acc, val) => acc + val.PorcentajeMaterial, 0) + +porcentajer - +Diferencia
     : 0;
   const [materiales, setmateriales] = useState(props.material ? props.material : 0);
   const [contaminaciones, setcontaminaciones] = useState(props.contaminacion ? props.contaminacion : '');
+  const [listacontaminaciones1, setlistacontaminaciones1] = useState(0)
+  const [listacontaminaciones2, setlistacontaminaciones2] = useState(0)
+  const [listacontaminaciones3, setlistacontaminaciones3] = useState(0)
   const disabled = true;
   const [Datosmaterial, setDatosmaterial] = useState(0);
   // Arreglo valores Contaminantes
@@ -201,6 +204,7 @@ const Material = (props) => {
     props.setClaArticuloRemisionado(props.ro.ClaArticuloRemisionado)
     }
   }, [])
+  
 
   useEffect(() => {
 
@@ -224,6 +228,7 @@ const Material = (props) => {
       tipoEstructura: 0,
     };
     /* eslint-enable */
+    if(listacontaminaciones2===0){
     callApi(urlKrakenService, 'POST', data481, (res) => {
       setBollas2(res.Result0.length ? res.Result0[0].Cantidad : 0)
       setCilindro2(res.Result0.length ? res.Result0[1].Cantidad : 0)
@@ -231,7 +236,10 @@ const Material = (props) => {
       setLlantasChico2(res.Result0.length ? res.Result0[3].Cantidad : 0)
       setLlantasMediano2(res.Result0.length ? res.Result0[4].Cantidad : 0)
       setLlantasGrande2(res.Result0.length ? res.Result0[5].Cantidad : 0)
-    })}
+    })
+    setlistacontaminaciones2(1)
+  }}
+
   
     if(Rowies.length===2 && (Rowies[1].ClaArticuloCompra || Rowies[1].ClaMaterialRecibeTraspaso)){
       /* eslint-disable */
@@ -251,6 +259,7 @@ const Material = (props) => {
       tipoEstructura: 0,
     };
     /* eslint-enable */
+    if(listacontaminaciones3===0){
     callApi(urlKrakenService, 'POST', data482, (res) => {
       setBollas3(res.Result0.length ? res.Result0[0].Cantidad : 0)
       setCilindro3(res.Result0.length ? res.Result0[1].Cantidad : 0)
@@ -259,7 +268,42 @@ const Material = (props) => {
       setLlantasMediano3(res.Result0.length ? res.Result0[4].Cantidad : 0)
       setLlantasGrande3(res.Result0.length ? res.Result0[5].Cantidad : 0)
     })
+setlistacontaminaciones3(1)}
   }}, [])
+
+  useEffect(() => {
+    const urlKrakenService = `${config.KrakenService}/${24}/${config.Servicio}`;
+  
+    /* eslint-disable */
+    const data70 = {
+      parameters:
+        '{"ClaUbicacion":' +
+        props.editBoxValue +
+        ',"ClaServicioJson":' +
+        70 +
+        ',"Parametros":"@pnClaUbicacion=' +
+        props.editBoxValue +
+        ',@pnIdBoleta=' +
+          props.placadato[0].IdBoleta +
+        '"}',
+      tipoEstructura: 0,
+    };
+    /* eslint-enable */
+    callApi(urlKrakenService, 'POST', data70, (res) => {
+      // setsrefri()
+      // setmrefri()
+      // setrefri()
+      // setlavadora()
+      // setboiler()
+      // setsecadora()
+      // setestufa()
+      // setmicroondas()
+      // setotros()
+      // setcostal()
+      // setsaco()
+      // setcontenedor()
+    })
+  }, [])
 
   useEffect(() => {
     if(materiales && materiales.some(material => material.ClaArticuloCompra === idmaterial)){
@@ -286,7 +330,7 @@ const Material = (props) => {
     tipoEstructura: 0,
   };
   /* eslint-enable */
-  if(props.ro.ClaArticuloCompra || props.ro.ClaMaterialRecibeTraspaso){
+  if((props.ro.ClaArticuloCompra || props.ro.ClaMaterialRecibeTraspaso) && listacontaminaciones1===0){
   callApi(urlKrakenService, 'POST', data48, (res) => {
     setBollas(res.Result0.length ? res.Result0[0].Cantidad : 0)
     setCilindro(res.Result0.length ? res.Result0[1].Cantidad : 0)
@@ -295,6 +339,7 @@ const Material = (props) => {
     setLlantasMediano(res.Result0.length ? res.Result0[4].Cantidad : 0)
     setLlantasGrande(res.Result0.length ? res.Result0[5].Cantidad : 0)
   })} 
+  setlistacontaminaciones1(1)
   }, [])
 
   useEffect(() => {
@@ -373,7 +418,7 @@ const Material = (props) => {
     }
     /* eslint-enable */
     if(props.NomMotivoEntrada===9){
-    if (idmaterial > 0) {
+    if (idmaterial > 0 && Datosmaterial===0 && subalmacenes===0) {
       FuncionData()
     }
   }
@@ -390,6 +435,7 @@ const Material = (props) => {
     }
   }
   }, [idmaterial]);
+
 
   // Función para cambio de material en el wizard
   const onValueChanged = (e) => {
@@ -652,13 +698,13 @@ const Material = (props) => {
     /* eslint-enable */
 
     if (subalmacen > 0 && nomsubalmacen) {
-      if(props.NomMotivoEntrada===9){
+      if(props.NomMotivoEntrada===9 && Referencia===0 && almacen===0){
       callApi(urlKrakenService, 'POST', data8, (res) => {
         setReferencia(res.Result0[0].ClaReferenciaCompra);
         setalmacen(res.Result0[0].ClaAlmacen);
       });
     }
-      else if(props.NomMotivoEntrada===3){
+      else if(props.NomMotivoEntrada===3 && Referencia===0 && almacen===0){
       callApi(urlKrakenService, 'POST', data33, (res) => {
         setReferencia(res.Result0[0].ClaReferenciaTraspaso);
         setalmacen(res.Result0[0].ClaAlmacen);
@@ -871,9 +917,9 @@ props.setActualizar(false)
         ',@pnClaArticuloCompra=' +
         ( props.ro.ClaArticuloCompra ? props.ro.ClaArticuloCompra : idmaterial) +
         ',@pnCantidadMaterial=' +
-        (((idmaterial === 30152200) || (idmaterial===52422500)) ? ((+botes + +electrodomestico)/ (Datosmaterial !==0 ? Datosmaterial[0].PesoTeoricoKgs: 1 )):(kilos > 0 ? kilos / (Datosmaterial !==0 ? Datosmaterial[0].PesoTeoricoKgs: 1 ):(cantidad === '' ? 0 : cantidad))) +
+        (((idmaterial === 301522) || (idmaterial===524225)) ? ((+botes + +electrodomestico)/ (Datosmaterial !==0 ? Datosmaterial[0].PesoTeoricoKgs: 1 )):(kilos > 0 ? kilos / (Datosmaterial !==0 ? Datosmaterial[0].PesoTeoricoKgs: 1 ):(cantidad === '' ? 0 : cantidad))) +
         ',@pnKilosMaterial=' +
-        (((idmaterial === 30152200) || (idmaterial===52422500)) ? (+botes + +electrodomestico): (cantidad > 0 ? cantidad * (Datosmaterial !==0 ? Datosmaterial[0].PesoTeoricoKgs:1):(kilos === '' ? 0 : kilos))) +
+        (((idmaterial === 301522) || (idmaterial===524225)) ? (+botes + +electrodomestico): (cantidad > 0 ? cantidad * (Datosmaterial !==0 ? Datosmaterial[0].PesoTeoricoKgs:1):(kilos === '' ? 0 : kilos))) +
         ',@pnKilosReales=' +
         (props.ro.KilosReales ? props.ro.KilosReales : 0) +
         ',@pnKilosContaminados=' +
@@ -906,7 +952,9 @@ props.setActualizar(false)
         (props.ro.ClaArticuloPreReg ? props.ro.ClaArticuloPreReg : '') +
         ',@psClaContaminantes=1|2|3|4|5|6|,@psValorContaminantes=' +
          Bollas +'|'+ Cilindro + '|' + Tanque + '|' +LlantasChico + '|' +LlantasMediano +  '|' +LlantasGrande +
-        '|,@psNombrePcMod=' +
+        '|'+ ((idmaterial === 301522) ? ',@psClaArtSupTipo=1|2|3|4|5|6|7|8|9|' : (idmaterial===524225) ? ',@psClaArtSupTipo=10|11|12|':null) +
+        + ((idmaterial === 301522) ? (',@psValorArtSupTipo='+srefri+'|'+mrefri+'|'+refri+'|'+lavadora+'|'+boiler+'|'+secadora+'|'+estufa+'|'+microondas+'|'+otros+'|') : (idmaterial===524225) ? ',@psValorArtSupTipo='+costal+'|'+saco+'|'+contenedor+'|':null) +
+        ',@psNombrePcMod=' +
         ipadress +
         ',@pnClaUsuarioMod=' +
         NumbUsuario +
@@ -981,9 +1029,9 @@ props.setActualizar(false)
         ',@pnClaMaterialRecibeTraspaso=' +
         (idmaterial) +
         ',@pnCantRecibida=' +
-        (((idmaterial === 30152200) || (idmaterial===52422500)) ? ((+botes + +electrodomestico)/ (Datosmaterial !==0 ? Datosmaterial[0].PesoTeoricoKgs: 1 )):(kilos > 0 ? kilos / (Datosmaterial !==0 ? Datosmaterial[0].PesoTeoricoRecibido: 1 ):(cantidad === '' ? 0 : cantidad))) +
+        (((idmaterial === 301522) || (idmaterial===524225)) ? ((+botes + +electrodomestico)/ (Datosmaterial !==0 ? Datosmaterial[0].PesoTeoricoKgs: 1 )):(kilos > 0 ? kilos / (Datosmaterial !==0 ? Datosmaterial[0].PesoTeoricoRecibido: 1 ):(cantidad === '' ? 0 : cantidad))) +
         ',@pnPesoRecibido=' +
-        (((idmaterial === 30152200) || (idmaterial===52422500)) ? (+botes + +electrodomestico): (cantidad > 0 ? cantidad * (Datosmaterial !==0 ? Datosmaterial[0].PesoTeoricoRecibido:1):(kilos === '' ? 0 : kilos))) +
+        (((idmaterial === 301522) || (idmaterial===524225)) ? (+botes + +electrodomestico): (cantidad > 0 ? cantidad * (Datosmaterial !==0 ? Datosmaterial[0].PesoTeoricoRecibido:1):(kilos === '' ? 0 : kilos))) +
         ',@pnPorcentajeMaterial=' +
         (porcentajer === '' ? 0 : porcentajer) +
         ',@pnPesoTaraRecibido=' +
@@ -1028,6 +1076,7 @@ props.setActualizar(false)
       // console.log(res);
     });
     
+    console.log(data12)
     callApi(urlKrakenService, 'POST', data12, (res) => {
       // console.log(res);
     })
@@ -1793,7 +1842,7 @@ props.setActualizar(false)
   return (
     <div>
       {!isNext ? (
-        ((idmaterial === 30152200) || (idmaterial===52422500)) ? (
+        ((idmaterial === 301522) || (idmaterial===524225)) ? (
           <Botes />
         ) : (
           <div className="box">
@@ -2121,7 +2170,7 @@ props.setActualizar(false)
                 <Row className="popup-title" style={{ marginLeft: '0px' }}>
                   Kilos Recibidos
                 </Row>
-                {((idmaterial === 30152200) || (idmaterial===52422500)) ?
+                {((idmaterial === 301522) || (idmaterial===524225)) ?
                 (
                   <Row className="popup-elem" style={{ marginLeft: '0px' }}>
                     {(+electrodomestico + +botes).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
@@ -2224,7 +2273,7 @@ props.setActualizar(false)
               style={{ marginRight: '30px' }}
               type="button"
               className="popup-button"
-              onClick={(kiloscont > 0 && razoncont < 1) || (+Llantas + +Tanques > 500)||(ContTotal >500) ? null : handleClose}
+              onClick={(kiloscont > 0 && razoncont < 1) || (+Llantas + +Tanques > 500)||(ContTotal >500) ? null :almacen !==0 ? handleClose:null}
             >
               Guardar &#43;
             </button>

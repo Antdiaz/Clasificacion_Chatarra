@@ -27,6 +27,9 @@ import {
   callApi,
 } from '../../utils/utils';
 import Patio from 'views/Patio/Patio';
+import { Cookies } from 'react-cookie';
+
+const cookies = new Cookies();
 
 const REACT_APP_VAR = env('VAR');
 const REACT_APP_OTRO = env('OTRO');
@@ -68,6 +71,8 @@ class Login extends React.Component {
           Token: res.token,
           NumUsuario: data.username,
         });
+
+        cookies.set("PruebaToken", res.token, { path: '/' })
 
         this.setState({
           numUsuario: data.username,

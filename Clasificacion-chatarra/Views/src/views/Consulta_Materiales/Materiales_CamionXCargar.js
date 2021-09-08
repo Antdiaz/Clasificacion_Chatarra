@@ -275,7 +275,7 @@ function Materiales({
       const PorcentajeSum =row &&  row.reduce((acc, val) => acc + val.Porcentaje, 0);
       const CantidadSum=row && row.reduce((acc, val) => acc + val.CantEmbarcada, 0);
 
-      if ((PorcentajeSum !== null && PorcentajeSum === 100) || (PorcentajeSum === 0 && CantidadSum>0) || (ValidaCargo===1 && row && row.length>0 && (row[0].CantEmbarcada !==null || row[0].KilogramosEmbarcados!==null || row[0].Porcentaje!==null))) {
+      if ((PorcentajeSum !== null && PorcentajeSum === 100) || (PorcentajeSum === 0 && CantidadSum>0) && (ValidaCargo===1 && row && row.length>0 && (row[0].CantEmbarcada !==null || row[0].KilogramosEmbarcados!==null || row[0].Porcentaje!==null))) {
         /* eslint-disable */
         const data66 = {
           parameters:
@@ -286,7 +286,7 @@ function Materiales({
             ',@pnIdBoleta=' +
             placadato[0].IdBoleta +
             ',@pnClaPlanCarga='+
-            (placadato[0].ClaPlanCarga !== null ? placadato[0].ClaPlanCarga : BoxPlanCarga)+
+            (placadato[0].ClaPlanCarga !== null ? placadato[0].ClaPlanCarga : BoxPlanCarga!==null ? BoxPlanCarga:0)+
             ',@psClaVehiculoPorClasificar=' +
             placadato[0].Placas +
             ',@psPlacas='+
@@ -302,7 +302,6 @@ function Materiales({
             ',@pnIdMensaje=,@psMensaje="}',
           tipoEstructura: 0,
         };
-
         /* eslint-enable */
         callApi(urlKrakenService, 'POST', data66, (res) => {
           // console.log(res);

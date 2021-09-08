@@ -999,7 +999,7 @@ const NuevoMaterial = (props) => {
                 pesajeparcial === 0 &&
                 Datosmaterial === 0)
                 ? null
-                : handleSubmit
+                :almacen !==0 ? handleSubmit :null
             }
           >
             GUARDAR

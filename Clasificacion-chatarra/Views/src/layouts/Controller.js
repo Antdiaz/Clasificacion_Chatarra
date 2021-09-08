@@ -30,7 +30,7 @@ class Admin extends React.Component {
       cantidadr: 0,
       kilosr: 0,
       observaciones: 'Ninguna',
-      almacen: 'x',
+      almacen: 0,
       subalmacen: 0,
       kiloscont: 0,
       pesajeparcial:0,
@@ -186,7 +186,7 @@ class Admin extends React.Component {
     //   this.setReportes(res.Result0);
     // });
 
-    if(this.state.editBoxValue===27 || this.state.editBoxValue===96 ||this.state.editBoxValue===30 ||this.state.editBoxValue===282 || this.state.editBoxValue===94 || this.state.editBoxValue===47 || this.state.editBoxValue===86 || this.state.editBoxValue===196){
+    if(this.state.editBoxValue===26 || this.state.editBoxValue===96 ||this.state.editBoxValue===30 ||this.state.editBoxValue===282 || this.state.editBoxValue===94 || this.state.editBoxValue===47 || this.state.editBoxValue===86 || this.state.editBoxValue===196){
     await callApi(urlKrakenService, 'POST', data,(res) => {
       this.setValores(res.Result0);
     });
@@ -245,7 +245,7 @@ class Admin extends React.Component {
       };
 
       /* eslint-enable */
-      if(this.state.editBoxValue===27 || this.state.editBoxValue===96 ||this.state.editBoxValue===30 ||this.state.editBoxValue===282 || this.state.editBoxValue===94 || this.state.editBoxValue===47 || this.state.editBoxValue===86 || this.state.editBoxValue===196){
+      if(this.state.editBoxValue===26 || this.state.editBoxValue===96 ||this.state.editBoxValue===30 ||this.state.editBoxValue===282 || this.state.editBoxValue===94 || this.state.editBoxValue===47 || this.state.editBoxValue===86 || this.state.editBoxValue===196){
         callApi(urlKrakenService, 'POST', data, (res) => {
         this.setValores(res.Result0);
       });

@@ -427,7 +427,7 @@ setPrereg(false)
 
                       {/* Sección de Clasificación de materiales */} 
 
-                      {!placadato || Actualizar=== true ? (
+                      {(!placadato || Actualizar=== true) ? (
                         <div style={{ textAlign: 'center', paddingTop: '40px' }}>
                           <CircularProgress />
                         </div>

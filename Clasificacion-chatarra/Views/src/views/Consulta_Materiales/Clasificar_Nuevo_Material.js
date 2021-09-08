@@ -666,9 +666,9 @@ const NuevoMaterial = (props) => {
         ',@pnClaArticuloCompra=' +
         idmaterialr +
         ',@pnCantidadMaterial=' +
-        (((idmaterialr === 30152200) || (idmaterialr===52422500)) ? ((+botes + +electrodomestico)/Datosmaterial[0].PesoTeoricoKgs):(kilosr > 0 ? kilosr /(Datosmaterial!==0 ? Datosmaterial[0].PesoTeoricoKgs : 1) : (cantidadr === '' ? 0 : cantidadr ))) +
+        (((idmaterialr === 301522) || (idmaterialr===524225)) ? ((+botes + +electrodomestico)/Datosmaterial[0].PesoTeoricoKgs):(kilosr > 0 ? kilosr /(Datosmaterial!==0 ? Datosmaterial[0].PesoTeoricoKgs : 1) : (cantidadr === '' ? 0 : cantidadr ))) +
         ',@pnKilosMaterial=' +
-        (((idmaterialr === 30152200) || (idmaterialr===52422500)) ? (+botes + +electrodomestico):(cantidadr > 0 ? cantidadr * (Datosmaterial!==0 ? Datosmaterial[0].PesoTeoricoKgs:1) : (kilosr === '' ? 0 : kilosr))) +
+        (((idmaterialr === 301522) || (idmaterialr===524225)) ? (+botes + +electrodomestico):(cantidadr > 0 ? cantidadr * (Datosmaterial!==0 ? Datosmaterial[0].PesoTeoricoKgs:1) : (kilosr === '' ? 0 : kilosr))) +
         ',@pnKilosReales=0,@pnKilosContaminados=' +
         (+Totales + +kiloscont) +
         ',@pnKilosDocumentados=0,@pnPorcentajeMaterial=' +
@@ -691,7 +691,9 @@ const NuevoMaterial = (props) => {
         Referencia +
         ',@psClaContaminantes=1|2|3|4|5|6|,@psValorContaminantes=' +
          Bollas +'|'+ Cilindro + '|' + Tanque + '|' +LlantasChico + '|' +LlantasMediano +  '|' +LlantasGrande +
-        '|,@pnIdRenglon=1,@psNombrePcMod=' +
+        '|'+ ((idmaterialr === 301522) ? ',@psClaArtSupTipo=1|2|3|4|5|6|7|8|9|' : (idmaterialr===524225) ? ',@psClaArtSupTipo=10|11|12|':null) +
+        + ((idmaterialr === 301522) ? ('@psValorArtSupTipo='+srefri+'|'+mrefri+'|'+refri+'|'+lavadora+'|'+boiler+'|'+secadora+'|'+estufa+'|'+microondas+'|'+otros+'|') : (idmaterialr===524225) ? ',@psValorArtSupTipo='+costal+'|'+saco+'|'+contenedor+'|':null) +
+        ',@pnIdRenglon=1,@psNombrePcMod=' +
         ipadress +
         ',@pnClaUsuarioMod=' +
         NumbUsuario +
@@ -760,9 +762,9 @@ const NuevoMaterial = (props) => {
         ',@pnClaMaterialRecibeTraspaso=' +
         (idmaterialr) +
         ',@pnCantRecibida=' +
-        (((idmaterialr === 30152200) || (idmaterialr===52422500)) ? ((+botes + +electrodomestico)/Datosmaterial[0].PesoTeoricoRecibido):(kilosr > 0 ? kilosr /(Datosmaterial!==0 ? Datosmaterial[0].PesoTeoricoRecibido : 1) : (cantidadr === '' ? 0 : cantidadr ))) +
+        (((idmaterialr === 301522) || (idmaterialr===524225)) ? ((+botes + +electrodomestico)/Datosmaterial[0].PesoTeoricoRecibido):(kilosr > 0 ? kilosr /(Datosmaterial!==0 ? Datosmaterial[0].PesoTeoricoRecibido : 1) : (cantidadr === '' ? 0 : cantidadr ))) +
         ',@pnPesoRecibido=' +
-        (((idmaterialr === 30152200) || (idmaterialr===52422500)) ? (+botes + +electrodomestico):(cantidadr > 0 ? cantidadr * (Datosmaterial!==0 ? Datosmaterial[0].PesoTeoricoRecibido:1) : (kilosr === '' ? 0 : kilosr)))+
+        (((idmaterialr === 301522) || (idmaterialr===524225)) ? (+botes + +electrodomestico):(cantidadr > 0 ? cantidadr * (Datosmaterial!==0 ? Datosmaterial[0].PesoTeoricoRecibido:1) : (kilosr === '' ? 0 : kilosr)))+
         ',@pnPorcentajeMaterial=' +
         (porcentajer ==='' ? 0 : pesajeparcial===1 ? 100 : porcentajer) +
         ',@pnPesoTaraRecibido=' +
@@ -802,7 +804,7 @@ const NuevoMaterial = (props) => {
     callApi(urlKrakenService, 'POST', data11, (res) => {
       // console.log(res);
     });
-
+console.log(data12)
     callApi(urlKrakenService, 'POST', data12, (res) => {
       // console.log(res);
     });
@@ -1877,7 +1879,7 @@ props.setActualizar(false)
                 <Row className="popup-title" style={{ marginLeft: '0px' }}>
                   Kilos Recibidos
                 </Row>
-                {((idmaterialr === 30152200) || (idmaterialr===52422500)) ?
+                {((idmaterialr === 301522) || (idmaterialr===524225)) ?
                 (
                   <Row className="popup-elem" style={{ marginLeft: '0px' }}>
                     {(+electrodomestico + +botes).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
@@ -1975,7 +1977,7 @@ props.setActualizar(false)
               style={{ marginRight: '30px' }}
               type="button"
               className="popup-button"
-              onClick={(kiloscont > 0 && razoncont < 1) || (+Llantas + +Tanques >500) || (ContTotal) > 500 ? null : handleSubmit}
+              onClick={(kiloscont > 0 && razoncont < 1) || (+Llantas + +Tanques >500) || (ContTotal) > 500 ? null :almacen !==0 ? handleSubmit:null}
             >
               Guardar &#43;
             </button>
