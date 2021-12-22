@@ -142,6 +142,7 @@ class Sidebar extends React.Component {
             activeClassName=""
             onClick={() => {
               this.closeSidenav();
+              this.props.setreValores(true)
               setSessionData({
                 url: prop.layout + prop.path,
               });

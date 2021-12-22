@@ -38,7 +38,7 @@ AdminNavbar.propTypes = {
   theme: PropTypes.oneOf(['dark', 'light']),
 };
 
-function AdminNavbar({ theme, Patio, editBoxValue, seteditBoxValue,TipoPatio,setTipoPatio }) {
+function AdminNavbar({ theme, Patio, editBoxValue, seteditBoxValue,TipoPatio,setTipoPatio,setreValores }) {
   const [modalreport, setmodalreport] = useState(false)
   const customStyles = {
     content: {
@@ -73,6 +73,7 @@ function AdminNavbar({ theme, Patio, editBoxValue, seteditBoxValue,TipoPatio,set
           <Collapse navbar isOpen>
             <Nav className="align-items-left" navbar>
               <img src={logo} alt="deaceroLogo" />
+              <div style={{verticalAlign:'center',paddingTop:'2.5%',paddingLeft: '5%',fontWeight: '600',fontSize: '20px',color:'white',fontFamily: 'Roboto, RobotoFallback, "Noto Kufi Arabic", Helvetica, Arial, sans-serif'}}>Clasificación Chatarra</div>
             </Nav>
             <Nav className="align-items-center ml-md-auto " navbar />
             <Nav className="align-items-center ml-auto ml-md-0" navbar>
@@ -111,7 +112,7 @@ function AdminNavbar({ theme, Patio, editBoxValue, seteditBoxValue,TipoPatio,set
                   </DropdownItem>
                 </DropdownMenu>
               </UncontrolledDropdown>
-              <Link to="/Clasificacion-Chatarra/Placas">
+              <Link onClick={() => setreValores(true)} to="/Clasificacion-Chatarra/Placas">
                 <i className="fa fa-home fa-lg" aria-hidden="true"></i>
               </Link>
             </Nav>

@@ -30,6 +30,12 @@ import { SkipPreviousRounded } from '@material-ui/icons';
 const Detalles = (props) => {
   // Valores dinámicos locales al editar material
   // Arreglo valores Contaminantes
+  const [Boyas, setBoyas] = useState(props.report.Boyas ? props.report.Boyas : 0)
+  const [Cilindro, setCilindro] = useState(props.report.Cilindro ? props.report.Cilindro : 0)
+  const [LlantasCh, setLlantasCh] = useState(props.report.LlantasCh ? props.report.LlantasCh : 0)
+  const [LlantasM, setLlantasM] = useState(props.report.LlantasM ? props.report.LlantasM : 0)
+  const [LlantasG, setLlantasG] = useState(props.report.LlantasG ? props.report.LlantasG : 0)
+  const [KilosContaminados, setKilosContaminados] = useState(props.report.KilosContaminados ? props.report.KilosContaminados : 0)
   const [Contaminantes, setContaminantes] = useState([
     [
       { nombre: 'Boyas', comentario: '50kgs', imagen: Boya, id: 1 },
@@ -112,21 +118,21 @@ const Detalles = (props) => {
           <div className="bote-elect">
             <Row>
               <Col>Llanta:</Col>
-              <Col>{+props.report.LlantasCh + +props.report.LlantasM + +props.report.LlantasG}</Col>
+              <Col>{+props.report.LlantasCh + +props.report.LlantasM + +props.report.LlantasG} Kg</Col>
               <Col>Total:</Col>
-              <Col>{+props.report.KilosContaminados ? +props.report.KilosContaminados : +props.report.Tanque + +props.report.Cilindro + +props.report.Boyas +props.report.LlantasCh + +props.report.LlantasM + +props.report.LlantasG}</Col>
+              <Col>{+props.report.KilosContaminados ? +props.report.KilosContaminados : +props.report.Tanque + +props.report.Cilindro + +props.report.Boyas +props.report.LlantasCh + +props.report.LlantasM + +props.report.LlantasG} Kg</Col>
               <Col></Col>
             </Row>
             <Row>
               <Col>Tanque:</Col>
-              <Col>{+props.report.Tanque + +props.report.Cilindro + +props.report.Boyas}</Col>
+              <Col>{+props.report.Tanque + +props.report.Cilindro + +props.report.Boyas} Kg</Col>
               <Col></Col>
               <Col></Col>
               <Col></Col>
             </Row>
             <Row>
               <Col>Otros:</Col>
-              <Col>{+props.report.KilosContaminados <0 ? (+props.report.KilosContaminados - (+props.report.Tanque + +props.report.Cilindro+ +props.report.Boyas + +props.report.LlantasCh + +props.report.LlantasM + +props.report.LlantasG)):0}</Col>
+              <Col>{+KilosContaminados - +Boyas - +Cilindro - +LlantasCh - +LlantasM - +LlantasG} Kg</Col>
               <Col></Col>
               <Col></Col>
               <Col></Col>
@@ -143,7 +149,7 @@ const Detalles = (props) => {
                 <Input
                   className="popup-recibidos"
                   type="number"
-                  defaultValue={+props.report.KilosContaminados<0 ? +props.report.KilosContaminados - (+props.report.Tanque+ +props.report.Cilindro + +props.report.Boyas + +props.report.LlantasCh + +props.report.LlantasM + +props.report.LlantasG):0}
+                  defaultValue={+KilosContaminados - +Boyas - +Cilindro - +LlantasCh - +LlantasM - +LlantasG}
                   disabled={true}
                 />
                 <InputGroupAddon addonType="append">
@@ -153,9 +159,9 @@ const Detalles = (props) => {
             </Col>
             <Col>
               <Row className="popup-title" style={{ marginLeft: '0px', marginTop: '20px' }}>
-                Motivo Contaminacion
+                Motivo Contaminación
               </Row>
-              {props.report.MotivoContaminacion}
+              {props.report.NomMotivoContaminacion ? props.report.NomMotivoContaminacion:''}
               <Row
                 style={{
                   color: 'red',

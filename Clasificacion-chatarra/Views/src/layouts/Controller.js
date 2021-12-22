@@ -7,18 +7,19 @@ import AdminFooter from 'components/Footers/AdminFooter.js';
 import Sidebar from 'components/Sidebar/Sidebar.js';
 import routes from 'routes.js';
 import { config } from '../utils/config';
-import { callApi, getSessionItem, setSessionData } from '../utils/utils';
+import { callApi, getSessionItem, setSessionData,logOut } from '../utils/utils';
 import Boleta from 'views/Consulta_Materiales/Boleta_Pantalla';
 
 class Admin extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      reValores:false,
       sidenavOpen: false,
       Valores: null,
       Datos: null,
       Usuario: null,
-      NumbUsuario: getSessionItem('NumUsuario'),
+      NumbUsuario: getSessionItem('Usuario'),
       Patio: null,
       editBoxValue: getSessionItem('PatioEscogido'),
       TipoPatio: getSessionItem('TipoPatio'),
@@ -55,12 +56,15 @@ class Admin extends React.Component {
       Actualizar: false,
       FiltroReporte: null,
       FiltroPlacas: null,
-      placadato: null
+      placadato: null,
     };
     this.timer = null;
   }
 
+
   setplacadato=(Val) => this.setState(() =>({placadato: Val}))
+
+  setreValores=(Val) => this.setState(() =>({reValores: Val}))
 
   setFiltroReporte=(Val) => this.setState(() =>({FiltroReporte: Val}))
 
@@ -141,6 +145,7 @@ class Admin extends React.Component {
 
   abortController = new AbortController()
 
+
   async componentDidMount() {
     const urlKrakenService = `${config.KrakenService}/${24}/${config.Servicio}`;
     const urlKrakenPlanta = `${config.KrakenService}/${24}/${36}`;
@@ -148,7 +153,7 @@ class Admin extends React.Component {
 
     /* eslint-disable */
     const data = {
-      parameters: '{"ClaUbicacion":' + this.state.editBoxValue + ',"ClaServicioJson":' + 1 + ',"Parametros":"@pnClaUbicacion=' + this.state.editBoxValue +',@psValor=,@pnEsParcial=0"}',
+      parameters: '{"ClaUbicacion":' + this.state.editBoxValue + ',"ClaServicioJson":' + 1 + ',"Parametros":"@pnClaUbicacion=' + this.state.editBoxValue +''+config.Separador+'@psValor='+config.Separador+'@pnEsParcial=0"}',
       tipoEstructura: 0,
     };
 
@@ -163,7 +168,7 @@ class Admin extends React.Component {
         this.state.editBoxValue +
         ',"ClaServicioJson":' +
         50 +
-        ',"Parametros":"@pdFechaIni='+ this.state.FechaDesde + ',@pdFechaFin='+ this.state.FechaHasta +'"}',
+        ',"Parametros":"@pdFechaIni='+ this.state.FechaDesde + ''+config.Separador+'@pdFechaFin='+ this.state.FechaHasta +'"}',
       tipoEstructura: 0,
     };
     /* eslint-enable */
@@ -182,15 +187,14 @@ class Admin extends React.Component {
       this.setPatio(res.Result0);
     });
   }
-    // callApi(urlKrakenService, 'POST', data50, (res) => {
-    //   this.setReportes(res.Result0);
-    // });
-
-    if(this.state.editBoxValue===26 || this.state.editBoxValue===96 ||this.state.editBoxValue===30 ||this.state.editBoxValue===282 || this.state.editBoxValue===94 || this.state.editBoxValue===47 || this.state.editBoxValue===86 || this.state.editBoxValue===196){
-    await callApi(urlKrakenService, 'POST', data,(res) => {
-      this.setValores(res.Result0);
+    callApi(urlKrakenService, 'POST', data50, (res) => {
+      this.setReportes(res.Result0);
     });
-    }
+
+    // console.log(data)
+    await callApi(urlKrakenService, 'POST', data,(res) => {
+      this.setValores(res.Result0.sort((a, b) =>(new Date(( (Math.abs(new Date() - new Date(b.HoraEntrada.replace("T",' ').replace(/-/g,'/').split(".")[0])))/60000)))- new Date(( (Math.abs(new Date() - new Date(a.HoraEntrada.replace("T",' ').replace(/-/g,'/').split(".")[0])))/60000))));
+    });
       fetch('https://api.ipify.org?format=json')
       .then(results => results.json())
       .then(data => setSessionData({
@@ -221,7 +225,7 @@ class Admin extends React.Component {
           this.state.editBoxValue +
           ',"ClaServicioJson":' +
           50 +
-          ',"Parametros":"@pdFechaIni='+ this.state.FechaDesde + ',@pdFechaFin='+ this.state.FechaHasta +'"}',
+          ',"Parametros":"@pdFechaIni='+ this.state.FechaDesde + ''+config.Separador+'@pdFechaFin='+ this.state.FechaHasta +'"}',
         tipoEstructura: 0,
       };
 
@@ -240,16 +244,15 @@ class Admin extends React.Component {
       const urlKrakenService = `${config.KrakenService}/${24}/${config.Servicio}`;
       /* eslint-disable */
       const data = {
-        parameters: '{"ClaUbicacion":' + this.state.editBoxValue + ',"ClaServicioJson":' + 1 + ',"Parametros":"@pnClaUbicacion=' + this.state.editBoxValue +',@psValor=,@pnEsParcial=0"}',
+        parameters: '{"ClaUbicacion":' + this.state.editBoxValue + ',"ClaServicioJson":' + 1 + ',"Parametros":"@pnClaUbicacion=' + this.state.editBoxValue +''+config.Separador+'@psValor='+config.Separador+'@pnEsParcial=0"}',
         tipoEstructura: 0,
       };
 
       /* eslint-enable */
-      if(this.state.editBoxValue===26 || this.state.editBoxValue===96 ||this.state.editBoxValue===30 ||this.state.editBoxValue===282 || this.state.editBoxValue===94 || this.state.editBoxValue===47 || this.state.editBoxValue===86 || this.state.editBoxValue===196){
+      // console.log(data)
         callApi(urlKrakenService, 'POST', data, (res) => {
-        this.setValores(res.Result0);
+        this.setValores(res.Result0.sort((a, b) =>(new Date(( (Math.abs(new Date() - new Date(b.HoraEntrada.replace("T",' ').replace(/-/g,'/').split(".")[0])))/60000)))- new Date(( (Math.abs(new Date() - new Date(a.HoraEntrada.replace("T",' ').replace(/-/g,'/').split(".")[0])))/60000))));
       });
-    }
   },50);
     }
 
@@ -266,14 +269,14 @@ class Admin extends React.Component {
           this.state.editBoxValue +
           ',"ClaServicioJson":' +
           50 +
-          ',"Parametros":"@pdFechaIni='+ this.state.FechaDesde + ',@pdFechaFin='+ this.state.FechaHasta +'"}',
+          ',"Parametros":"@pdFechaIni='+ this.state.FechaDesde + ''+config.Separador+'@pdFechaFin='+ this.state.FechaHasta +'"}',
         tipoEstructura: 0,
       };
 
       /* eslint-enable */
-      // callApi(urlKrakenService, 'POST', data50, (res) => {
-      //   this.setReportes(res.Result0);
-      // });
+      callApi(urlKrakenService, 'POST', data50, (res) => {
+        this.setReportes(res.Result0);
+      });
   },50);
     }
   }
@@ -284,12 +287,15 @@ class Admin extends React.Component {
         return this.getRoutes(prop.views);
       }
       if (prop.layout === '/Clasificacion-Chatarra') {
-        if (prop.path === '/Placas' || prop.path === '/Reportes') {
+        if (prop.path === '/Placas' || prop.path === '/Reportes' || prop.path === '/Indicadores' || prop.path === '/Reportes_Uso') {
           return (
             <Route
               path={prop.layout + prop.path}
               component={() => (
                 <prop.component
+                  reValores={this.state.reValores}
+                  setreValores={this.setreValores}
+                  setValores={this.setValores}
                   Valores={this.state.Valores}
                   Datos={this.state.Datos}
                   setDatos={this.setDatos}
@@ -386,6 +392,7 @@ class Admin extends React.Component {
           routes={routes}
           toggleSidenav={this.toggleSidenav}
           sidenavOpen={this.state.sidenavOpen}
+          setreValores={this.setreValores}
         />
         <div className="main-content" ref="mainContent" onClick={this.closeSidenav}>
           <AdminNavbar
@@ -397,6 +404,7 @@ class Admin extends React.Component {
             setTipoPatio={this.setTipoPatio}
             row={this.state.row}
             setrow={this.setrow}
+            setreValores={this.setreValores}
           />
           <Switch>{this.getRoutes(routes)}</Switch>
           <Switch>
@@ -406,6 +414,7 @@ class Admin extends React.Component {
                 routes={routes}
                 toggleSidenav={this.toggleSidenav}
                 sidenavOpen={this.state.sidenavOpen}
+                setreValores={this.setreValores}
               />
               <Boleta
                 placadato={this.state.placadato}

@@ -88,7 +88,7 @@ function setSessionData(params) {
       const element = params[key];
 
       if (typeof element === 'object') {
-        cookies.set(key, JSON.stringify(element), { path: '/' });
+        cookies.set(key, JSON.stringify(element), { path: '/'});
       } else {
         cookies.set(key, element, { path: '/' });
       }
@@ -172,17 +172,22 @@ function sessionAlive() {
 
   if (jwtToken) {
     const { exp } = decodeToken(jwtToken);
+    // console.log(exp*1000)
+    // console.log(Date.now())
 
-    if (Date.now() < exp * 1000) {
+    if (Date.now() < (exp * 1000)) {
       resp = true;
     }
-  }
 
+    if (Date.now() >= (exp*1000)) {
+    logOut();
+  }
+  }
   if (!resp) {
     logOut();
   }
-
-  return resp;
+  return resp
+  
 }
 
 /**

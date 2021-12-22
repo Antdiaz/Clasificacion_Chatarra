@@ -7,153 +7,226 @@ import { callApi, getSessionItem } from '../../../../utils/utils';
 import {config} from '../../../../utils/config'
 import { SettingsRemoteTwoTone } from '@material-ui/icons';
 
-function Cargo_Nodescargo({setPlanCarga,placadato,editBoxValue,setBoxPlanCarga,NomMotivoEntrada,setActualizar,row,setrow,Todos,setTodos,TodosChange,setTodosChange,setValidaCargo,Nocargo,setNocargo}) {
+function Cargo_Nodescargo({ClaUbicacionOrigen,cambionodesc,setcambionodesc,setPlanCarga,placadato,editBoxValue,setBoxPlanCarga,NomMotivoEntrada,setActualizar,row,setrow,Todos,setTodos,TodosChange,setTodosChange,setValidaCargo,Nocargo,setNocargo}) {
     const ipadress = getSessionItem('Ipaddress');
     const NumbUsuario = getSessionItem('NumUsuario');
-
+    const Token = getSessionItem('Token');
 
     useEffect(() => {
     if(placadato){
               /* eslint-disable */
     const urlKrakenService = `${config.KrakenService}/${24}/${config.Servicio}`;
-    const data11 = {
-      parameters:
-        '{"ClaUbicacion":' +
-        editBoxValue +
-        ',"ClaServicioJson":' +
-        11 +
-        ',"Parametros":"@pnClaUbicacion=' +
-        editBoxValue +
-        ',@pnIdBoleta=' +
-        placadato[0].IdBoleta +
-        ',@psObservaciones=,@pnEsRevisionEfectuada=' +
-        placadato[0].EsRevisionEfectuada +
-        ',@pnClaTipoClasificacion=' +
-        placadato[0].ClaTipoClasificacion +
-        ',@pnEsNoCargoDescargoMaterial=' +
-        Todos +
-        ',@psNombrePcMod=' +
-        ipadress +
-        ',@pnClaUsuarioMod=' +
-        NumbUsuario +
-        ',@psOrigen=WEB"}',
-      tipoEstructura: 0,
-    };
+    const urlKrakenBloque = `${config.KrakenService}/${24}/${config.Bloque}`;
+    if(NomMotivoEntrada===9 && (row || row==='')){
+      const data11 = 
+      [ `@pnClaUbicacion=${editBoxValue}${config.Separador}@pnIdBoleta=${placadato[0].IdBoleta}${config.Separador}@psObservaciones='${(placadato[0].Observaciones ? placadato[0].Observaciones.replace('#', '%23'): '')}'${config.Separador}@pnEsRevisionEfectuada=${placadato[0].EsRevisionEfectuada}${config.Separador}@pnClaTipoClasificacion=${placadato[0].ClaTipoClasificacion}${config.Separador}@pnEsNoCargoDescargoMaterial=${Todos}${config.Separador}@psNombrePcMod='${ipadress}'${config.Separador}@pnClaUsuarioMod=${NumbUsuario}${config.Separador}@psOrigen='WEB'`];
 
-    const data36 = {
-      parameters:
-        '{"ClaUbicacion":' +
-        editBoxValue +
-        ',"ClaServicioJson":36,"Parametros":"@pnClaUbicacion=' +
-        editBoxValue +
-        ',@pnIdBoleta=' +
-        placadato[0].IdBoleta +
-        ',@pnClaViajeOrigen='+
-        placadato[0].ClaViajeOrigen +
-        ',@pnClaUbicacionOrigen=' +
-        placadato[0].ClaUbicacionOrigen +
-        ',@pnClaTransporte=' +
-        placadato[0].ClaTransporte +
-        ',@pnClaTransportista=' +
-        placadato[0].ClaTransportista +
-        ',@psNomTransportista=' +
-        placadato[0].NomTransportista +
-        ',@psNomChofer=' +
-        (placadato[0].NomChofer !== null ? placadato[0].NomChofer: 0)+
-        ',@psPlacas=' +
-        placadato[0].Placas +
-        ',@pnPesoDocumentado=' +
-        (placadato[0].PesoDocumentado !==null ? placadato[0].PesoDocumentado: 0)+
-        ',@psObservaciones=' +
-        placadato[0].Observaciones +
-        ',@pnEsRevisionEfectuada=' +
-        (placadato[0].EsRevisionEfectuada ? placadato[0].EsRevisionEfectuada :0)+
-        ',@pnClaTipoClasificacion=' +
-        placadato[0].ClaTipoClasificacion +
-        ',@pnEsNoCargoDescargoMaterial=' +
-        Todos +
-        ',@psNombrePcMod=' +
-        ipadress +
-        ',@pnClaUsuarioMod=' +
-        NumbUsuario +
-        ',@pnAccionSp=,@psOrigen=WEB"}',
-        tipoEstructura: 0,
-    };
+      const data13 =
+      [`@pnClaUbicacion=${editBoxValue}${config.Separador}@pnIdBoleta=${placadato[0].IdBoleta}${config.Separador}@pnClaTipoClasificacion=1${config.Separador}@pnClaUbicacionProveedor=${placadato[0].ClaUbicacionProveedor}${config.Separador}@pnClaOrdenCompra=''${config.Separador}@pnClaTipoOrdenCompra=''${config.Separador}@pnIdListaPrecio=${placadato[0].IdListaPrecio}${config.Separador}@pnEsNoCargoDescargoMaterial=${Todos}${config.Separador}@psNombrePcMod='${ipadress}'${config.Separador}@pnClaUsuarioMod=${NumbUsuario}${config.Separador}@pnEsPesajeParcial=0`]
+    
 
-    const data64 = {
+      const data83 ={ parameters: `{"ClaUbicacion":${editBoxValue},"Token":"${Token}","ClaServicioJson":"83","IdBoleta":"${placadato[0].IdBoleta}","EnBloque":"${1}","Encabezado":"${data11}","Detalle":"","Validacion":"${data13}"}`,
+      tipoEstructura: 0}
+
+    async function Encabezado()  {
+      setcambionodesc(1);
+      console.log(data83)
+      callApi(urlKrakenBloque, 'POST', data83, (res) => {
+        // console.log(res);
+      });
+      if(NomMotivoEntrada===9 && TodosChange===1 && Todos===1){
+        setTimeout(() =>{
+          setrow('')
+              }, 1000);
+      }
+    }
+    if(Todos==1){
+    Encabezado().then
+    setPlanCarga('')
+    setBoxPlanCarga(null)
+    setTodosChange(0)
+    setValidaCargo(1)
+
+    if(Todos===1){
+      setNocargo(1)
+    }
+    setActualizar(true);
+        setTimeout(() =>{
+    setActualizar(false)
+        }, 50);
+      }
+
+    else {
+      setActualizar(true);
+        setTimeout(() =>{
+    setActualizar(false)
+        }, 50);
+    }
+  }
+
+  if(NomMotivoEntrada===3 && (row || row==='')){
+
+    const data36 = 
+        [ `@pnClaUbicacion=${editBoxValue}${config.Separador}@pnIdBoleta=${placadato[0].IdBoleta}${config.Separador}@pnClaViajeOrigen=${placadato[0].ClaViajeOrigen}${config.Separador}@pnClaUbicacionOrigen=${placadato[0].ClaUbicacionOrigen}${config.Separador}@pnClaTransporte=${placadato[0].ClaTransporte}${config.Separador}@pnClaTransportista=${placadato[0].ClaTransportista}${config.Separador}@psNomTransportista='${placadato[0].NomTransportista}'${config.Separador}@psNomChofer='${(placadato[0].NomChofer !== null ? placadato[0].NomChofer: 0)}'${config.Separador}@psPlacas='${placadato[0].Placas}'${config.Separador}@pnPesoDocumentado=${(placadato[0].PesoDocumentado !==null ? placadato[0].PesoDocumentado: 0)}${config.Separador}@psObservaciones='${(placadato[0].Observaciones ? placadato[0].Observaciones.replace('#', '%23'): '')}'${config.Separador}@pnEsRevisionEfectuada=${(placadato[0].EsRevisionEfectuada ? placadato[0].EsRevisionEfectuada : 0)}${config.Separador}@pnClaTipoClasificacion=${placadato[0].ClaTipoClasificacion}${config.Separador}@pnEsNoCargoDescargoMaterial=${Todos}${config.Separador}@psNombrePcMod='${ipadress}'${config.Separador}@pnClaUsuarioMod=${NumbUsuario}${config.Separador}@psOrigen='WEB'`];
+ 
+    const data38 =
+        [`@pnClaUbicacion=${editBoxValue}${config.Separador}@pnIdBoleta=${placadato[0].IdBoleta}${config.Separador}@pnClaUbicacionOrigen=${ClaUbicacionOrigen}${config.Separador}@pnClaViajeOrigen=${placadato[0].ClaViajeOrigen}${config.Separador}@pnEsNoCargoDescargoMaterial=${Todos}${config.Separador}@psNombrePcMod='${ipadress}'${config.Separador}@pnClaUsuarioMod=${NumbUsuario}`]
+        
+        const data84 ={ parameters: `{"ClaUbicacion":${editBoxValue},"Token":"${Token}","ClaServicioJson":"84","IdBoleta":"${placadato[0].IdBoleta}","EnBloque":"${1}","Encabezado":"${data36}","Detalle":"","Validacion":"${(Todos===1) ? data38 : ''}"}`,
+        tipoEstructura: 0}
+
+
+    if(NomMotivoEntrada===3 && TodosChange===1){
+      setcambionodesc(1)
+      async function Encabezado()  {
+        setcambionodesc(1);
+        console.log(data84)
+        callApi(urlKrakenBloque, 'POST', data84, (res) => {
+          // console.log(res);
+        });
+        if(NomMotivoEntrada===3 && TodosChange===1 && Todos===1){
+          setTimeout(() =>{
+            setrow('')
+                }, 1000);
+        }
+      }
+      if(Todos===1 || Todos===0 && TodosChange===1){
+        Encabezado().then
+        setPlanCarga('')
+        setBoxPlanCarga(null)
+        setTodosChange(0)
+        setValidaCargo(1)
+    
+        if(Todos===1){
+          setNocargo(1)
+        }
+        setActualizar(true);
+            setTimeout(() =>{
+        setActualizar(false)
+            }, 50);
+          }
+          else {
+            setActualizar(true);
+              setTimeout(() =>{
+          setActualizar(false)
+              }, 50);
+          }
+      }
+    }
+
+  if(NomMotivoEntrada===1 && (row || row===''|| row===null || row==='0'|| !row)) {
+
+    
+    const data64 = [ `@pnClaUbicacion=${editBoxValue}${config.Separador}@pnIdBoleta=${placadato[0].IdBoleta}${config.Separador}@psPlacas='${placadato[0].Placas}'${config.Separador}@pnIdPlanCarga=${placadato[0].IdPlanCarga ? placadato[0].IdPlanCarga:0}${config.Separador}@psObservaciones='${placadato[0].Observaciones ? placadato[0].Observaciones :''}'${config.Separador}@pnEsRevisionEfectuada=${placadato[0].EsRevisionEfectuada}${config.Separador}@pnEsNoCargoDescargoMaterial=${Todos}${config.Separador}@psNombrePcMod='${ipadress}'${config.Separador}@pnClaUsuarioMod=${NumbUsuario}${config.Separador}@psOrigen='WEB'`];
+
+    const data66 =
+    [`@pnClaUbicacion=${editBoxValue}${config.Separador}@pnIdBoleta=${placadato[0].IdBoleta}${config.Separador}@pnClaPlanCarga=${(placadato[0].ClaPlanCarga !== null ? placadato[0].ClaPlanCarga : 0)}${config.Separador}@psClaVehiculoPorClasificar='${placadato[0].Placas}'${config.Separador}@psPlacas='${placadato[0].Placas}'${config.Separador}@pnEsNoCargoDescargoMaterial=${Todos}${config.Separador}@pnPesoAtrilesTarimas=${(placadato[0].PesoAtrilesTarimas !== null ? placadato[0].PesoAtrilesTarimas : 0)}${config.Separador}@psNombrePcMod='${ipadress}'${config.Separador}@pnClaUsuarioMod=${NumbUsuario}`]
+  
+   
+    const data85 ={ parameters: `{"ClaUbicacion":${editBoxValue},"Token":"${Token}","ClaServicioJson":"85","IdBoleta":"${placadato[0].IdBoleta}","EnBloque":"${1}","Encabezado":"${data64}","Detalle":"","Validacion":"${(Todos===1) ? data66 : ''}"}`,
+    tipoEstructura: 0}
+  
+    
+    if(NomMotivoEntrada===1 && TodosChange===1){
+      setcambionodesc(1)
+      async function Encabezado()  {
+        setcambionodesc(1);
+        console.log(data85)
+        callApi(urlKrakenBloque, 'POST', data85, (res) => {
+          // console.log(res);
+        });
+        if(NomMotivoEntrada===1 && TodosChange===1 && Todos===1){
+          setTimeout(() =>{
+            setrow('')
+                }, 1000);
+        }
+      }
+      if(Todos===1 || Todos===0 && TodosChange===1){
+        Encabezado().then
+        setPlanCarga('')
+        setBoxPlanCarga(null)
+        setTodosChange(0)
+        setValidaCargo(1)
+    
+        if(Todos===1){
+          setNocargo(1)
+        }
+        setActualizar(true);
+            setTimeout(() =>{
+        setActualizar(false)
+            }, 50);
+          }
+          else {
+            setActualizar(true);
+              setTimeout(() =>{
+          setActualizar(false)
+              }, 50);
+          }
+      }
+
+    }
+
+  if(NomMotivoEntrada===110 && row){
+    const data72 = {
       parameters:
         '{"ClaUbicacion":' +
         editBoxValue +
-        ',"ClaServicioJson":64,"Parametros":"@pnClaUbicacion=' +
+        ',"ClaServicioJson":72,"Parametros":"@pnClaUbicacion=' +
         editBoxValue +
-        ',@pnIdBoleta=' +
+        ''+config.Separador+'@pnIdBoleta=' +
         placadato[0].IdBoleta +
-        ',@psPlacas='+
-        placadato[0].Placas +
-        '@pnIdPlanCarga='+ 
-        placadato[0].IdPlanCarga+
-        ',@psObservaciones=' +
-        placadato[0].Observaciones +
-        ',@pnEsRevisionEfectuada=' +
-        placadato[0].EsRevisionEfectuada +
-        ',@pnEsNoCargoDescargoMaterial=' +
+        ''+config.Separador+'@pnClaViajeDevolucionTraspaso='+ 
+        placadato[0].ClaViajeDevolucionTraspaso+
+        ''+config.Separador+'@pnClaUbicacionEntradaTraspaso='+
+        placadato[0].ClaUbicacionEntradaTraspaso+
+        ''+config.Separador+'@pnIdBoletaOrigenTrasRec='+
+        placadato[0].IdBoletaOrigenTrasRec+
+        ''+config.Separador+'@psObservaciones=' +
+        (placadato[0].Observaciones ? placadato[0].Observaciones.replace('#', '%23'):'') +
+        ''+config.Separador+'@pnEsRevisionEfectuada=' +
+        (placadato[0].EsRevisionEfectuada !==null ? placadato[0].EsRevisionEfectuada:0) +
+        ''+config.Separador+'@pnEsNoCargoDescargoMaterial=' +
         Todos +
-        ',@psNombrePcMod=' +
+        ''+config.Separador+'@psNombrePcMod=' +
         ipadress +
-        ',@pnClaUsuarioMod=' +
+        ''+config.Separador+'@pnClaUsuarioMod=' +
         NumbUsuario +'"}',
         tipoEstructura: 0,
     };
+
+    if(NomMotivoEntrada===110 && TodosChange===1){
+      setcambionodesc(1);
+      async function Encabezado()  {
+      if(TodosChange===1){
+      callApi(urlKrakenService, 'POST', data72, (res) => {
+        // console.log(res);
+      });
+    }
+    
+      if(NomMotivoEntrada===110 && TodosChange===1 && Todos===1){
+        setTimeout(() =>{
+          setrow('')
+              }, 1400);
+      }
+    }
+      Encabezado().then
+      setPlanCarga('')
+      setBoxPlanCarga(null)
+      setTodosChange(0)
+      setValidaCargo(1)
+      if(Todos===1){
+        setNocargo(1)
+      }
+      setActualizar(true);
+          setTimeout(() =>{
+      setActualizar(false)
+          }, 50);
+  }
 /* eslint-enable */
 
-if(NomMotivoEntrada===9 && TodosChange===1){
-  callApi(urlKrakenService, 'POST', data11, (res) => {
-    // console.log(res);
-  });
-  if(NomMotivoEntrada===9 && TodosChange===1 && Todos===1){
-    setTimeout(() =>{
-      setrow('')
-          }, 1000);
-  }
-}
-
-if(NomMotivoEntrada===3 && TodosChange===1){
-  callApi(urlKrakenService, 'POST', data36, (res) => {
-    // console.log(res);
-  });
-  if(NomMotivoEntrada===3 && TodosChange===1 && Todos===1){
-    setTimeout(() =>{
-      setrow('')
-          }, 1400);
-  }
-}
-
-if(NomMotivoEntrada===1 && TodosChange===1){
-  if(TodosChange===1 && Todos!==0){
-  callApi(urlKrakenService, 'POST', data64, (res) => {
-    // console.log(res);
-  });
-}
-
-  if(NomMotivoEntrada===1 && TodosChange===1 && Todos===1){
-    setTimeout(() =>{
-      setrow('')
-          }, 1400);
-  }
 
 
 }
-setPlanCarga('')
-setBoxPlanCarga(null)
-setTodosChange(0)
-setValidaCargo(1)
-if(Todos===1){
-  setNocargo(1)
-}
-setActualizar(true);
-    setTimeout(() =>{
-setActualizar(false)
-    }, 50);
     }
     }, [Todos])
 
@@ -220,7 +293,7 @@ setActualizar(false)
       });
     return (
       <>
-        <FormControlLabel style={{height: "27px",float:'right',width:'20%'}} control={<IOSSwitch checked={Todos === 1} onChange={handleTodos} name="checkedB" />} label={NomMotivoEntrada===1 ? "No cargo material" :"No descargo material"} />
+        <FormControlLabel style={{height: "27px",float:'right',width:'20%'}} control={<IOSSwitch checked={Todos === 1} onChange={handleTodos} disabled={cambionodesc === 1} name="checkedB" />} label={NomMotivoEntrada===1 ? "No cargo material" :"No descargo material"} />
       </>
     )
 }

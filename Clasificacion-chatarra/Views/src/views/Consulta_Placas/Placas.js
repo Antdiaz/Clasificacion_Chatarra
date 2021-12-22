@@ -18,11 +18,24 @@ const Items = ({
 }) => {
   const Placas = ({lista}) => {
     const [showResults, setshowResults] = useState(false);
+    const [showProv, setshowProv] = useState(false)
     const [showObservaciones, setshowObservaciones] = useState(false);
+
+    const timediff = (Math.abs(new Date() - new Date(lista.HoraEntrada.replace("T",' ').replace(/-/g,'/').split(".")[0])))/60000;
+    const hours = (timediff/60);
+    const rhours = Math.floor(hours);
+    const minutes = (hours - rhours)*60;
+    const rminutes = Math.round(minutes);
+    const tiempo = `${rhours}h ${rminutes}m`;
+
 
     const handleShow = () => {
       setshowResults(!showResults);
     };
+
+    const handleProv = () =>{
+      setshowProv(!showProv)
+    }
 
     const handleObservaciones = () => {
       setshowObservaciones(!showObservaciones);
@@ -49,11 +62,11 @@ const Items = ({
                     lista.ClaVehiculoPorClasificar ? lista.ClaVehiculoPorClasificar : 'Sin dato'
                   }/Boleta:${lista.IdBoleta}`}
                 >
-                  <i className="fa fa-info-circle fa-2x" onClick={() => {setpoppesaje(true);setrow(0);setNomMotivoEntrada(lista.ClaMotivoEntrada);setClaUbicacionOrigen(lista.ClaUbicacionOrigen);setClaFabricacionViaje(0);setClaViajeOrigen(lista.ClaViajeOrigen);setpesajeparcial(0);}} aria-hidden="true"></i>
+                  {lista.ClaMotivoEntrada !==102 && lista.ClaMotivoEntrada !==111 ? (<i className="fa fa-info-circle fa-2x" title="Más información / Clasificación" onClick={() => {setpoppesaje(true);setrow(0);setNomMotivoEntrada(lista.ClaMotivoEntrada);setClaUbicacionOrigen(lista.ClaUbicacionOrigen);setClaViajeOrigen(lista.ClaViajeOrigen);setpesajeparcial(0);}} aria-hidden="true"></i>):null}
                 </Link>
                 <div className="form" style={{ width: '100%' }}>
                   <div className="dx-fieldset">
-                    <div className="dx-fieldset-header" style={{width: '48%',display:'flex',justifyContent:'space-between'}} onClick={handleShow}>
+                    <div className="dx-fieldset-header" style={{width: '55%',display:'inline-flex',justifyContent:'space-between'}} onClick={handleShow}>
                       <span>
                         Placa:&nbsp;{lista.ClaVehiculoPorClasificar}
                       </span>
@@ -61,6 +74,10 @@ const Items = ({
                         &nbsp;{lista.NomMotivoEntrada}
                       </small>
                       <i className="fas fa-ellipsis-h"></i>
+                    </div>
+                    <div className="dx-fieldset-header" style={{width: '40%',display:'inline-flex',float:'right',paddingLeft:'11vw'}} onClick={handleShow}>
+                      {/* <i className=" estado fas fa-clock" style={{color: timediff < 30 ? '#179f17': (timediff <= 45 && timediff >= 30) ? '#ffc82b': '#f11f1f' }}></i>{lista.HoraEntrada.split("T").pop().split(".")[0]} */}
+                      <i className=" estado fas fa-clock" style={{color: timediff < 30 ? '#179f17': (timediff <= 45 && timediff >= 30) ? '#ffc82b': '#f11f1f' }}></i>{tiempo}
                     </div>
                     {showResults && (
                       <div className="dx-field">
@@ -88,11 +105,28 @@ const Items = ({
                     )}
                     {lista.ClaProveedor == null ? null : (
                       <div className="dx-field">
-                        <div className="dx-field-label">Proveedor:</div>
-                        <div className="dx-field-value-static">
-                          {lista.NomProveedor.split(/\s+/).slice(0, 1) +
-                            [' '] +
-                            lista.NomProveedor.split(/\s+/).slice(2, 3)}
+                        <div className="dx-field-label" style={{overflow: 'visible'}}>Proveedor:</div>
+                        <div className="dx-field-value-static" onClick={handleProv}>
+                          {!showProv  ?
+                            (
+                              <div style={{cursor: 'pointer'}}>
+                                {lista.NomProveedor.split(/\s+/).slice(0, 1) +
+                                  [' '] +
+                                  lista.NomProveedor.split(/\s+/).slice(2, 3)} 
+                                <span>...</span>
+                              </div>
+                            )
+                            :
+                            !showResults ? (
+                              <div style={{width:'25vw'}}>
+                                {lista.NomProveedor}
+                              </div>
+                            )
+                            : (
+                              <div style={{width:'15vw'}}>
+                                {lista.NomProveedor}
+                              </div>
+                            )} 
                         </div>
                       </div>
                     )}
@@ -125,6 +159,14 @@ const Items = ({
                     )}
                     {showResults && (
                       <div className="dx-field">
+                        <div className="dx-field-label">Fecha Entrada:</div>
+                        <div className="dx-field-value-static">
+                          {lista.HoraEntrada == null ? '-' : (lista.HoraEntrada.replace("T",' ').replace(/-/g,'/').split(".")[0])}
+                        </div>
+                      </div>
+                    )}
+                    {showResults && (
+                      <div className="dx-field">
                         <div className="dx-field-label">Tipo :</div>
                         <div className="dx-field-value-static">{lista.NomMotivoEntrada}</div>
                       </div>
@@ -146,7 +188,7 @@ const Items = ({
   };
 
   return (
-    <div>{listas !== undefined && (editBoxValue ===26 || editBoxValue===96 || editBoxValue===282 || editBoxValue===30 || editBoxValue===94 || editBoxValue===47 || editBoxValue===86 || editBoxValue===196)&& listas.map((lista,index) => <Placas lista={lista} key={index} />)}</div>
+    <div>{listas !== undefined && listas.map((lista,index) => <Placas lista={lista} key={index} />)}</div>
   );
 };
 

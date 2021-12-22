@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import swal from 'sweetalert';
 import {
   CardHeader,
   Row,
@@ -41,7 +42,7 @@ import Cilinder from '../../assets/img/Cilindro.png';
 
 const NuevoMaterial = (props) => {
   // Valores que leen cantidades de botes y electrodomésticos
-  const [isNext, setIsNext] = useState(false);
+  const [isNext, setIsNext] = useState(0);
   const [srefri, setsrefri] = useState(0);
   const [mrefri, setmrefri] = useState(0);
   const [refri, setrefri] = useState(0);
@@ -61,27 +62,40 @@ const NuevoMaterial = (props) => {
   const [cantidadr, setcantidadr] = useState(0);
   const [kilose, setkilose] = useState(0);
   const [kilosr, setkilosr] = useState(0);
-  const [porcentajer, setporcentajer] = useState(pesajeparcial === 1 ? 100 : 0);
-  const [observaciones, setobservaciones] = useState(props.placadato[0].Observaciones ? props.placadato[0].Observaciones:'');
+  const [porcentajer, setporcentajer] = useState(pesajeparcial === 1 ? 0 : 0);
+  const [observaciones, setobservaciones] = useState('');
   const [pesajeparcial, setpesajeparcial] = useState(
-    props.placadato[0].EsPesajeParcial === 1 ? props.placadato[0].EsPesajeParcial : 0
-  );
+    props.placadato[0].EsPesajeParcial === 1 ? props.placadato[0].EsPesajeParcial : 0);
   const ipadress = getSessionItem('Ipaddress');
   const NumbUsuario = getSessionItem('NumUsuario');
+  const Token = getSessionItem('Token');
   const [idmaterialr, setidmaterialr] = useState(0);
   const [nombrematerialr, setnombrematerialr] = useState(0);
   const [idmaterialviaje, setidmaterialviaje] = useState(0);
+  const [cantremisionada, setcantremisionada] = useState(null);
+  const [pesoremisionado, setpesoremisionado] = useState(null);
+  const [unidadRemisionado, setunidadRemisionado] = useState(null)
   const [nombrematerialviaje, setnombrematerialviaje] = useState(0);
   const [almacen, setalmacen] = useState(0)
   const [subalmacen, setsubalmacen] = useState(0);
-  const [nomsubalmacen, setnomsubalmacen] = useState(0);
+  const [nomsubalmacen, setnomsubalmacen] = useState('');
   const [subalmacenes, setsubalmacenes] = useState(0);
   const [kiloscont, setkiloscont] = useState(0);
   const [razoncont, setrazoncont] = useState(0);
+  const [electrobots, setelectrobots] = useState('0|0|0|0|0|0|0|0|0|0|0|0|')
+  const [electrobots2, setelectrobots2] = useState('0|0|0|0|0|0|0|0|0|0|0|0|')
+  const [idFabricacion, setidFabricacion] = useState(0)
+  const [IdFabricacionDet, setIdfabricacionDet] = useState(0)
   const [Referencia, setReferencia] = useState(0);
+  const [ClaTransportista, setClaTransportista] = useState(props.placadato[0].ClaTransportista);
+  const [NomTransportista, setNomTransportista] = useState(props.placadato[0].NomTransportista);
   const PorcentajeSum = props.row
     ? +props.row.reduce((acc, val) => acc + val.PorcentajeMaterial, 0) + +porcentajer
     : 0;
+  const Electcheck = props.row ? props.row.some(material => material.idmaterialr === (config.idBote ||
+    config.idElect)) ? 1:0:0;
+  const ElectBotecheck = props.row ? props.row.some(material => (material.Bote >0 || material.ELECTRODOMESTICOS >0)) ? 1:0:0;
+  const Materialescheck= props.row ? props.row.some(material=> (props.NomMotivoEntrada===9 ? (material.ClaArticuloCompra===config.idBote || material.ClaArticuloCompra===config.idElect):props.NomMotivoEntrada===3 && (material.ClaMaterialRecibeTraspaso===config.idBote || material.ClaMaterialRecibeTraspaso===config.idElect))) ? 1:0:0;
   // Arreglo valores Contaminantes
   const [Contaminantes, setContaminantes] = useState([
     [
@@ -178,6 +192,7 @@ const NuevoMaterial = (props) => {
   const Totales = +Llantas +Tanques ;
   const ContTotal= +Bollas*+50 + +Cilindro*+100 + +Tanque*+200 + +LlantasChico*+25 + +LlantasMediano*+50 + +LlantasGrande*+100 + +Bollas2*+50 + +Cilindro2*+100 + +Tanque2*+200 + +LlantasChico2*+25 + +LlantasMediano2*+50 + +LlantasGrande2*+100 + +Bollas3*+50 + +Cilindro3*+100 + +Tanque3*+200 + +LlantasChico3*+25 + +LlantasMediano3*+50 + +LlantasGrande3*+100 ;
   // Función para cambio a pesaje parcial
+
   const useCheckbox = (e) => {
     if (props.pesajeparcial === 1) {
       false;
@@ -209,21 +224,21 @@ const NuevoMaterial = (props) => {
       48 +
       ',"Parametros":"@pnClaUbicacion=' +
       props.editBoxValue +
-      ',@pnIdBoleta=' +
+      ''+config.Separador+'@pnIdBoleta=' +
         props.placadato[0].IdBoleta +
-      ',@pnClaArticuloCompra=' +
+      ''+config.Separador+'@pnClaArticuloCompra=' +
       (props.NomMotivoEntrada===9 ? props.row[0].ClaArticuloCompra : props.NomMotivoEntrada===3 && props.row[0].ClaMaterialRecibeTraspaso)+
       '"}',
     tipoEstructura: 0,
   };
   /* eslint-enable */
   callApi(urlKrakenService, 'POST', data481, (res) => {
-    setBollas2(res.Result0.length ? res.Result0[0].Cantidad : 0)
-    setCilindro2(res.Result0.length ? res.Result0[1].Cantidad : 0)
-    setTanque2(res.Result0.length ? res.Result0[2].Cantidad : 0)
-    setLlantasChico2(res.Result0.length ? res.Result0[3].Cantidad : 0)
-    setLlantasMediano2(res.Result0.length ? res.Result0[4].Cantidad : 0)
-    setLlantasGrande2(res.Result0.length ? res.Result0[5].Cantidad : 0)
+    setBollas2(res.Result0.length ? (res.Result0[0].Cantidad !==null ? res.Result0[0].Cantidad : 0) : 0)
+    setCilindro2(res.Result0.length ? (res.Result0[1].Cantidad !==null ? res.Result0[1].Cantidad : 0) : 0)
+    setTanque2(res.Result0.length ? (res.Result0[2].Cantidad !==null ? res.Result0[2].Cantidad : 0) : 0)
+    setLlantasChico2(res.Result0.length ? (res.Result0[3].Cantidad !==null ? res.Result0[3].Cantidad : 0) : 0)
+    setLlantasMediano2(res.Result0.length ? (res.Result0[4].Cantidad !==null ? res.Result0[4].Cantidad : 0) : 0)
+    setLlantasGrande2(res.Result0.length ? (res.Result0[5].Cantidad !==null ? res.Result0[5].Cantidad : 0) : 0)
   })}
 
   if(props.row.length===2 && props.row[1].ClaArticuloCompra>0){
@@ -236,21 +251,21 @@ const NuevoMaterial = (props) => {
       48 +
       ',"Parametros":"@pnClaUbicacion=' +
       props.editBoxValue +
-      ',@pnIdBoleta=' +
+      ''+config.Separador+'@pnIdBoleta=' +
         props.placadato[0].IdBoleta +
-      ',@pnClaArticuloCompra=' +
+      ''+config.Separador+'@pnClaArticuloCompra=' +
       (props.NomMotivoEntrada===9 ? props.row[1].ClaArticuloCompra : props.NomMotivoEntrada===3 && props.row[1].ClaMaterialRecibeTraspaso) +
       '"}',
     tipoEstructura: 0,
   };
   /* eslint-enable */
   callApi(urlKrakenService, 'POST', data482, (res) => {
-    setBollas3(res.Result0.length ? res.Result0[0].Cantidad : 0)
-    setCilindro3(res.Result0.length ? res.Result0[1].Cantidad : 0)
-    setTanque3(res.Result0.length ? res.Result0[2].Cantidad : 0)
-    setLlantasChico3(res.Result0.length ? res.Result0[3].Cantidad : 0)
-    setLlantasMediano3(res.Result0.length ? res.Result0[4].Cantidad : 0)
-    setLlantasGrande3(res.Result0.length ? res.Result0[5].Cantidad : 0)
+    setBollas3(res.Result0.length ? (res.Result0[0].Cantidad !==null ? res.Result0[0].Cantidad : 0) : 0)
+    setCilindro3(res.Result0.length ? (res.Result0[1].Cantidad !==null ? res.Result0[1].Cantidad : 0) : 0)
+    setTanque3(res.Result0.length ? (res.Result0[2].Cantidad !==null ? res.Result0[2].Cantidad : 0) : 0)
+    setLlantasChico3(res.Result0.length ? (res.Result0[3].Cantidad !==null ? res.Result0[3].Cantidad : 0) : 0)
+    setLlantasMediano3(res.Result0.length ? (res.Result0[4].Cantidad !==null ? res.Result0[4].Cantidad : 0) : 0)
+    setLlantasGrande3(res.Result0.length ? (res.Result0[5].Cantidad !==null ? res.Result0[5].Cantidad : 0) : 0)
   })
 }}, [])
 
@@ -264,13 +279,13 @@ const NuevoMaterial = (props) => {
         props.editBoxValue +
         ',"ClaServicioJson":6,"Parametros":"@pnClaUbicacion=' +
         props.editBoxValue +
-        ',@pnClaArticuloCompra=' +
+        ''+config.Separador+'@pnClaArticuloCompra=' +
         idmaterialr +
-        ',@pnClaProveedor=' +
+        ''+config.Separador+'@pnClaProveedor=' +
         props.placadato[0].ClaProveedor +
-        ',@pnIdListaPrecio=' +
+        ''+config.Separador+'@pnIdListaPrecio=' +
         props.placadato[0].IdListaPrecio +
-        ',@pnClaOrdenCompra=,@pnClaTipoOrdenCompra="}',
+        ''+config.Separador+'@pnClaOrdenCompra='+config.Separador+'@pnClaTipoOrdenCompra="}',
       tipoEstructura: 0,
     };
 
@@ -280,7 +295,7 @@ const NuevoMaterial = (props) => {
         props.editBoxValue +
         ',"ClaServicioJson":31,"Parametros":"@pnClaUbicacion=' +
         props.editBoxValue +
-        ',@pnClaMaterialRecibeTraspaso=' +
+        ''+config.Separador+'@pnClaMaterialRecibeTraspaso=' +
         idmaterialr +
         '"}',
       tipoEstructura: 0,
@@ -291,7 +306,7 @@ const NuevoMaterial = (props) => {
         props.editBoxValue +
         ',"ClaServicioJson":7,"Parametros":"@pnClaUbicacion=' +
         props.editBoxValue +
-        ',@pnClaArticuloCompra=' +
+        ''+config.Separador+'@pnClaArticuloCompra=' +
         idmaterialr +
         '"}',
       tipoEstructura: 0,
@@ -303,7 +318,7 @@ const NuevoMaterial = (props) => {
         props.editBoxValue +
         ',"ClaServicioJson":32,"Parametros":"@pnClaUbicacion=' +
         props.editBoxValue +
-        ',@pnClaMaterialRecibeTraspaso=' +
+        ''+config.Separador+'@pnClaMaterialRecibeTraspaso=' +
         idmaterialr +
         '"}',
       tipoEstructura: 0,
@@ -348,13 +363,13 @@ const NuevoMaterial = (props) => {
         props.editBoxValue +
         ',"ClaServicioJson":8,"Parametros":"@pnClaUbicacion=' +
         props.editBoxValue +
-        ',@pnClaArticuloCompra=' +
+        ''+config.Separador+'@pnClaArticuloCompra=' +
         idmaterialr +
-        ',@pnClaSubAlmacenCompra=' +
+        ''+config.Separador+'@pnClaSubAlmacenCompra=' +
         subalmacen +
-        ',@psNomSubAlmacenCompra=' +
-        nomsubalmacen +
-        ',@pnIdBoleta=' +
+        ''+config.Separador+'@psNomSubAlmacenCompra=' +
+        (nomsubalmacen && nomsubalmacen.includes('"') ? '':nomsubalmacen)+
+        ''+config.Separador+'@pnIdBoleta=' +
         props.placadato[0].IdBoleta +
         '"}',
       tipoEstructura: 0,
@@ -366,13 +381,13 @@ const NuevoMaterial = (props) => {
         props.editBoxValue +
         ',"ClaServicioJson":33,"Parametros":"@pnClaUbicacion=' +
         props.editBoxValue +
-        ',@pnClaMaterialRecibeTraspaso=' +
+        ''+config.Separador+'@pnClaMaterialRecibeTraspaso=' +
         idmaterialr +
-        ',@pnClaSubAlmacenTraspaso=' +
+        ''+config.Separador+'@pnClaSubAlmacenTraspaso=' +
         subalmacen +
-        ',@psNomSubAlmacenTraspaso=' +
-        nomsubalmacen +
-        ',@pnIdBoleta=' +
+        ''+config.Separador+'@psNomSubAlmacenTraspaso=' +
+        (nomsubalmacen && nomsubalmacen.includes('"') ? '':nomsubalmacen)+
+        ''+config.Separador+'@pnIdBoleta=' +
         props.placadato[0].IdBoleta +
         '"}',
       tipoEstructura: 0,
@@ -409,6 +424,42 @@ const NuevoMaterial = (props) => {
   }
   }, [subalmacenes]);
 
+  useEffect(() => {
+    const urlKrakenVal = `${config.KrakenService}/${24}/${config.Servicio}`;
+     /* eslint-disable */
+     if(props.NomMotivoEntrada===3 && props.Materialviaje && props.placadato && idmaterialviaje !==0){
+    const data49 = {
+      parameters:
+        '{"ClaUbicacion":' +
+        props.editBoxValue +
+        ',"ClaServicioJson":' +
+        49+
+        ',"Parametros":"@pnClaUbicacion=' +
+        props.editBoxValue +
+        ''+config.Separador+'@pnClaArticuloRemisionado=' +
+        idmaterialviaje +
+        ''+config.Separador+'@pnClaUbicacionOrigen=' +
+        props.placadato[0].ClaUbicacionOrigen +
+        ''+config.Separador+'@pnClaViajeOrigen=' +
+        props.placadato[0].ClaViajeOrigen +
+        '' + ((props.placadato[0].IdFabDefault !== null) ? (''+config.Separador+'@pnClaFabricacionViaje='+props.placadato[0].IdFabDefault+'') : '') +
+        // '@pnClaFabricacionViaje=' +
+        // idFabricacion+
+        '"}',
+      tipoEstructura: 0,
+    };
+     /* eslint-enable */
+
+      callApi(urlKrakenVal, 'POST', data49, (res) => {
+        console.log(res.Result0,'hola')
+        setIdfabricacionDet(res.Result0[0].IdFabricacionDet)
+        setcantremisionada(res.Result0[0].CantRemisionada)
+        setpesoremisionado(res.Result0[0].PesoRemisionado)
+        setunidadRemisionado(res.Result0[0].NomUnidadRemisionado)
+      })
+    }
+  }, [idmaterialviaje])
+
   // Función para cambio de material en el wizard
   const onValueChangedr = (e) => {
     setidmaterialr(e.value);
@@ -421,6 +472,14 @@ const NuevoMaterial = (props) => {
     props.setidmaterialviaje(e.value);
     setidmaterialviaje(e.value)
     setnombrematerialviaje(e.component.option('text').split('-').pop());
+    setidFabricacion(e.component.option("selectedItem").idFabricacion)
+  };
+
+  const onValueChangedes = (e) => {
+    props.setidmaterialviaje(e.component.option("selectedItem").ClaArticuloRemisionado);
+    setidmaterialviaje(e.component.option("selectedItem").ClaArticuloRemisionado)
+    setnombrematerialviaje(e.component.option('text').split('-').pop());
+    setidFabricacion(e.value)
   };
 
   // Operaciones para obtener los kilos de botes/electrodomésticos
@@ -435,7 +494,7 @@ const NuevoMaterial = (props) => {
     50 * estufa +
     20 * microondas +
     50 * otros;
-  const botes = 35 * costal + 250 * saco + 150 * contenedor;
+  const botes = (25 * costal) + (250 * saco) + (150 * contenedor);
 
   const kilosbotes = botes + electrodomestico;
 
@@ -469,7 +528,29 @@ const NuevoMaterial = (props) => {
     setporcentajer(event.target.value);
   };
 
+  const handleMensaje= () => {
+    swal('Error', ('Almacen y/o Referencia se está mandando como nulo. Favor de revisar con encargado de Aplicación Web'), 'error', {
+      buttons: {
+        confirm: {
+          text: 'Aceptar',
+          className: 'animation-on-hover btn btn-success',
+        },
+      },
+    });
+   }
 
+   if(ElectBotecheck===1 && ((idmaterialr===config.idBote) || (idmaterialr===config.idElect))) {
+    swal('warning', ('No es posible seleccionar electrodoméstico/bote como material a clasificar porque ya fue declarado en alguno de los materiales previamente clasificado.'), 'warning', {
+      buttons: {
+        confirm: {
+          text: 'Aceptar',
+          className: 'animation-on-hover btn btn-success',
+        },
+      },
+    });
+    setidmaterialr(0)
+    setnombrematerialr('')
+   }
 
   const handlesubalmacen = (event) => {
     setsubalmacen(event.value);
@@ -479,43 +560,43 @@ const NuevoMaterial = (props) => {
   // Funciones para sumar/restar las cantidades de botes/electrodomésticos con límite de 50 piezas
 
   const handleSum1 = () => {
-    if (srefri < 50) {
+    if (srefri < 50 ) {
       setsrefri(srefri + 1);
     }
   };
 
   const handleSum2 = () => {
-    if (mrefri < 50) {
+    if (mrefri < 50 ) {
       setmrefri(mrefri + 1);
     }
   };
   const handleSum3 = () => {
-    if (refri < 50) {
+    if (refri < 50 ) {
       setrefri(refri + 1);
     }
   };
   const handleSum4 = () => {
-    if (lavadora < 50) {
+    if (lavadora < 50 ) {
       setlavadora(lavadora + 1);
     }
   };
   const handleSum5 = () => {
-    if (boiler < 50) {
+    if (boiler < 50 ) {
       setboiler(boiler + 1);
     }
   };
   const handleSum6 = () => {
-    if (secadora < 50) {
+    if (secadora < 50 ) {
       setsecadora(secadora + 1);
     }
   };
   const handleSum7 = () => {
-    if (estufa < 50) {
+    if (estufa < 50 ) {
       setestufa(estufa + 1);
     }
   };
   const handleSum8 = () => {
-    if (microondas < 50) {
+    if (microondas < 50 ) {
       setmicroondas(microondas + 1);
     }
   };
@@ -525,12 +606,12 @@ const NuevoMaterial = (props) => {
     }
   };
   const handleSum10 = () => {
-    if (costal < 50) {
+    if (costal < 50 ) {
       setcostal(costal + 1);
     }
   };
   const handleSum11 = () => {
-    if (saco < 50) {
+    if (saco < 50 ) {
       setsaco(saco + 1);
     }
   };
@@ -541,12 +622,12 @@ const NuevoMaterial = (props) => {
   };
 
   const handleRest1 = () => {
-    if (srefri > 0) {
+    if (srefri > 0 ) {
       setsrefri(srefri - 1);
     }
   };
   const handleRest2 = () => {
-    if (mrefri > 0) {
+    if (mrefri > 0 ) {
       setmrefri(mrefri - 1);
     }
   };
@@ -556,22 +637,22 @@ const NuevoMaterial = (props) => {
     }
   };
   const handleRest4 = () => {
-    if (lavadora > 0) {
+    if (lavadora > 0 ) {
       setlavadora(lavadora - 1);
     }
   };
   const handleRest5 = () => {
-    if (boiler > 0) {
+    if (boiler > 0 ) {
       setboiler(boiler - 1);
     }
   };
   const handleRest6 = () => {
-    if (secadora > 0) {
+    if (secadora > 0 ) {
       setsecadora(secadora - 1);
     }
   };
   const handleRest7 = () => {
-    if (estufa > 0) {
+    if (estufa > 0 ) {
       setestufa(estufa - 1);
     }
   };
@@ -581,28 +662,36 @@ const NuevoMaterial = (props) => {
     }
   };
   const handleRest9 = () => {
-    if (otros > 0) {
+    if (otros > 0 ) {
       setotros(otros - 1);
     }
   };
   const handleRest10 = () => {
-    if (costal > 0) {
+    if (costal > 0 ) {
       setcostal(costal - 1);
     }
   };
   const handleRest11 = () => {
-    if (saco > 0) {
+    if (saco > 0 ) {
       setsaco(saco - 1);
     }
   };
   const handleRest12 = () => {
-    if (contenedor > 0) {
+    if (contenedor > 0 ) {
       setcontenedor(contenedor - 1);
     }
   };
 
+  const togglePopup0 = () => {
+    setIsNext(0);
+  };
+
+  const togglePopup1 = () => {
+    setIsNext(1);
+  };
+
   const togglePopup2 = () => {
-    setIsNext(!isNext);
+    setIsNext(2);
   };
 
   const closebote = () => {
@@ -613,7 +702,7 @@ const NuevoMaterial = (props) => {
     setkilosr(kilosbotes);
     setcantidadr(kilosbotes);
     setidmaterialr(0);
-    setIsNext(!isNext);
+    setIsNext(1);
   };
 
   // Función para cambiar del paso 1 (Clasificación de Material) & paso 2 (Contaminación)
@@ -623,6 +712,57 @@ const NuevoMaterial = (props) => {
     props.setmodaladdOpen(false);
   };
 
+  useEffect(() => {
+    props.NomMotivoEntrada===9 && props.row && props.row.forEach(electros => {
+
+  const urlKrakenService = `${config.KrakenService}/${24}/${config.Servicio}`;
+    /* eslint-disable */
+    const data70 = {
+      parameters:
+        '{"ClaUbicacion":' +
+        props.editBoxValue +
+        ',"ClaServicioJson":' +
+        70 +
+        ',"Parametros":"@pnClaUbicacion=' +
+        props.editBoxValue +
+        ''+config.Separador+'@pnIdBoleta=' +
+          props.placadato[0].IdBoleta +
+        // ',@pnClaArticuloCompra=' +
+        // (props.NomMotivoEntrada===9 ? props.ro.ClaArticuloCompra : props.NomMotivoEntrada===3 && props.ro.ClaMaterialRecibeTraspaso)+
+        '"}',
+      tipoEstructura: 0,
+    };
+    /* eslint-enable */
+    
+    callApi(urlKrakenService, 'POST', data70, (res) => {
+      if(res.Result0.length>0){
+      const isrefri= res.Result0.filter(electrobotes => electrobotes.ClaArticulo === electros.ClaArticuloCompra && electrobotes.ClaArtSupTipo===1)[0].Cantidad
+      const imrefri =res.Result0.filter(electrobotes => electrobotes.ClaArticulo === electros.ClaArticuloCompra && electrobotes.ClaArtSupTipo===2)[0].Cantidad
+      const irefri =res.Result0.filter(electrobotes => electrobotes.ClaArticulo === electros.ClaArticuloCompra && electrobotes.ClaArtSupTipo===3)[0].Cantidad
+      const ilavadora = res.Result0.filter(electrobotes => electrobotes.ClaArticulo === electros.ClaArticuloCompra && electrobotes.ClaArtSupTipo===4)[0].Cantidad
+      const iboiler = res.Result0.filter(electrobotes => electrobotes.ClaArticulo === electros.ClaArticuloCompra && electrobotes.ClaArtSupTipo===5)[0].Cantidad
+      const isecadora = res.Result0.filter(electrobotes => electrobotes.ClaArticulo === electros.ClaArticuloCompra && electrobotes.ClaArtSupTipo===6)[0].Cantidad
+      const iestufa= res.Result0.filter(electrobotes => electrobotes.ClaArticulo === electros.ClaArticuloCompra && electrobotes.ClaArtSupTipo===7)[0].Cantidad
+      const imicroondas = res.Result0.filter(electrobotes => electrobotes.ClaArticulo === electros.ClaArticuloCompra && electrobotes.ClaArtSupTipo===8)[0].Cantidad
+      const iotros = res.Result0.filter(electrobotes => electrobotes.ClaArticulo === electros.ClaArticuloCompra && electrobotes.ClaArtSupTipo===9)[0].Cantidad
+      const icostal= res.Result0.filter(electrobotes => electrobotes.ClaArticulo === electros.ClaArticuloCompra && electrobotes.ClaArtSupTipo===10)[0].Cantidad
+      const isaco = res.Result0.filter(electrobotes => electrobotes.ClaArticulo === electros.ClaArticuloCompra && electrobotes.ClaArtSupTipo===11)[0].Cantidad
+      const icontenedor = res.Result0.filter(electrobotes => electrobotes.ClaArticulo === electros.ClaArticuloCompra && electrobotes.ClaArtSupTipo===12)[0].Cantidad
+      
+
+      if(props.row.length===1 || props.row.length===2){
+        setelectrobots((`${isrefri}|${imrefri}|${irefri}|${ilavadora}|${iboiler}|${isecadora}|${iestufa}|${imicroondas}|${iotros}|${icostal}|${isaco}|${icontenedor}|`).toString())
+      }
+
+      else if(props.row.length===2){
+        setelectrobots2((`${isrefri}|${imrefri}|${irefri}|${ilavadora}|${iboiler}|${isecadora}|${iestufa}|${imicroondas}|${iotros}|${icostal}|${isaco}|${icontenedor}|`).toString())
+      }
+    }
+    })
+  })
+  }, [])
+
+  // console.log(electrobots)
   // Función que guarda los cambios efectuados en el material
   // Servicio JSON 11 --> SP= BasSch.BasGuardarClasEntCompraMatPrimaProc <Guarda clasificación>
   // Servicio JSON 12 --> SP= BasSch.BasRegistraMaterialClasEntCompraMatPrimaProc <Registra material a clasificar>
@@ -630,405 +770,117 @@ const NuevoMaterial = (props) => {
   const handleSubmit = () => {
     props.setpoppesaje(true);
     const urlKrakenService = `${config.KrakenService}/${24}/${config.Servicio}`;
-
+    const urlKrakenBloque = `${config.KrakenService}/${24}/${config.Bloque}`;
     /* eslint-disable */
-
-    const data11 = {
-      parameters:
-        '{"ClaUbicacion":' +
-        props.editBoxValue +
-        ',"ClaServicioJson":' +
-        11 +
-        ',"Parametros":"@pnClaUbicacion=' +
-        props.editBoxValue +
-        ',@pnIdBoleta=' +
-        props.placadato[0].IdBoleta +
-        ',@psObservaciones='+ observaciones +',@pnEsRevisionEfectuada=' +
-        props.placadato[0].EsRevisionEfectuada +
-        ',@pnClaTipoClasificacion=' +
-        props.placadato[0].ClaTipoClasificacion +
-        ',@pnEsNoCargoDescargoMaterial=0,@psNombrePcMod=' +
-        ipadress +
-        ',@pnClaUsuarioMod=' +
-        NumbUsuario +
-        ',@psOrigen=WEB"}',
-      tipoEstructura: 0,
-    };
-
-    const data12 = {
-      parameters:
-        '{"ClaUbicacion":' +
-        props.editBoxValue +
-        ',"ClaServicioJson":12,"Parametros":"@pnClaUbicacion=' +
-        props.editBoxValue +
-        ',@pnIdBoleta=' +
-        props.placadato[0].IdBoleta +
-        ',@pnClaArticuloCompra=' +
-        idmaterialr +
-        ',@pnCantidadMaterial=' +
-        (((idmaterialr === 301522) || (idmaterialr===524225)) ? ((+botes + +electrodomestico)/Datosmaterial[0].PesoTeoricoKgs):(kilosr > 0 ? kilosr /(Datosmaterial!==0 ? Datosmaterial[0].PesoTeoricoKgs : 1) : (cantidadr === '' ? 0 : cantidadr ))) +
-        ',@pnKilosMaterial=' +
-        (((idmaterialr === 301522) || (idmaterialr===524225)) ? (+botes + +electrodomestico):(cantidadr > 0 ? cantidadr * (Datosmaterial!==0 ? Datosmaterial[0].PesoTeoricoKgs:1) : (kilosr === '' ? 0 : kilosr))) +
-        ',@pnKilosReales=0,@pnKilosContaminados=' +
-        (+Totales + +kiloscont) +
-        ',@pnKilosDocumentados=0,@pnPorcentajeMaterial=' +
-        (porcentajer ==='' ? 0 : pesajeparcial===1 ? 100 : porcentajer) +
-        ',@pnEsPesajeParcial=' +
-        pesajeparcial +
-        ',@pnClaAlmacen='+
-        almacen +
-        ',@pnClaSubAlmacenCompra=' +
-        subalmacen +
-        ',@pnClaMotivoContaminacion=' +
-        (Totales>0 && kiloscont<1 ? 6 : razoncont) +
-        ',@pnEsNoCargoDescargoMaterial=0,@pnClaProveedor=' +
-        props.placadato[0].ClaProveedor +
-        ',@pnIdListaPrecio=' +
-        props.placadato[0].IdListaPrecio +
-        ',@pnClaTipoOrdenCompra=,@pnClaOrdenCompra=,@pnClaUbicacionProveedor=' +
-        props.placadato[0].ClaUbicacionProveedor +
-        ',@psClaReferenciaCompra=' +
-        Referencia +
-        ',@psClaContaminantes=1|2|3|4|5|6|,@psValorContaminantes=' +
-         Bollas +'|'+ Cilindro + '|' + Tanque + '|' +LlantasChico + '|' +LlantasMediano +  '|' +LlantasGrande +
-        '|'+ ((idmaterialr === 301522) ? ',@psClaArtSupTipo=1|2|3|4|5|6|7|8|9|' : (idmaterialr===524225) ? ',@psClaArtSupTipo=10|11|12|':null) +
-        + ((idmaterialr === 301522) ? ('@psValorArtSupTipo='+srefri+'|'+mrefri+'|'+refri+'|'+lavadora+'|'+boiler+'|'+secadora+'|'+estufa+'|'+microondas+'|'+otros+'|') : (idmaterialr===524225) ? ',@psValorArtSupTipo='+costal+'|'+saco+'|'+contenedor+'|':null) +
-        ',@pnIdRenglon=1,@psNombrePcMod=' +
-        ipadress +
-        ',@pnClaUsuarioMod=' +
-        NumbUsuario +
-        ',@pnAccionSp="}',
-      tipoEstructura: 0,
-    };
-  
-    const data36 = {
-      parameters:
-        '{"ClaUbicacion":' +
-        props.editBoxValue +
-        ',"ClaServicioJson":36,"Parametros":"@pnClaUbicacion=' +
-        props.editBoxValue +
-        ',@pnIdBoleta=' +
-        props.placadato[0].IdBoleta +
-        ',@pnClaViajeOrigen='+
-        props.ClaViajeOrigen +
-        ',@pnClaUbicacionOrigen=' +
-        props.ClaUbicacionOrigen +
-        ',@pnClaTransporte=' +
-        props.placadato[0].ClaTransporte +
-        ',@pnClaTransportista=' +
-        props.placadato[0].ClaTransportista +
-        ',@psNomTransportista=' +
-        props.placadato[0].NomTransportista +
-        ',@psNomChofer=' +
-        (props.placadato[0].NomChofer !== null ? props.placadato[0].NomChofer: 0)+
-        ',@psPlacas=' +
-        props.placadato[0].Placas +
-        ',@pnPesoDocumentado=' +
-        props.placadato[0].PesoDocumentado +
-        ',@psObservaciones=' +
-        observaciones +
-        ',@pnEsRevisionEfectuada=' +
-        (props.placadato[0].EsRevisionEfectuada ? props.placadato[0].EsRevisionEfectuada : 0) +
-        ',@pnClaTipoClasificacion=' +
-        props.placadato[0].ClaTipoClasificacion +
-        ',@pnEsNoCargoDescargoMaterial=0,@psNombrePcMod=' +
-        ipadress +
-        ',@pnClaUsuarioMod=' +
-        NumbUsuario +
-        ',@pnAccionSp=,@psOrigen=WEB"}',
-        tipoEstructura: 0,
-    };
-
-    const data37 = {
-      parameters:
-        '{"ClaUbicacion":' +
-        props.editBoxValue +
-        ',"ClaServicioJson":37,"Parametros":"@pnClaUbicacion=' +
-        props.editBoxValue +
-        ',@pnIdBoleta=' +
-        props.placadato[0].IdBoleta +
-        ',@pnClaViajeOrigen='+
-        props.ClaViajeOrigen +
-        ',@pnClaUbicacionOrigen='+
-        props.ClaUbicacionOrigen +
-        ',@pnIdRenglonRecepcion=,@pnIdFabricacion=' +
-        (props.placadato[0].IdFabDefault) +
-        ',@pnIdFabricacionDet=' +
-         2 +
-        ',@pnClaArticuloRemisionado=' +
-        (idmaterialviaje ? idmaterialviaje : 0) +
-        ',@pnCantRemisionada=' +
-        0+
-        ',@pnClaMaterialRecibeTraspaso=' +
-        (idmaterialr) +
-        ',@pnCantRecibida=' +
-        (((idmaterialr === 301522) || (idmaterialr===524225)) ? ((+botes + +electrodomestico)/Datosmaterial[0].PesoTeoricoRecibido):(kilosr > 0 ? kilosr /(Datosmaterial!==0 ? Datosmaterial[0].PesoTeoricoRecibido : 1) : (cantidadr === '' ? 0 : cantidadr ))) +
-        ',@pnPesoRecibido=' +
-        (((idmaterialr === 301522) || (idmaterialr===524225)) ? (+botes + +electrodomestico):(cantidadr > 0 ? cantidadr * (Datosmaterial!==0 ? Datosmaterial[0].PesoTeoricoRecibido:1) : (kilosr === '' ? 0 : kilosr)))+
-        ',@pnPorcentajeMaterial=' +
-        (porcentajer ==='' ? 0 : pesajeparcial===1 ? 100 : porcentajer) +
-        ',@pnPesoTaraRecibido=' +
-        (0) +
-        ',@pnClaAlmacen=' +
-        (almacen) +
-        ',@pnClaSubAlmacenTraspaso=' +
-        (subalmacen) +
-        ',@pnClaSubSubAlmacen=' +
-        ( 0) +
-        ',@pnClaSeccion=' +
-        (0) +
-        ',@psReferencia1=0,@psReferencia2=0,@psReferencia3=0,@psReferencia4=0,@psReferencia5=0,@pnEsPesajeParcial=' +
-        pesajeparcial  +
-        ',@pnKilosReales='+(0)+
-        ',@pnKilosContaminados='+
-        ((+kiloscont + +Totales))+
-        ',@pnClaMotivoContaminacion='+
-        (Totales>0 && kiloscont<1 ? 6 : razoncont) +
-        ',@pnClaReferenciaTraspaso=' +
-        Referencia +
-        ',@psClaContaminantes=1|2|3|4|5|6|,@psValorContaminantes=' +
-         Bollas +'|'+ Cilindro + '|' + Tanque + '|' +LlantasChico + '|' +LlantasMediano +  '|' +LlantasGrande +
-        '|,@pnEsNoCargoDescargoMaterial=' +
-        props.placadato[0].EsNoCargoDescargoMaterial +
-        ',@psNombrePcMod=' +
-        ipadress +
-        ',@pnClaUsuarioMod=' +
-        NumbUsuario +
-        ',@pnAccionSp=1"}',
-      tipoEstructura: 0,
-    };
-    // usage
-    /* eslint-enable */
 
     if(props.NomMotivoEntrada===9){
-    callApi(urlKrakenService, 'POST', data11, (res) => {
-      // console.log(res);
-    });
-console.log(data12)
-    callApi(urlKrakenService, 'POST', data12, (res) => {
-      // console.log(res);
-    });
+    const data11 = 
+       [ `@pnClaUbicacion=${props.editBoxValue}${config.Separador}@pnIdBoleta=${props.placadato[0].IdBoleta}${config.Separador}@psObservaciones='${(props.placadato[0].Observaciones ? props.placadato[0].Observaciones.replace('#', '%23'): '')}'${config.Separador}@pnEsRevisionEfectuada=${props.placadato[0].EsRevisionEfectuada}${config.Separador}@pnClaTipoClasificacion=${props.placadato[0].ClaTipoClasificacion}${config.Separador}@pnEsNoCargoDescargoMaterial=0${config.Separador}@psNombrePcMod='${ipadress}'${config.Separador}@pnClaUsuarioMod=${NumbUsuario}${config.Separador}@psOrigen='WEB'`];
 
-     props.row && props.row.forEach((element,index)=> {
-       /* eslint-disable */
-      const data121 = {
-        parameters:
-          '{"ClaUbicacion":' +
-          props.editBoxValue +
-          ',"ClaServicioJson":12,"Parametros":"@pnClaUbicacion=' +
-          props.editBoxValue +
-          ',@pnIdBoleta=' +
-          props.placadato[0].IdBoleta +
-          ',@pnClaArticuloCompra=' +
-          element.ClaArticuloCompra +
-          ',@pnCantidadMaterial=' +
-          element.CantidadMaterial +
-          ',@pnKilosMaterial=' +
-          element.KilosMaterial +
-          ',@pnKilosReales=0,@pnKilosContaminados=' +
-          element.KilosContaminados +
-          ',@pnKilosDocumentados=0,@pnPorcentajeMaterial=' +
-          element.PorcentajeMaterial +
-          ',@pnEsPesajeParcial=' +
-          element.EsPesajeParcial +
-          ',@pnClaAlmacen='+
-          element.ClaAlmacen +
-          ',@pnClaSubAlmacenCompra=' +
-          element.ClaSubAlmacenCompra +
-          ',@pnClaMotivoContaminacion=' +
-          (element.ClaMotivoContaminacion ? element.ClaMotivoContaminacion : '') +
-          ',@pnEsNoCargoDescargoMaterial=0,@pnClaProveedor=' +
-          props.placadato[0].ClaProveedor +
-          ',@pnIdListaPrecio=' +
-          props.placadato[0].IdListaPrecio +
-          ',@pnClaTipoOrdenCompra=,@pnClaOrdenCompra=,@pnClaUbicacionProveedor=' +
-          props.placadato[0].ClaUbicacionProveedor +
-          ',@psClaReferenciaCompra=' +
-          element.ClaReferenciaCompra +
-          ',@pnIdRenglon=1,@psNombrePcMod=' +
-          ipadress +
-          ',@pnClaUsuarioMod=' +
-          NumbUsuario +
-          ',@pnAccionSp="}',
-        tipoEstructura: 0,
-      };
-       /* eslint-enable */
+    const data12 = 
+        [`@@TransactionSAMP:@pnClaUbicacion=${props.editBoxValue}${config.Separador}@pnIdBoleta=${props.placadato[0].IdBoleta}${config.Separador}@pnClaArticuloCompra=${idmaterialr}${config.Separador} @pnCantidadMaterial=${((kilosr > 0 ? kilosr /(Datosmaterial!==0 ? Datosmaterial[0].PesoTeoricoKgs : 1) : ((cantidadr === '' || cantidadr === null ) ? 0 : cantidadr )))}${config.Separador}@pnKilosMaterial=${((cantidadr > 0 ? cantidadr * (Datosmaterial!==0 ? Datosmaterial[0].PesoTeoricoKgs:1) : (kilosr === '' ? 0 : kilosr)))}${config.Separador} @pnKilosReales=0${config.Separador}@pnKilosContaminados=${(+Totales + +kiloscont)}${config.Separador}@pnKilosDocumentados=0${config.Separador}@pnPorcentajeMaterial=${(porcentajer ==='' ? 0 : pesajeparcial===1 ? 0 : porcentajer)}${config.Separador}@pnEsPesajeParcial=${pesajeparcial}${config.Separador}@pnClaAlmacen=${almacen}${config.Separador}@pnClaSubAlmacenCompra=${subalmacen}${config.Separador}@pnClaMotivoContaminacion=${(Totales>0 && kiloscont<1 ? 6 : razoncont)}${config.Separador}@pnEsNoCargoDescargoMaterial=0${config.Separador}@pnClaProveedor=${props.placadato[0].ClaProveedor}${config.Separador}@pnIdListaPrecio=${props.placadato[0].IdListaPrecio}${config.Separador}@pnClaTipoOrdenCompra=''${config.Separador}@pnClaOrdenCompra=''${config.Separador}@pnClaUbicacionProveedor=${props.placadato[0].ClaUbicacionProveedor}${config.Separador}@psClaReferenciaCompra='${Referencia}'${config.Separador}@psClaContaminantes='1|2|3|4|5|6|'${config.Separador}@psValorContaminantes='${Bollas}|${Cilindro}|${Tanque}|${LlantasChico}|${LlantasMediano}|${LlantasGrande}|'${config.Separador}@psClaArtSupTipo='1|2|3|4|5|6|7|8|9|10|11|12|'${config.Separador}@psValorArtSupTipo='${srefri}|${mrefri}|${refri}|${lavadora}|${boiler}|${secadora}|${estufa}|${microondas}|${otros}|${costal}|${saco}|${contenedor}|'${config.Separador}@pnIdRenglon=${(props.row.length + 1)}${config.Separador}@pnKilosElectrodomesticos=${(electrodomestico)}${config.Separador}@pnKilosBote=${(botes)}${config.Separador}@pnObservaciones='${(observaciones)}'${config.Separador}@psNombrePcMod='${ipadress}'${config.Separador}@pnClaUsuarioMod=${NumbUsuario}`]
 
-    if(props.TipoPatio ===4 && index<2){
-    callApi(urlKrakenService, 'POST', data121, (res) => {
-      // console.log(res);
-    });
-  }
+    const data13 =
+    [`@pnClaUbicacion=${props.editBoxValue}${config.Separador}@pnIdBoleta=${props.placadato[0].IdBoleta}${config.Separador}@pnClaTipoClasificacion=1${config.Separador}@pnClaUbicacionProveedor=${props.placadato[0].ClaUbicacionProveedor}${config.Separador}@pnClaOrdenCompra=''${config.Separador}@pnClaTipoOrdenCompra=''${config.Separador}@pnIdListaPrecio=${props.placadato[0].IdListaPrecio}${config.Separador}@pnEsNoCargoDescargoMaterial=0${config.Separador}@psNombrePcMod='${ipadress}'${config.Separador}@pnClaUsuarioMod=${NumbUsuario}${config.Separador}@pnEsPesajeParcial=${pesajeparcial}`]
+  
+    const data12g= props.row && props.row.map((element,index)=>{
+      if(element.ClaArticuloCompra){
+        if(props.TipoPatio ===4 && index<2){
+      const data = [`@@TransactionSAMP:@pnClaUbicacion=${props.editBoxValue}${config.Separador}@pnIdBoleta=${props.placadato[0].IdBoleta}${config.Separador}@pnClaArticuloPreReg=${element.ClaArticuloPreReg ? element.ClaArticuloPreReg: 0}${config.Separador}@pnClaArticuloCompra=${element.ClaArticuloCompra}${config.Separador}@pnCantidadMaterial=${(element.CantidadMaterial)}${config.Separador}@pnKilosMaterial=${element.KilosMaterial}${config.Separador} @pnKilosReales=${(element.KilosReales)}${config.Separador}@pnKilosContaminados=${element.KilosContaminados}${config.Separador}@pnKilosDocumentados=${(element.KilosDocumentados)}${config.Separador}@pnPorcentajeMaterial=${(element.PorcentajeMaterial)}${config.Separador}@pnEsPesajeParcial=${(element.EsPesajeParcial)}${config.Separador}@pnClaAlmacen=${element.ClaAlmacen}${config.Separador}@pnClaSubAlmacenCompra=${element.ClaSubAlmacenCompra}${config.Separador}@pnClaMotivoContaminacion=${element.ClaMotivoContaminacion ? element.ClaMotivoContaminacion : 0}${config.Separador}@pnEsNoCargoDescargoMaterial=0${config.Separador}@pnClaProveedor=${props.placadato[0].ClaProveedor}${config.Separador}@pnIdListaPrecio=${props.placadato[0].IdListaPrecio}${config.Separador}@pnClaTipoOrdenCompra=''${config.Separador}@pnClaOrdenCompra=''${config.Separador}@pnClaUbicacionProveedor=${props.placadato[0].ClaUbicacionProveedor}${config.Separador}@psClaReferenciaCompra='${element.ClaReferenciaCompra}'${config.Separador}@psClaArtSupTipo='1|2|3|4|5|6|7|8|9|10|11|12|'${config.Separador}@psValorArtSupTipo='${((index + 1) === 1 ? electrobots: electrobots2)}'${config.Separador}@pnIdRenglon=${(element.IdRenglon)}${config.Separador}@pnKilosElectrodomesticos=${(element.KilosElectrodomesticos ? element.KilosElectrodomesticos : 0)}${config.Separador}@pnKilosBote=${(element.KilosBote ? element.KilosBote : 0)}${config.Separador}@pnObservaciones='${(element.Observaciones)}'${config.Separador}@psNombrePcMod='${ipadress}'${config.Separador}@pnClaUsuarioMod=${NumbUsuario}`]
+  
+        return data
+        }
+        if(props.TipoPatio ===9 && index<14){
+      const data = [`@@TransactionSAMP:@pnClaUbicacion=${props.editBoxValue}${config.Separador}@pnIdBoleta=${props.placadato[0].IdBoleta}${config.Separador}@pnClaArticuloPreReg=${element.ClaArticuloPreReg ? element.ClaArticuloPreReg: 0}${config.Separador}@pnClaArticuloCompra=${element.ClaArticuloCompra}${config.Separador}@pnCantidadMaterial=${(element.CantidadMaterial)}${config.Separador}@pnKilosMaterial=${element.KilosMaterial}${config.Separador} @pnKilosReales=${(element.KilosReales)}${config.Separador}@pnKilosContaminados=${element.KilosContaminados}${config.Separador}@pnKilosDocumentados=${(element.KilosDocumentados)}${config.Separador}@pnPorcentajeMaterial=${(element.PorcentajeMaterial)}${config.Separador}@pnEsPesajeParcial=${(element.EsPesajeParcial)}${config.Separador}@pnClaAlmacen=${element.ClaAlmacen}${config.Separador}@pnClaSubAlmacenCompra=${element.ClaSubAlmacenCompra}${config.Separador}@pnClaMotivoContaminacion=${element.ClaMotivoContaminacion ? element.ClaMotivoContaminacion : 0}${config.Separador}@pnEsNoCargoDescargoMaterial=0${config.Separador}@pnClaProveedor=${props.placadato[0].ClaProveedor}${config.Separador}@pnIdListaPrecio=${props.placadato[0].IdListaPrecio}${config.Separador}@pnClaTipoOrdenCompra=''${config.Separador}@pnClaOrdenCompra=''${config.Separador}@pnClaUbicacionProveedor=${props.placadato[0].ClaUbicacionProveedor}${config.Separador}@psClaReferenciaCompra='${element.ClaReferenciaCompra}'${config.Separador}@psClaArtSupTipo='1|2|3|4|5|6|7|8|9|10|11|12|'${config.Separador}@psValorArtSupTipo='${((index + 1) === 1 ? electrobots: electrobots2)}'${config.Separador}@pnIdRenglon=${(element.IdRenglon)}${config.Separador}@pnKilosElectrodomesticos=${(element.KilosElectrodomesticos ? element.KilosElectrodomesticos : 0)}${config.Separador}@pnKilosBote=${(element.KilosBote ? element.KilosBote : 0)}${config.Separador}@pnObservaciones='${(element.Observaciones)}'${config.Separador}@psNombrePcMod='${ipadress}'${config.Separador}@pnClaUsuarioMod=${NumbUsuario}`]
+  
+        return data 
+        }
+      }
+      })
+      const PorcentajeSum =props.row &&  props.row.reduce((acc, val) => acc + val.PorcentajeMaterial, 0) + +porcentajer;
+      const CantidadSum=props.row &&  props.row.reduce((acc, val) => acc + val.CantidadMaterial, 0) + +cantidadr;
 
-  else if(props.TipoPatio ===9 && index<14){
-    callApi(urlKrakenService, 'POST', data121, (res) => {
-      // console.log(res);
-    });
-  }
-  }); 
-  }
-
-
-    async function FuncionData()  {
-    await 
-    callApi(urlKrakenService, 'POST', data36, (res) => {
-     // console.log(res);
-   });
-   
-   console.log(data37)
-     callApi(urlKrakenService, 'POST', data37, (res) => {
-     // console.log(res);
-   });
-
-    /* eslint-disable */
-    if((props.row.length===1 || props.row.length===2) && props.row[0].ClaMaterialRecibeTraspaso){
-      const data371 = {
-       parameters:
-         '{"ClaUbicacion":' +
-         props.editBoxValue +
-         ',"ClaServicioJson":37,"Parametros":"@pnClaUbicacion=' +
-         props.editBoxValue +
-         ',@pnIdBoleta=' +
-         props.placadato[0].IdBoleta +
-         ',@pnClaViajeOrigen='+
-         props.ClaViajeOrigen +
-         ',@pnClaUbicacionOrigen='+
-         props.ClaUbicacionOrigen +
-         ',@pnIdRenglonRecepcion=,@pnIdFabricacion=' +
-         (props.placadato[0].IdFabDefault) +
-         ',@pnIdFabricacionDet=' +
-         (2) +
-         ',@pnClaArticuloRemisionado=' +
-         props.row[0].ClaArticuloRemisionado +
-         ',@pnCantRemisionada=' +
-         props.row[0].CantRemisionada +
-         ',@pnClaMaterialRecibeTraspaso=' +
-         props.row[0].ClaMaterialRecibeTraspaso +
-         ',@pnCantRecibida=' +
-         props.row[0].CantRecibida +
-         ',@pnPesoRecibido=' +
-         props.row[0].PesoRecibido +
-         ',@pnPorcentajeMaterial=' +
-         props.row[0].PorcentajeMaterial +
-         ',@pnPesoTaraRecibido=' +
-         (0) +
-         ',@pnClaAlmacen=' +
-         props.row[0].ClaAlmacen +
-         ',@pnClaSubAlmacenTraspaso=' +
-         props.row[0].ClaSubAlmacenTraspaso +
-         ',@pnClaSubSubAlmacen=' +
-         ( 0) +
-         ',@pnClaSeccion=' +
-         (0) +
-         ',@psReferencia1='+(0)+
-         ',@psReferencia2='+(0)+
-         ',@psReferencia3='+(0)+
-         ',@psReferencia4='+(0)+
-         ',@psReferencia5='+(0)+
-         ',@pnEsPesajeParcial=' +
-         props.row[0].EsPesajeParcial  +
-         ',@pnKilosReales='+(0)+
-         ',@pnKilosContaminados='+
-         (props.row[0].KilosContaminados ? props.row[0].KilosContaminados : 0)+
-         ',@pnClaMotivoContaminacion='+
-         (props.row[0].ClaMotivoContaminacion ? props.row[0].ClaMotivoContaminacion : 0) +
-         ',@pnClaReferenciaTraspaso=' +
-         props.row[0].ClaReferenciaTraspaso +
-         ',@pnEsNoCargoDescargoMaterial=' +
-         props.placadato[0].EsNoCargoDescargoMaterial +
-         ',@psNombrePcMod=' +
-         ipadress +
-         ',@pnClaUsuarioMod=' +
-         NumbUsuario +
-         ',@pnAccionSp=1"}',
-       tipoEstructura: 0,
-     };/* eslint-enable */
-     callApi(urlKrakenService, 'POST', data371, (res) => {
-       // console.log(res);
-     });
+      const data83 ={ parameters: `{"ClaUbicacion":${props.editBoxValue},"Token":"${Token}","ClaServicioJson":"83","IdBoleta":"${props.placadato[0].IdBoleta}","EnBloque":"${1}","Encabezado":"${data11}","Detalle":"${data12}${data12g ? data12g.join("") : null}","Validacion":"${(((PorcentajeSum !== null && (PorcentajeSum === 100)) || (PorcentajeSum === 0 && CantidadSum>0) || (props.ValidaCargo===1 && props.row && props.row.length>0 && (props.row[0].CantidadMaterial !==null || props.row[0].KilosMaterial!==null || props.row[0].PorcentajeMaterial!==null)&& (PorcentajeSum !== null && PorcentajeSum === 100) || (PorcentajeSum === 0 && CantidadSum>0)))|| pesajeparcial===1) ? data13 : ''}"}`,
+      tipoEstructura: 0}
+    async function GuardaCompra(){
+      console.log(data83)
+      callApi(urlKrakenBloque, 'POST', data83, (res) => {
+        props.setcambioGuardar(1);
+        props.setActualizar(true);
+        setTimeout(() =>{
+        props.setActualizar(false)
+        }, 50);
+      })
     }
-   
-    if(props.row.length===2 && props.row[1].ClaMaterialRecibeTraspaso){
-      /* eslint-disable */
-     const data372 = {
-      parameters:
-        '{"ClaUbicacion":' +
-        props.editBoxValue +
-        ',"ClaServicioJson":37,"Parametros":"@pnClaUbicacion=' +
-        props.editBoxValue +
-        ',@pnIdBoleta=' +
-        props.placadato[0].IdBoleta +
-        ',@pnClaViajeOrigen='+
-        props.ClaViajeOrigen +
-        ',@pnClaUbicacionOrigen='+
-        props.ClaUbicacionOrigen +
-        ',@pnIdRenglonRecepcion=,@pnIdFabricacion=' +
-        (props.placadato[0].IdFabDefault) +
-        ',@pnIdFabricacionDet=' +
-        (2) +
-        ',@pnClaArticuloRemisionado=' +
-        props.row[1].ClaArticuloRemisionado +
-        ',@pnCantRemisionada=' +
-        props.row[1].CantRemisionada+
-        ',@pnClaMaterialRecibeTraspaso=' +
-        props.row[1].ClaMaterialRecibeTraspaso +
-        ',@pnCantRecibida=' +
-        props.row[1].CantRecibida +
-        ',@pnPesoRecibido=' +
-        props.row[1].PesoRecibido +
-        ',@pnPorcentajeMaterial=' +
-        props.row[1].PorcentajeMaterial +
-        ',@pnPesoTaraRecibido=' +
-        (0) +
-        ',@pnClaAlmacen=' +
-        props.row[1].ClaAlmacen +
-        ',@pnClaSubAlmacenTraspaso=' +
-        props.row[1].ClaSubAlmacenTraspaso +
-        ',@pnClaSubSubAlmacen=' +
-        ( 0) +
-        ',@pnClaSeccion=' +
-        (0) +
-        ',@psReferencia1='+(0)+
-        ',@psReferencia2='+(0)+
-        ',@psReferencia3='+(0)+
-        ',@psReferencia4='+(0)+
-        ',@psReferencia5='+(0)+
-        ',@pnEsPesajeParcial=' +
-        props.row[1].EsPesajeParcial  +
-        ',@pnKilosReales='+(0)+
-        ',@pnKilosContaminados='+
-        props.row[1].KilosContaminados+
-        ',@pnClaMotivoContaminacion='+
-        (props.row[1].ClaMotivoContaminacion ? props.row[1].ClaMotivoContaminacion : 0) +
-        ',@pnClaReferenciaTraspaso=' +
-        props.row[1].ClaReferenciaTraspaso +
-        ',@pnEsNoCargoDescargoMaterial=' +
-        props.placadato[0].EsNoCargoDescargoMaterial +
-        ',@psNombrePcMod=' +
-        ipadress +
-        ',@pnClaUsuarioMod=' +
-        NumbUsuario +
-        ',@pnAccionSp=1"}',
-      tipoEstructura: 0,
-    };/* eslint-enable */
-     callApi(urlKrakenService, 'POST', data372, (res) => {
-      // console.log(res);
-    });
-   }
-  }
-  if(props.NomMotivoEntrada===3){
-  FuncionData()
-}
 
-    props.setrow('');
+    if(props.NomMotivoEntrada===9){
+      GuardaCompra()
+  }
+
     props.setpesajeparcial(pesajeparcial);
     props.setmodaladdOpen(false);
+    props.setrow('');
 
-    props.setActualizar(true);
-    setTimeout(() =>{
-props.setActualizar(false)
-    }, 50);
-  };
+    }
+
+
+
+        else if (props.NomMotivoEntrada===3){
+        const data36 = 
+        [ `@pnClaUbicacion=${props.editBoxValue}${config.Separador}@pnIdBoleta=${props.placadato[0].IdBoleta}${config.Separador}@pnClaViajeOrigen=${props.ClaViajeOrigen}${config.Separador}@pnClaUbicacionOrigen=${props.ClaUbicacionOrigen}${config.Separador}@pnClaTransporte=${props.placadato[0].ClaTransporte}${config.Separador}@pnClaTransportista=${ClaTransportista}${config.Separador}@psNomTransportista='${NomTransportista}'${config.Separador}@psNomChofer='${(props.placadato[0].NomChofer !== null ? props.placadato[0].NomChofer: 0)}'${config.Separador}@psPlacas='${props.placadato[0].Placas}'${config.Separador}@pnPesoDocumentado=${props.placadato[0].PesoDocumentado}${config.Separador}@psObservaciones='${(props.placadato[0].Observaciones ? props.placadato[0].Observaciones.replace('#', '%23'): '')}'${config.Separador}@pnEsRevisionEfectuada=${(props.placadato[0].EsRevisionEfectuada ? props.placadato[0].EsRevisionEfectuada : 0)}${config.Separador}@pnClaTipoClasificacion=${props.placadato[0].ClaTipoClasificacion}${config.Separador}@pnEsNoCargoDescargoMaterial=0${config.Separador}@psNombrePcMod='${ipadress}'${config.Separador}@pnClaUsuarioMod=${NumbUsuario}${config.Separador}@psOrigen='WEB'`];
+ 
+        const data37 = 
+        [ `@@TransactionSAMP:@pnClaUbicacion=${props.editBoxValue}${config.Separador}@pnIdBoleta=${props.placadato[0].IdBoleta}${config.Separador}@pnClaViajeOrigen=${props.ClaViajeOrigen}${config.Separador}@pnClaUbicacionOrigen=${props.ClaUbicacionOrigen}${config.Separador}@pnIdRenglonRecepcion=${(props.row.length + 1)}${config.Separador}@pnIdFabricacion=${idFabricacion}${config.Separador}@pnIdFabricacionDet=${IdFabricacionDet}${config.Separador}@pnClaArticuloRemisionado=${(idmaterialviaje ? idmaterialviaje : 0)}${config.Separador}@pnCantRemisionada=${cantremisionada}${config.Separador}@pnClaMaterialRecibeTraspaso=${idmaterialr}${config.Separador}@pnCantRecibida=${((kilosr > 0 ? kilosr /(Datosmaterial!==0 ? Datosmaterial[0].PesoTeoricoRecibido : 1) : ((cantidadr === '' || cantidadr === null ) ? 0 : cantidadr )))}${config.Separador}@pnPesoRecibido=${((cantidadr > 0 ? cantidadr * (Datosmaterial!==0 ? Datosmaterial[0].PesoTeoricoRecibido:1) : (kilosr === '' ? 0 : kilosr)))}${config.Separador}@pnPorcentajeMaterial=${(porcentajer ==='' ? 0 : pesajeparcial===1 ? 100 : porcentajer)}${config.Separador}@pnPesoTaraRecibido=0${config.Separador}@pnClaAlmacen=${almacen}${config.Separador}@pnClaSubAlmacenTraspaso=${(subalmacen)}${config.Separador}@pnAccionSp=1${config.Separador}@pnClaSeccion=0${config.Separador}@psReferencia1=${Referencia}${config.Separador}@psReferencia2=0${config.Separador}@psReferencia3=0${config.Separador}@psReferencia4=0${config.Separador}@psReferencia5=0${config.Separador}@pnEsPesajeParcial=${pesajeparcial}${config.Separador}@pnKilosReales=0${config.Separador}@pnKilosContaminados=${((+kiloscont + +Totales))}${config.Separador}@pnClaMotivoContaminacion=${(Totales>0 && kiloscont<1 ? 6 : razoncont)}${config.Separador}@pnClaReferenciaTraspaso=${Referencia}${config.Separador}@psClaContaminantes='1|2|3|4|5|6|'${config.Separador}@psValorContaminantes='${Bollas}|${Cilindro}|${Tanque}|${LlantasChico}|${LlantasMediano}|${LlantasGrande}|'${config.Separador}@pnEsNoCargoDescargoMaterial=${props.placadato[0].EsNoCargoDescargoMaterial}${config.Separador}@pnObservaciones='${(observaciones)}'${config.Separador}@psNombrePcMod='${ipadress}'${config.Separador}@pnClaUsuarioMod=${NumbUsuario}`];
+ 
+
+        const data37g= props.row && props.row.map((element,index)=>{
+          if(element.ClaMaterialRecibeTraspaso){
+            if(props.TipoPatio ===4 && index<2){
+          const data = [ `@@TransactionSAMP:@pnClaUbicacion=${props.editBoxValue}${config.Separador}@pnIdBoleta=${props.placadato[0].IdBoleta}${config.Separador}@pnClaViajeOrigen=${props.ClaViajeOrigen}${config.Separador}@pnClaUbicacionOrigen=${props.ClaUbicacionOrigen}${config.Separador}@pnIdRenglonRecepcion=${(element.IdRenglonRecepcion ? element.IdRenglonRecepcion : '')}${config.Separador}@pnIdFabricacion=${(element.IdFabricacion ? element.IdFabricacion : 0)}${config.Separador}@pnIdFabricacionDet=${(element.IdFabricacionDet ? element.IdFabricacionDet : 0)}${config.Separador}@pnClaArticuloRemisionado=${(element.ClaArticuloRemisionado ? element.ClaArticuloRemisionado : 0)}${config.Separador}@pnCantRemisionada=${(element.CantRemisionada ? element.CantRemisionada : 0)}${config.Separador}@pnClaMaterialRecibeTraspaso=${element.ClaMaterialRecibeTraspaso}${config.Separador}@pnCantRecibida=${element.CantRecibida}${config.Separador}@pnPesoRecibido=${element.PesoRecibido}${config.Separador}@pnPorcentajeMaterial=${element.PorcentajeMaterial}${config.Separador}@pnPesoTaraRecibido=${(element.PesoTaraRecibido !== null ? element.PesoTaraRecibido : 0)}${config.Separador}@pnClaAlmacen=${(element.ClaAlmacen ? element.ClaAlmacen : 1)}${config.Separador}@pnClaSubAlmacenTraspaso=${(element.ClaSubAlmacenTraspaso)}${element.ClaSubSubAlmacen !== null   && element.ClaSubSubAlmacen !== 0 ? (config.Separador+'@pnClaSubSubAlmacen='+element.ClaSubSubAlmacen) : ''}${config.Separador}@pnClaSeccion=${(element.ClaSeccion !== null ? element.ClaSeccion : 0)}${config.Separador}@psReferencia1=${(element.Referencia1 !== null ? element.Referencia1 : 0)}${config.Separador}@psReferencia2=${(element.Referencia2 !== null ? element.Referencia2 : 0)}${config.Separador}@psReferencia3=${(element.Referencia3 !== null ? element.Referencia3 : 0)}${config.Separador}@psReferencia4=${(element.Referencia4 !== null ? element.Referencia4 : 0)}${config.Separador}@psReferencia5=${(element.Referencia5 !== null ? element.Referencia5 : 0)}${config.Separador}@pnEsPesajeParcial=${element.EsPesajeParcial}${config.Separador}@pnKilosReales=${(element.KilosReales ? element.KilosReales : 0)}${config.Separador}@pnKilosContaminados=${(element.KilosContaminados ? element.KilosContaminados : 0)}${config.Separador}@pnClaMotivoContaminacion=${(element.ClaMotivoContaminacion ? element.ClaMotivoContaminacion : 0)}${config.Separador}@pnClaReferenciaTraspaso=${element.ClaReferenciaTraspaso}${config.Separador}@psClaContaminantes='1|2|3|4|5|6|'${config.Separador}@psValorContaminantes='${Bollas2}|${Cilindro2}|${Tanque2}|${LlantasChico2}|${LlantasMediano2}|${LlantasGrande2}|'${config.Separador}@pnEsNoCargoDescargoMaterial=0${config.Separador}@pnObservaciones='${(element.observaciones)}'${config.Separador}@psNombrePcMod='${ipadress}'${config.Separador}@pnClaUsuarioMod=${NumbUsuario}`];
+ 
+            return data
+            }
+            if(props.TipoPatio ===9 && index<14){
+          const data = [ `@@TransactionSAMP:@pnClaUbicacion=${props.editBoxValue}${config.Separador}@pnIdBoleta=${props.placadato[0].IdBoleta}${config.Separador}@pnClaViajeOrigen=${props.ClaViajeOrigen}${config.Separador}@pnClaUbicacionOrigen=${props.ClaUbicacionOrigen}${config.Separador}@pnIdRenglonRecepcion=${(element.IdRenglonRecepcion ? element.IdRenglonRecepcion : '')}${config.Separador}@pnIdFabricacion=${(element.IdFabricacion ? element.IdFabricacion : 0)}${config.Separador}@pnIdFabricacionDet=${(element.IdFabricacionDet ? element.IdFabricacionDet : 0)}${config.Separador}@pnClaArticuloRemisionado=${(element.ClaArticuloRemisionado ? element.ClaArticuloRemisionado : 0)}${config.Separador}@pnCantRemisionada=${(element.CantRemisionada ? element.CantRemisionada : 0)}${config.Separador}@pnClaMaterialRecibeTraspaso=${element.ClaMaterialRecibeTraspaso}${config.Separador}@pnCantRecibida=${element.CantRecibida}${config.Separador}@pnPesoRecibido=${element.PesoRecibido}${config.Separador}@pnPorcentajeMaterial=${element.PorcentajeMaterial}${config.Separador}@pnPesoTaraRecibido=${(element.PesoTaraRecibido !== null ? element.PesoTaraRecibido : 0)}${config.Separador}@pnClaAlmacen=${(element.ClaAlmacen ? element.ClaAlmacen : 1)}${config.Separador}@pnClaSubAlmacenTraspaso=${(element.ClaSubAlmacenTraspaso)}${element.ClaSubSubAlmacen !== null  && element.ClaSubSubAlmacen !== 0  ? (config.Separador+'@pnClaSubSubAlmacen='+element.ClaSubSubAlmacen) : ''}${config.Separador}@pnClaSeccion=${(element.ClaSeccion !== null ? element.ClaSeccion : 0)}${config.Separador}@psReferencia1=${(element.Referencia1 !== null ? element.Referencia1 : 0)}${config.Separador}@psReferencia2=${(element.Referencia2 !== null ? element.Referencia2 : 0)}${config.Separador}@psReferencia3=${(element.Referencia3 !== null ? element.Referencia3 : 0)}${config.Separador}@psReferencia4=${(element.Referencia4 !== null ? element.Referencia4 : 0)}${config.Separador}@psReferencia5=${(element.Referencia5 !== null ? element.Referencia5 : 0)}${config.Separador}@pnEsPesajeParcial=${element.EsPesajeParcial}${config.Separador}@pnKilosReales=${(element.KilosReales ? element.KilosReales : 0)}${config.Separador}@pnKilosContaminados=${(element.KilosContaminados ? element.KilosContaminados : 0)}${config.Separador}@pnClaMotivoContaminacion=${(element.ClaMotivoContaminacion ? element.ClaMotivoContaminacion : 0)}${config.Separador}@pnClaReferenciaTraspaso=${element.ClaReferenciaTraspaso}${config.Separador}@psClaContaminantes='1|2|3|4|5|6|'${config.Separador}@psValorContaminantes='${Bollas2}|${Cilindro2}|${Tanque2}|${LlantasChico2}|${LlantasMediano2}|${LlantasGrande2}|'${config.Separador}@pnEsNoCargoDescargoMaterial=0${config.Separador}@pnObservaciones='${(element.observaciones)}'${config.Separador}@psNombrePcMod='${ipadress}'${config.Separador}@pnClaUsuarioMod=${NumbUsuario}`];
+ 
+            return data 
+            }
+          }
+          })
+
+          const data38 =
+          [`@pnClaUbicacion=${props.editBoxValue}${config.Separador}@pnIdBoleta=${props.placadato[0].IdBoleta}${config.Separador}@pnClaUbicacionOrigen=${props.ClaUbicacionOrigen}${config.Separador}@pnClaViajeOrigen=${props.ClaViajeOrigen}${config.Separador}@pnEsNoCargoDescargoMaterial=0${config.Separador}@psNombrePcMod='${ipadress}'${config.Separador}@pnClaUsuarioMod=${NumbUsuario}`]
+        
+          const PorcentajeSum =props.row &&  props.row.reduce((acc, val) => acc + val.PorcentajeMaterial, 0) + +porcentajer;
+          const CantidadSum=props.row &&  props.row.reduce((acc, val) => acc + val.CantidadMaterial, 0) + +cantidadr;
+
+          const data84 ={ parameters: `{"ClaUbicacion":${props.editBoxValue},"Token":"${Token}","ClaServicioJson":"84","IdBoleta":"${props.placadato[0].IdBoleta}","EnBloque":"${1}","Encabezado":"${data36}","Detalle":"${data37}${data37g ? data37g.join("") : ''}","Validacion":"${(((PorcentajeSum !== null && (PorcentajeSum === 100)) || (PorcentajeSum === 0 && CantidadSum>0) || (props.ValidaCargo===1 && props.row && props.row.length>0 && (props.row[0].CantidadMaterial !==null || props.row[0].KilosMaterial!==null || props.row[0].PorcentajeMaterial!==null)&& (PorcentajeSum !== null && PorcentajeSum === 100) || (PorcentajeSum === 0 && CantidadSum>0)))|| pesajeparcial===1) ? data38 : ''}"}`,
+        tipoEstructura: 0}
+
+
+        async function FuncionData()  {
+          console.log(data84)
+          callApi(urlKrakenBloque, 'POST', data84, (res) => {
+                  props.setcambioGuardar(1);
+                  props.setActualizar(true);
+                  setTimeout(() =>{
+                        props.setActualizar(false)
+                      }, 50);
+                })
+              }
+
+              if(props.NomMotivoEntrada===3){
+                FuncionData()
+            }
+            
+
+              props.setpesajeparcial(pesajeparcial);
+              props.setmodaladdOpen(false);
+              props.setrow('');
+    }
+    // usage
+    /* eslint-enable */
+};
 
 
   // Componente de botes y electrodomésticos para el respectivo material
@@ -1194,8 +1046,8 @@ props.setActualizar(false)
 
   function Botes() {
     return (
-      <div className="box">
-        <span className="close-icon" onClick={closebote}>
+      <div className="boxbot">
+        <span className="close-icon" onClick={handleBack}>
           x
         </span>
         <CardHeader>
@@ -1203,12 +1055,12 @@ props.setActualizar(false)
           <div className="bote-elect">
             <Row>
               <Col>Electrodoméstico:</Col>
-              <Col>{electrodomestico} Kgs</Col>
+              <Col>{electrodomestico.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} Kg</Col>
               <Col></Col>
             </Row>
             <Row>
               <Col>Bote:</Col>
-              <Col>{botes} Kgs</Col>
+              <Col>{botes.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} Kg</Col>
               <Col></Col>
             </Row>
           </div>
@@ -1237,7 +1089,7 @@ props.setActualizar(false)
                     value={srefri === 0 ? '' : srefri}
                     defaultValue=""
                     className="popup-number"
-                    disabled="disabled"
+                    onChange={(e)=> setsrefri(e.target.value)}
                   />
                 </div>
               </div>
@@ -1263,7 +1115,7 @@ props.setActualizar(false)
                     value={mrefri === 0 ? '' : mrefri}
                     defaultValue=""
                     className="popup-number"
-                    disabled="disabled"
+                    onChange={(e)=> setmrefri(e.target.value)}
                   />
                 </div>
               </div>
@@ -1288,14 +1140,11 @@ props.setActualizar(false)
                     value={refri === 0 ? '' : refri}
                     defaultValue=""
                     className="popup-number"
-                    disabled="disabled"
+                    onChange={(e)=> setrefri(e.target.value)}
                   />
                 </div>
               </div>
             </Col>
-          </Row>
-
-          <Row className="popup-row">
             <Col>
               <div className="popup-column">
                 <div>
@@ -1314,11 +1163,14 @@ props.setActualizar(false)
                     value={lavadora === 0 ? '' : lavadora}
                     defaultValue=""
                     className="popup-number"
-                    disabled="disabled"
+                    onChange={(e)=> setlavadora(e.target.value)}
                   />
                 </div>
               </div>
             </Col>
+          </Row>
+
+          <Row className="popup-row">
             <Col>
               <div className="popup-column">
                 <div>
@@ -1337,7 +1189,7 @@ props.setActualizar(false)
                     value={boiler === 0 ? '' : boiler}
                     defaultValue=""
                     className="popup-number"
-                    disabled="disabled"
+                    onChange={(e)=> setboiler(e.target.value)}
                   />
                 </div>
               </div>
@@ -1360,14 +1212,11 @@ props.setActualizar(false)
                     value={secadora === 0 ? '' : secadora}
                     defaultValue=""
                     className="popup-number"
-                    disabled="disabled"
+                    onChange={(e)=> setsecadora(e.target.value)}
                   />
                 </div>
               </div>
             </Col>
-          </Row>
-
-          <Row className="popup-row">
             <Col>
               <div className="popup-column">
                 <div>
@@ -1386,7 +1235,7 @@ props.setActualizar(false)
                     value={estufa === 0 ? '' : estufa}
                     defaultValue=""
                     className="popup-number"
-                    disabled="disabled"
+                    onChange={(e)=> setestufa(e.target.value)}
                   />
                 </div>
               </div>
@@ -1409,11 +1258,14 @@ props.setActualizar(false)
                     value={microondas === 0 ? '' : microondas}
                     defaultValue=""
                     className="popup-number"
-                    disabled="disabled"
+                    onChange={(e)=> setmicroondas(e.target.value)}
                   />
                 </div>
               </div>
             </Col>
+          </Row>
+
+          <Row className="popup-row">
             <Col>
               <div className="popup-column">
                 <div>
@@ -1432,14 +1284,11 @@ props.setActualizar(false)
                     value={otros === 0 ? '' : otros}
                     defaultValue=""
                     className="popup-number"
-                    disabled="disabled"
+                    onChange={(e)=> setotros(e.target.value)}
                   />
                 </div>
               </div>
             </Col>
-          </Row>
-
-          <Row className="popup-row">
             <Col>
               <div className="popup-column">
                 <div>
@@ -1458,7 +1307,7 @@ props.setActualizar(false)
                     value={costal === 0 ? '' : costal}
                     defaultValue=""
                     className="popup-number"
-                    disabled="disabled"
+                    onChange={(e)=> setcostal(e.target.value)}
                   />
                 </div>
               </div>
@@ -1481,7 +1330,7 @@ props.setActualizar(false)
                     value={saco === 0 ? '' : saco}
                     defaultValue=""
                     className="popup-number"
-                    disabled="disabled"
+                    onChange={(e)=> setsaco(e.target.value)}
                   />
                 </div>
               </div>
@@ -1504,7 +1353,7 @@ props.setActualizar(false)
                     value={contenedor === 0 ? '' : contenedor}
                     defaultValue=""
                     className="popup-number"
-                    disabled="disabled"
+                    onChange={(e)=> setcontenedor(e.target.value)}
                   />
                 </div>
               </div>
@@ -1517,13 +1366,10 @@ props.setActualizar(false)
             type="button"
             className="popup-button"
             onClick={
-              (electrodomestico>1 || botes>1) ? togglePopup2 :null
+               togglePopup0
             }
           >
-            Siguiente &gt;
-          </button>
-          <button type="button" className="popup-button" onClick={() => setidmaterialr(0)}>
-            &#60; Regresar
+            &#60; OK
           </button>
         </div>
       </div>
@@ -1534,10 +1380,10 @@ props.setActualizar(false)
 
   return (
     <div>
-      {!isNext ? (
-        ((idmaterialr === 301522) || (idmaterialr ===524225)) ? (
+      {isNext===1 ? 
+        (
           <Botes />
-        ) : (
+        ) : isNext===0 ? (
           <div className="box">
             <span className="close-icon" onClick={handleBack}>
               x
@@ -1566,18 +1412,29 @@ props.setActualizar(false)
                   {props.NomMotivoEntrada=== 9 ? <Row> No aplica</Row> :props.NomMotivoEntrada=== 3 ? 
                     (
                       <Row> 
-                        {props.Materialviaje &&
+                        {props.Materialviaje && props.Materialviaje.every( v => v.idFabricacion === props.Materialviaje[0].idFabricacion) ?
                         (
-                        <SelectBox
-                          searchEnabled={true}
-                          dataSource={props.Materialviaje ? props.Materialviaje:''}
-                          defaultValue={idmaterialviaje}
-                          displayExpr="NomArticuloRemisionado"
-                          valueExpr="ClaArticuloRemisionado"
-                          placeholder="Seleccionar Material.."
-                          onValueChanged={onValueChangede}
-                        />
-                        )}
+                          <SelectBox
+                            searchEnabled={true}
+                            dataSource={props.Materialviaje ? props.Materialviaje:''}
+                            defaultValue={idmaterialviaje}
+                            displayExpr="NomArticuloRemisionado"
+                            valueExpr="ClaArticuloRemisionado"
+                            placeholder="Seleccionar Material.."
+                            onValueChanged={onValueChangede}
+                          />
+                        ):
+                        (
+                          <SelectBox
+                            searchEnabled={true}
+                            dataSource={props.Materialviaje ? props.Materialviaje:''}
+                            defaultValue={idFabricacion}
+                            displayExpr="NomArticuloRemisionado"
+                            valueExpr="idFabricacion"
+                            placeholder="Seleccionar Material.."
+                            onValueChanged={onValueChangedes}
+                          />
+                          )}
                       </Row>
                     ):<Row> No aplica</Row>}
                 </Col>
@@ -1621,7 +1478,7 @@ props.setActualizar(false)
               <Row className="popup-row">
                 <Col>
                   <Row className="popup-title">Cantidad Enviada</Row>
-                  <Row>-</Row>
+                  <Row>{cantremisionada !== null && unidadRemisionado !== null ? `${cantremisionada.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}  ${unidadRemisionado}`: '-' }</Row>
                 </Col>
                 <Col>
                   <Row className="popup-title" style={{ marginLeft: '0px' }}>
@@ -1658,7 +1515,7 @@ props.setActualizar(false)
               <Row className="popup-row">
                 <Col>
                   <Row className="popup-title">Kilos Enviados</Row>
-                  <Row>-</Row>
+                  <Row>{pesoremisionado !==null && unidadRemisionado !== null ?`${pesoremisionado.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}  ${unidadRemisionado}` : '-'}</Row>
                 </Col>
                 <Col>
                   <Row className="popup-title" style={{ marginLeft: '0px' }}>
@@ -1684,7 +1541,7 @@ props.setActualizar(false)
                       type="number"
                     />
                     <InputGroupAddon addonType="append">
-                      <InputGroupText>kgs</InputGroupText>
+                      <InputGroupText>Kg</InputGroupText>
                     </InputGroupAddon>
                   </InputGroup>
                 </Col>
@@ -1703,7 +1560,7 @@ props.setActualizar(false)
                         max={100}
                         value={
                           props.placadato[0].EsPesajeParcial === 1 || pesajeparcial === 1
-                            ? 100
+                            ? 0
                             : porcentajer
                         }
                         disabled={
@@ -1720,16 +1577,6 @@ props.setActualizar(false)
                   </Row>
                 </Col>
                 <Col>
-                  <Row className="popup-title" style={{ marginLeft: '0px' }}>
-                    Zona de Descarga
-                  </Row>
-                  <Input className="popup-recibidos" type="text" />
-                </Col>
-              </Row>
-
-              <Row className="popup-row">
-                <Col></Col>
-                <Col>
                   <form>
                     <input
                       type="checkbox"
@@ -1740,6 +1587,16 @@ props.setActualizar(false)
                     <>{/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}</>
                     <label type="text">&nbsp; Pesaje Parcial</label>
                   </form>
+                  {/* <Row className="popup-title" style={{ marginLeft: '0px' }}>
+                    Zona de Descarga
+                  </Row> */}
+                </Col>
+              </Row>
+
+              <Row className="popup-row">
+                <Col></Col>
+                <Col>
+                
                 </Col>
               </Row>
               <Row
@@ -1752,7 +1609,7 @@ props.setActualizar(false)
                 className="warning"
               >
                 <span style={{ color: 'red !important' }}>
-                  {PorcentajeSum > 100 ? 'El porcentaje no puede exceder el 100%' : null}
+                  {(PorcentajeSum > 100 && pesajeparcial===0) ? 'El porcentaje no puede exceder el 100%' : null}
                 </span>
               </Row>
               <Row className="popup-row">
@@ -1765,54 +1622,62 @@ props.setActualizar(false)
               </Row>
               <Row className="popup-row">
                 <Col>
-                  <Row className="popup-title">
-                    {/* <Col>Almacén</Col>
-                    <Col>
-                      <Row>1</Row>
-                    </Col> */}
+                  {/* En desarrollo */}
+
+                  <Row className="popup-title" style={{paddingTop:'10px'}}>
+                    <div className="opcion" onClick={togglePopup2} style={{marginLeft:'7%',marginRight:'7%',marginBottom:'0%',backgroundColor: 'white',borderRadius: '50%',border: '1px solid grey',padding: '10px'}}><img src={Cilinder} alt="dryer" style={{width:'40px'}} /><br /><span style={{fontWeight: '400'}}></span></div>
+                    {props.NomMotivoEntrada===9 && Materialescheck===0 ? (<div className="opcion" onClick={togglePopup1} style={{marginLeft:'7%',marginRight:'7%',marginBottom:'0%',backgroundColor: 'white',borderRadius: '50%',border: '1px solid grey',padding: '10px'}}><img src={microwave} alt="dryer" style={{width:'40px'}} /></div>):''}
+                    {props.NomMotivoEntrada===9 && Materialescheck===0 ? (<div className="opcion" onClick={togglePopup1} style={{marginLeft:'7%',marginRight:'7%',marginBottom:'0%',backgroundColor: 'white',borderRadius: '50%',border: '1px solid grey',padding: '10px'}}><img src={bag} alt="dryer" style={{width:'40px'}} /></div>):''}
                   </Row>
+                  <Row>
+                    <div className="opcion-titulo" style={{marginLeft:'6%',marginTop:'0%',fontSize:'10px'}}>Contaminantes</div>
+                    {props.NomMotivoEntrada===9 && Materialescheck===0 ? (<div className="opcion-titulo" style={{marginLeft:'9%',marginTop:'0%',fontSize:'10px'}}>Electrodomésticos</div>) : ''}
+                    {props.NomMotivoEntrada===9 && Materialescheck===0 ? (<div className="opcion-titulo" style={{marginLeft:'16%',marginTop:'0%',fontSize:'10px'}}>Botes</div>):''}
+                  </Row>
+                  <Row>
+                    <div className="opcion-titulo" style={{width:'31%',textAlign:'center',marginTop:'0%',fontSize:'14px'}}>{(+Totales + +kiloscont).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} Kg</div>
+                    {props.NomMotivoEntrada===9 && Materialescheck===0 ? (<div className="opcion-titulo" style={{width:'31%',textAlign:'center',marginTop:'0%',fontSize:'14px'}}>{electrodomestico.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} Kg</div>) : ''}
+                    {props.NomMotivoEntrada===9 && Materialescheck===0 ? (<div className="opcion-titulo" style={{width:'31%',textAlign:'center',marginTop:'0%',fontSize:'14px'}}>{botes.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} Kg</div>):''}
+                  </Row>
+                  {/* Fin desarrollo */}
                 </Col>
                 <Col className="ajuste-subalmacen">
-                  <Row className="popup-title">
-                    <Col>Subalmacén</Col>
-                    <Col>
-                      <Row>
-                        <SelectBox
-                          dataSource={props.material ? subalmacenes : ''}
-                          defaultValue={subalmacen}
-                          displayExpr={props.NomMotivoEntrada===9 ? "NomSubAlmacenCompra": props.NomMotivoEntrada===3 ? "NomSubAlmacenTraspaso":0}
-                          valueExpr={props.NomMotivoEntrada===9 ? "ClaSubAlmacenCompra": props.NomMotivoEntrada===3 ? "ClaSubAlmacenTraspaso":0}
-                          placeholder="Seleccionar Subalmacen.."
-                          onValueChanged={handlesubalmacen}
-                          noDataText="Selecciona Material"
-                          disabled={subalmacenes.length === 1}
-                        />
-                      </Row>
-                      <Row
-                        style={{
-                          color: 'red',
-                          position: 'absolute',
-                          marginTop: '0px',
-                          marginLeft: '-5%',
-                        }}
-                        className="warning"
-                      >
-                        <span style={{ color: 'red !important' }}>
-                          {idmaterialr > 1 && subalmacen === 0 ? 'Selecciona subalmacen' : null}
-                        </span>
-                      </Row>
-                    </Col>
+                  <Row className="popup-title" style={{ marginLeft: '0px' }}>Subalmacén</Row>
+                  <SelectBox
+                    dataSource={props.material ? subalmacenes : ''}
+                    value={subalmacenes.length===1 ? (props.NomMotivoEntrada===9? subalmacenes[0].ClaSubAlmacenCompra : subalmacenes[0].ClaSubAlmacenTraspaso):subalmacen}
+                    displayExpr={props.NomMotivoEntrada===9 ? "NomSubAlmacenCompra": props.NomMotivoEntrada===3 ? "NomSubAlmacenTraspaso":0}
+                    valueExpr={props.NomMotivoEntrada===9 ? "ClaSubAlmacenCompra": props.NomMotivoEntrada===3 ? "ClaSubAlmacenTraspaso":0}
+                    placeholder="Seleccionar Subalmacen.."
+                    onValueChanged={handlesubalmacen}
+                    noDataText="Selecciona Material"
+                    disabled={subalmacenes.length === 1}
+                  />
+                  <Row
+                    style={{
+                      color: 'red',
+                      position: 'absolute',
+                      marginTop: '0px',
+                      marginLeft: '0px',
+                    }}
+                    className="warning"
+                  >
+                    <span style={{ color: 'red !important'}}>
+                      {idmaterialr > 1 && subalmacen === 0 ? 'Selecciona subalmacen' : null}
+                    </span>
                   </Row>
                 </Col>
               </Row>
             </Container>
-            <div>
+            {/* Liberado */}
+
+            {/* <div>
               <button
                 style={{ marginRight: '30px' }}
                 type="button"
                 className="popup-button"
                 onClick={
-                  PorcentajeSum > 100 || idmaterialr < 1 || subalmacen < 1 || (props.NomMotivoEntrada=== 3 && idmaterialviaje < 1) || ((kilosr===0 || kilosr==='') && (cantidadr===0 || cantidadr==='') && (porcentajer===0 || porcentajer==='') && (pesajeparcial===0) && (Datosmaterial=== 0)) ? null : togglePopup2
+                  (PorcentajeSum > 100 && (pesajeparcial===0)) || idmaterialr < 1 || subalmacen < 1 || (props.NomMotivoEntrada=== 3 && idmaterialviaje < 1) || ((kilosr===0 || kilosr==='' || kilosr==='0' ) && (cantidadr===0 || cantidadr==='' || cantidadr==='0') && (porcentajer===0 || porcentajer==='' || porcentajer==='0') && (pesajeparcial===0)) || ((Datosmaterial=== 0) || (ElectBotecheck===1 && Electcheck===1)) ? null :((idmaterialr !== config.idElect) && (idmaterialr !==config.idBote) && Electcheck===0 && Materialescheck===0) ? togglePopup2 : togglePopup2
                 }
               >
                 Siguiente &gt;
@@ -1820,11 +1685,27 @@ props.setActualizar(false)
               <button type="button" className="popup-button" onClick={handleBack}>
                 &#9447; Cancelar
               </button>
+            </div> */}
+
+            {/* Fin Liberado */}
+
+            {/* En desarrollo */}
+            <div>
+              <button
+                style={{ marginRight: '30px' }}
+                type="button"
+                className="popup-button"
+                onClick={(PorcentajeSum > 100 && (pesajeparcial===0)) || idmaterialr < 1 || subalmacen < 1 || (props.NomMotivoEntrada=== 3 && idmaterialviaje < 1) || ((kilosr===0 || kilosr==='' || kilosr==='0' ) && (cantidadr===0 || cantidadr==='' || cantidadr==='0') && (porcentajer===0 || porcentajer==='' || porcentajer==='0') && (pesajeparcial===0)) || ((Datosmaterial=== 0) || (ElectBotecheck===1 && Electcheck===1)) ? null : (Referencia !==0 && Referencia!==null && Referencia !=='0') ? handleSubmit:handleMensaje}
+              >
+                Guardar &#43;
+              </button>
             </div>
-          </div>
+            {/* Fin desarrollo */}
+
+          </div>  
         )
-      ) : (
-        <div className="box">
+        : isNext===2 && (
+        <div className="box Contabox">
           <span className="close-icon" onClick={handleBack}>
             x
           </span>
@@ -1855,7 +1736,9 @@ props.setActualizar(false)
             </div>
           </CardHeader>
           <Container fluid={true}>
-            <Row className="popup-row" style={{ marginTop: '40px',height:'80px',marginLeft:"7%"}}>
+
+            {/* Liberado */}
+            {/* <Row className="popup-row" style={{ marginTop: '40px',height:'80px',marginLeft:"7%"}}>
               <Col>
                 <Row className="popup-title">Material Recibido</Row>
                 <Row>{nombrematerialr}</Row>
@@ -1879,35 +1762,28 @@ props.setActualizar(false)
                 <Row className="popup-title" style={{ marginLeft: '0px' }}>
                   Kilos Recibidos
                 </Row>
-                {((idmaterialr === 301522) || (idmaterialr===524225)) ?
-                (
-                  <Row className="popup-elem" style={{ marginLeft: '0px' }}>
-                    {(+electrodomestico + +botes).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
-                    &nbsp; Kg
-                  </Row>
-                ):
-                (
-                  <Row className="popup-elem" style={{ marginLeft: '0px' }}>
-                    {pesajeparcial === 1 || props.placadato[0].EsPesajeParcial === 1
-                      ? '--'
-                      : kilosr === ''
-                      ? 0
-                      : cantidadr > 0
-                      ? (cantidadr * (props.NomMotivoEntrada===9 ? Datosmaterial=== 0 ? 1 : Datosmaterial[0].PesoTeoricoKgs: props.NomMotivoEntrada===3 ? Datosmaterial=== 0 ? 1 : Datosmaterial[0].PesoTeoricoRecibido: 1)).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-                      : kilosr.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
-                    &nbsp; Kg
-                  </Row>
-                )}
+                <Row className="popup-elem" style={{ marginLeft: '0px' }}>
+                  {pesajeparcial === 1 || props.placadato[0].EsPesajeParcial === 1
+                    ? '--'
+                    : kilosr === ''
+                    ? 0
+                    : cantidadr > 0
+                    ? (cantidadr * (props.NomMotivoEntrada===9 ? Datosmaterial=== 0 ? 1 : Datosmaterial[0].PesoTeoricoKgs: props.NomMotivoEntrada===3 ? Datosmaterial=== 0 ? 1 : Datosmaterial[0].PesoTeoricoRecibido: 1)).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                    : kilosr.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                  &nbsp; Kg
+                </Row>
               </Col>
               <Col style={{height:"100%"}}>
                 <Row className="popup-title" style={{ marginLeft: '0px' }}>
                   Porcentaje
                 </Row>
                 <Row className="popup-elem" style={{ marginLeft: '0px' }}>
-                  {pesajeparcial===1 ? 100 : porcentajer} &nbsp;%
+                  {pesajeparcial===1 ? 0 : porcentajer} &nbsp;%
                 </Row>
               </Col>
-            </Row>
+            </Row> */}
+
+            {/* Fin Liberado */}
             <Row className="popup-row">
               <Col>
                 <Row className="popup-title" style={{ marginLeft: '50%', marginTop: '20px' }}>
@@ -1921,17 +1797,18 @@ props.setActualizar(false)
                     defaultValue={kiloscont}
                   />
                   <InputGroupAddon addonType="append">
-                    <InputGroupText>kgs</InputGroupText>
+                    <InputGroupText>Kg</InputGroupText>
                   </InputGroupAddon>
                 </InputGroup>
               </Col>
               <Col>
                 <Row className="popup-title" style={{ marginLeft: '0px', marginTop: '20px' }}>
-                  Motivo Contaminacion
+                  Motivo Contaminación
                 </Row>
                 {props.contaminacion &&
                 (
                 <SelectBox
+                  style={{width:'60%'}}
                   searchEnabled={true}
                   dataSource={props.contaminacion ? props.contaminacion : ''}
                   defaultValue=""
@@ -1972,19 +1849,39 @@ props.setActualizar(false)
               </span>
             </div>
           </Container>
+          
+          {/* Liberado */}
+
+          {/* <div style={{ marginTop: '70px' }}>
+            <button
+              style={{ marginRight: '30px' }}
+              type="button"
+              className="popup-button"
+              onClick={(kiloscont > 0 && razoncont < 1) || (+Llantas + +Tanques >500) || (ContTotal) > 500 ? null :almacen !==0 && (Referencia !==0 || Referencia!==null)? handleSubmit:handleMensaje}
+            >
+              Guardar &#43;
+            </button>
+            <button type="button" className="popup-button" onClick={((idmaterialr !== config.idElect) && (idmaterialr !==config.idBote) && Electcheck===0) ? togglePopup0 : togglePopup0}>
+              &#60; Regresar
+            </button>
+          </div>
+
+           */}
+          {/* Fin Liberado */}
+
+          {/* En desarrollo */}
           <div style={{ marginTop: '70px' }}>
             <button
               style={{ marginRight: '30px' }}
               type="button"
               className="popup-button"
-              onClick={(kiloscont > 0 && razoncont < 1) || (+Llantas + +Tanques >500) || (ContTotal) > 500 ? null :almacen !==0 ? handleSubmit:null}
+              onClick={(kiloscont > 0 && razoncont < 1) || (+Llantas + +Tanques >500) || (ContTotal) > 500 ? null : togglePopup0}
             >
-              Guardar &#43;
-            </button>
-            <button type="button" className="popup-button" onClick={togglePopup2}>
-              &#60; Regresar
+              &#60; OK
             </button>
           </div>
+          {/* Fin desarrollo */}
+
         </div>
       )}
     </div>

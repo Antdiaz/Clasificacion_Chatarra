@@ -28,7 +28,7 @@ function Imagenes({ id, editBoxValue, row, NomMotivoEntrada }) {
   const [Modalregistro, setModalregistro] = useState(false);
   const [Modalmanual, setModalmanual] = useState(false);
   const [Zoom, setZoom] = useState(false);
-  const Material = ( NomMotivoEntrada===9 ? row && row.length>0 && row[0].ClaArticuloCompra>0 ? row[0].ClaArticuloCompra:0:NomMotivoEntrada===3 ? row>0 && row[0].ClaMaterialRecibeTraspaso>0 ? row[0].ClaMaterialRecibeTraspaso:0:0)
+  const Material = (NomMotivoEntrada===9 ? (row && row.length>0 && row[0].ClaArticuloCompra>0 ? row[0].ClaArticuloCompra:0): row && row.length>0 && row[0].ClaArticuloPlanCarga)
   // Función que guarda los cambios efectuados en el material
   // Servicio JSON 14 --> SP= BasSch.BasObtieneFotografiasMaterialPro <Obtiene fotos>
   // Servicio JSON 26 --> SP= BasSch.BasObtieneFotografiasMaterialPreRegProc <Material pre-registro>
@@ -44,9 +44,9 @@ function Imagenes({ id, editBoxValue, row, NomMotivoEntrada }) {
           14 +
           ',"Parametros":"@pnClaUbicacion=' +
           editBoxValue +
-          ',@pnIdBoleta=' +
+          ''+config.Separador+'@pnIdBoleta=' +
           id +
-          ',@pnClaTipoCamaraVideo=1"}',
+          ''+config.Separador+'@pnClaTipoCamaraVideo=1"}',
         tipoEstructura: 0,
       };
 
@@ -58,9 +58,9 @@ function Imagenes({ id, editBoxValue, row, NomMotivoEntrada }) {
           26 +
           ',"Parametros":"@pnClaUbicacion=' +
           editBoxValue +
-          ',@pnIdBoleta=' +
+          ''+config.Separador+'@pnIdBoleta=' +
           id +
-          ',@pnClaArticulo=-1"}',
+          ''+config.Separador+'@pnClaArticulo="}',
         tipoEstructura: 0,
       };
 
@@ -72,9 +72,9 @@ function Imagenes({ id, editBoxValue, row, NomMotivoEntrada }) {
           14 +
           ',"Parametros":"@pnClaUbicacion=' +
           editBoxValue +
-          ',@pnIdBoleta=' +
+          ''+config.Separador+'@pnIdBoleta=' +
           id +
-          ',@pnClaTipoCamaraVideo=2"}',
+          ''+config.Separador+'@pnClaTipoCamaraVideo=2"}',
         tipoEstructura: 0,
       };
 
@@ -90,23 +90,25 @@ function Imagenes({ id, editBoxValue, row, NomMotivoEntrada }) {
         tipoEstructura: 0,
       };
       /* eslint-enable */
-    //   callApi(urlKrakenService, 'POST', data14, (res) => {
-    //     setFotoplaca(res.Result0.length > 0 ? res.Result0[0].Fotografia : 0);
-    //   });
+      callApi(urlKrakenService, 'POST', data14, (res) => {
+        console.log(res)
+        setFotoplaca(res.Result0.length > 0 ? res.Result0[0].Fotografia : 0);
+      });
 
-    //   callApi(urlKrakenService, 'POST', data141, (res) => {
-    //     setMaterialsuperior(res.Result0.length > 0 ? res.Result0[0].Fotografia : 0);
-    //   });
+      callApi(urlKrakenService, 'POST', data141, (res) => {
+        console.log(res)
+        setMaterialsuperior(res.Result0.length > 0 ? res.Result0[1].Fotografia : 0);
+      });
 
-    //   callApi(urlKrakenService, 'POST', data26, (res) => {
-    //     setPreregistro(res.Result0.length > 0 ? res.Result0[0].FotoMaterial : 0);
-    //   });
+     callApi(urlKrakenService, 'POST', data26, (res) => {
+       setPreregistro(res.Result0.length > 0 ? res.Result0[0].FotoMaterial : 0);
+      });
 
-    //   if(Material>0){
-    //   callApi(urlKrakenService, 'POST', data40, (res) => {
-    //     setManual(res.Result0.length > 0 ? res.Result0[0].Imagen : 0);
-    //   });
-    // }
+      if(Material>0 || NomMotivoEntrada===1){
+      callApi(urlKrakenService, 'POST', data40, (res) => {
+        setManual(res.Result0.length > 0 ? res.Result0[0].Imagen : 0);
+      });
+    }
       return () => {
         isCancelled = true;
       };
@@ -243,7 +245,7 @@ function Imagenes({ id, editBoxValue, row, NomMotivoEntrada }) {
                   setModalregistro(true);
                 }}
               >
-                {Fotoplaca ? <ZoomInIcon style={{ float: 'right', cursor: 'pointer' }} /> : null}
+                {Preregistro ? <ZoomInIcon style={{ float: 'right', cursor: 'pointer' }} /> : null}
               </span>
             </CardTitle>
           </CardHeader>
@@ -339,6 +341,7 @@ function Imagenes({ id, editBoxValue, row, NomMotivoEntrada }) {
                     width: Zoom ? '200%' : '150%',
                     cursor: Zoom ? 'zoom-out' : 'zoom-in',
                     marginLeft: Zoom ? '-40%' : '-40%',
+                    marginTop: '-30px'
                   }}
                   src={
                     Manual !== 0 /* eslint-disable */

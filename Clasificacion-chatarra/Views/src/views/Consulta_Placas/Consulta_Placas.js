@@ -2,9 +2,14 @@ import React, { useState,useEffect } from 'react';
 import 'devextreme-react/text-area';
 import { Row, Col, Button, Input } from 'reactstrap';
 import Items from './Placas';
+import { config } from '../../utils/config';
+import { callApi} from '../../utils/utils';
 
 function Consulta({
+  reValores,
+  setreValores,
   Valores,
+  setValores,
   Datos,
   setDatos,
   filtropesaje,
@@ -37,14 +42,31 @@ function Consulta({
   const [Filtro, setFiltro] = useState(FiltroPlacas);
   // Función para filtrado de Placas con Pesaje Parcial
 
-
 useEffect(() => {
+  if(reValores===true){
+    setreValores(false)
+  setValores(null)
+  const urlKrakenService = `${config.KrakenService}/${24}/${config.Servicio}`;
+
+  /* eslint-disable */
+  const data = {
+    parameters: '{"ClaUbicacion":' + editBoxValue + ',"ClaServicioJson":' + 1 + ',"Parametros":"@pnClaUbicacion=' + editBoxValue +''+config.Separador+'@psValor='+config.Separador+'@pnEsParcial=0"}',
+    tipoEstructura: 0,
+  };
+ /* eslint-enable */
+
+ callApi(urlKrakenService, 'POST', data,(res) => {
+  setValores(res.Result0.sort((a, b) =>(new Date(( (Math.abs(new Date() - new Date(b.HoraEntrada.replace("T",' ').replace(/-/g,'/').split(".")[0])))/60000)))- new Date(( (Math.abs(new Date() - new Date(a.HoraEntrada.replace("T",' ').replace(/-/g,'/').split(".")[0])))/60000))));
+});
+  }
+
   if(placadato !== null){
     setplacadato(null)
   }
   if(material !== null){
 setmaterial(null)
   }
+
 }, [])
 
   const handleRefresh = () =>{
@@ -212,7 +234,6 @@ setRefresh(false)
               >
                 <option value="todos">Todos</option>
                 <option value="porclasificar">Por clasificar</option>
-                <option value="endescarga">En descarga</option>
                 <option value="clasificado">Clasificado</option>
               </select>
             </form>
@@ -242,13 +263,13 @@ setRefresh(false)
                         ? [lista.EsClasificado].includes(1)
                         : [lista.EsClasificado]) &&
                       lista.ClaVehiculoPorClasificar.toLowerCase().includes(Datos.toLowerCase())) ||
-                    [lista.NomChofer].includes(Datos.toUpperCase()) ||
-                    [lista.NomProveedor].includes(Datos) ||
+                      (lista.NomChofer ? [lista.NomChofer].includes(Datos.toUpperCase()) : '') ||
+                    (lista.NomProveedor ? lista.NomProveedor.toLowerCase().includes(Datos.toLowerCase()): '') ||
                     lista.NomMotivoEntrada.toLowerCase().includes(Datos.toLowerCase()) ||
                     lista.IdBoleta.toString().includes(Datos) ||
                     lista.PesoEntrada.toString().includes(Datos.replace(/,/g, '')) ||
                     lista.NomTransporte.includes(Datos.toUpperCase()) ||
-                    lista.NomTransportista.includes(Datos.toUpperCase())
+                    ( lista.NomTransportista ?  lista.NomTransportista.includes(Datos.toUpperCase()): '')
                 )
               : !Datos && filtropesaje
               ? Valores.filter(
@@ -279,13 +300,13 @@ setRefresh(false)
                         ? [lista.EsClasificado].includes(1)
                         : [lista.EsClasificado]) &&
                       lista.ClaVehiculoPorClasificar.toLowerCase().includes(Datos.toLowerCase())) ||
-                    [lista.NomChofer].includes(Datos.toUpperCase()) ||
-                    [lista.NomProveedor].includes(Datos) ||
+                    (lista.NomChofer ? [lista.NomChofer].includes(Datos.toUpperCase()) : '')||
+                    (lista.NomProveedor ? lista.NomProveedor.toLowerCase().includes(Datos.toLowerCase()): '') ||
                     lista.NomMotivoEntrada.toLowerCase().includes(Datos.toLowerCase()) ||
                     lista.IdBoleta.toString().includes(Datos) ||
                     lista.PesoEntrada.toString().includes(Datos.replace(/,/g, '')) ||
                     lista.NomTransporte.includes(Datos.toUpperCase()) ||
-                    lista.NomTransportista.includes(Datos.toUpperCase())
+                    ( lista.NomTransportista ?  lista.NomTransportista.includes(Datos.toUpperCase()): '')
                 )
               : !Datos &&
                 !filtropesaje &&

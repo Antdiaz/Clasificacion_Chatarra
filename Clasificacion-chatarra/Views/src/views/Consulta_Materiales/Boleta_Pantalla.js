@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { config } from '../../utils/config';
-import { callApi} from '../../utils/utils';
+import { callApi,getSessionItem} from '../../utils/utils';
 import { Card, CardText, CardHeader, CardBody, CardTitle, Button, Row, Col,Input, InputGroup, InputGroupAddon, InputGroupText} from 'reactstrap';
 import { useParams } from 'react-router';
 import TableContainer from '@material-ui/core/TableContainer';
@@ -22,6 +22,8 @@ import Imagenes from './Imagenes'
 import Imagenespt from './Imagenes_pt'
 import Preregistro from './Pre-registro_Mensaje';
 import CargoNodescargo from './Cargo/NoDescargo/Cargo_Nodescargo';
+import MaterialesDevolucion from './Materiales_Devolucion_Trasp';
+import Observaciones from './Cargo/NoDescargo/Observaciones';
 
 
 function Boleta({
@@ -73,14 +75,21 @@ function Boleta({
   const [editOpen, seteditOpen] = useState(false);
   const [idmaterialviaje, setidmaterialviaje] = useState(0);
   const [PlanCarga, setPlanCarga] = useState(null);
+  const [cambioGuardar, setcambioGuardar] = useState(0)
   const [BoxPlanCarga,setBoxPlanCarga] = useState(null);
   const [EsValido, setEsValido] = useState(null);
   const [Todos, setTodos] = useState(0);
   const [TodosChange, setTodosChange] = useState(0);
   const [ValidaCargo, setValidaCargo] = useState(0);
-  const [Nocargo, setNocargo] = useState(0)
-  const [Savemat, setSavemat] = useState(0)
-
+  const [Nocargo, setNocargo] = useState(0);
+  const [Savemat, setSavemat] = useState(0);
+  const [ValidaTara, setValidaTara] = useState(0);
+  const [Observacionesno, setObservacionesno] = useState('');
+  const [cambionodesc, setcambionodesc] = useState(0);
+  const ipadress = getSessionItem('Ipaddress');
+  const NumbUsuario = getSessionItem('NumUsuario');
+  const Token = getSessionItem('Token');
+  const [enter, setenter] = useState(false)
  // Estilo de pop up/ wizard
   const customStyles = {
     content: {
@@ -91,10 +100,12 @@ function Boleta({
     },
   };
 
+
   useEffect(() => {
     if(placadato && TodosChange===0){
       setTodos(placadato[0].EsNoCargoDescargoMaterial)
     }
+    setmaterialpt('')
   }, [placadato])
 
 
@@ -105,7 +116,7 @@ function Boleta({
   const handlePlan = (event) => {
     if (placadato && event.charCode === 13 && Todos !==1){
     const urlKrakenService = `${config.KrakenService}/${24}/${config.Servicio}`;
-
+      setenter(true)
     /* eslint-disable */
 
       const data68={
@@ -116,11 +127,11 @@ function Boleta({
         68 +
         ',"Parametros":"@pnClaUbicacion=' +
         editBoxValue +
-        ',@psPlanCarga=' +
+        ''+config.Separador+'@psPlanCarga=' +
         (PlanCarga ===null ? 0: PlanCarga ) +
-        ',@pnClaTransporte='+
+        ''+config.Separador+'@pnClaTransporte='+
         placadato[0].ClaTransporte +
-        ',@pnClaTransportista='+
+        ''+config.Separador+'@pnClaTransportista='+
         placadato[0].ClaTransportista +'"}',
       tipoEstructura: 0,
       }
@@ -155,25 +166,33 @@ function Boleta({
       69 +
       ',"Parametros":"@pnClaUbicacion=' +
       editBoxValue +
-      ',@psClaVehiculoPorClasificar=' +
+      ''+config.Separador+'@psClaVehiculoPorClasificar=' +
       placa +
-      ',@pnIdBoleta='+
+      ''+config.Separador+'@pnIdBoleta='+
       id +
-      ',@pnIdPlanCarga=' +
+      ''+config.Separador+'@pnIdPlanCarga=' +
       (PlanCarga ===null ? 0: PlanCarga )+
-      ',@pnClaPlanCarga=' + 
+      ''+config.Separador+'@pnClaPlanCarga=' + 
       BoxPlanCarga +
-      ',@pnEsTraspaso=1"}',
+      ''+config.Separador+'@pnEsTraspaso=1"}',
     tipoEstructura: 0,
     }
 
   /* eslint-enable */
-    if(BoxPlanCarga !==null && EsValido===null){
+    if(BoxPlanCarga !==null && EsValido===null && (row==='' || row===0 || row===null)){
     callApi(urlKrakenService, 'POST', data69, (res) => {
       setEsValido(res.Result0[0].EsPCValida)
       });
   }
   }, [BoxPlanCarga,Actualizar])
+
+  const Refresh =() =>{
+    setrow('')
+    setActualizar(true);
+    setTimeout(() => {
+      setActualizar(false);
+    }, 50);
+  }
 
   useEffect(() => {
     const urlKrakenService = `${config.KrakenService}/${24}/${config.Servicio}`;
@@ -187,16 +206,36 @@ function Boleta({
       63 +
       ',"Parametros":"@pnClaUbicacion=' +
       editBoxValue +
-      ',@pnIdBoleta=' +
+      ''+config.Separador+'@pnIdBoleta=' +
       id +
-      ',@pnIdPlanCarga='+
+      ''+config.Separador+'@pnIdPlanCarga='+
       (PlanCarga ===null ? 0: PlanCarga ) +'"}',
     tipoEstructura: 0,
   };
   /* eslint-enable */
-    if(EsValido !==null && EsValido=== 1 && (row.length<1 || row===0)){
+    if(EsValido !==null && EsValido=== 1 && (row==='' || row===0 || row===null)){
+      const PorcentajeSum = row && row.reduce((acc, val) => acc + val.Porcentaje, 0);
+      const CantidadSum=row &&  row.reduce((acc, val) => acc + val.CantEmbarcada, 0)
+      const KilosSum=row && row.reduce((acc, val) => acc + val.KilogramosEmbarcados, 0);
     callApi(urlKrakenService, 'POST', data63, (res) => {
     setrow(res.Result0);
+     /* eslint-disable */
+     const urlKrakenBloque = `${config.KrakenService}/${24}/${config.Bloque}`;
+     const data64 = [ `@pnClaUbicacion=${editBoxValue}${config.Separador}@pnIdBoleta=${placadato[0].IdBoleta}${config.Separador}@psPlacas='${placadato[0].Placas}'${config.Separador}@pnIdPlanCarga=${PlanCarga}${config.Separador}@psObservaciones='${(Observacionesno ? Observacionesno.replace('#', '%23'): '')}'${config.Separador}@pnEsRevisionEfectuada=${placadato[0].EsRevisionEfectuada}${config.Separador}@pnEsNoCargoDescargoMaterial=0${config.Separador}@psNombrePcMod='${ipadress}'${config.Separador}@pnClaUsuarioMod=${NumbUsuario}${config.Separador}@psOrigen='WEB'`];
+
+     const data66 =
+     [`@pnClaUbicacion=${editBoxValue}${config.Separador}@pnIdBoleta=${placadato[0].IdBoleta}${config.Separador}@pnClaPlanCarga=${PlanCarga}${config.Separador}@psClaVehiculoPorClasificar='${placadato[0].Placas}'${config.Separador}@psPlacas='${placadato[0].Placas}'${config.Separador}@pnEsNoCargoDescargoMaterial=0${config.Separador}@pnPesoAtrilesTarimas=${(placadato[0].PesoAtrilesTarimas !== null ? placadato[0].PesoAtrilesTarimas : 0)}${config.Separador}@psNombrePcMod='${ipadress}'${config.Separador}@pnClaUsuarioMod=${NumbUsuario}`]
+   
+     
+    const data85 ={ parameters: `{"ClaUbicacion":${editBoxValue},"Token":"${Token}","ClaServicioJson":"85","IdBoleta":"${placadato[0].IdBoleta}","EnBloque":"${1}","Encabezado":"${data64}","Detalle":"","Validacion":"${(PorcentajeSum !== null && (PorcentajeSum === 100)) || (row && row.some(ro => ro.EsPesajeParcial) && (PorcentajeSum === 100 || PorcentajeSum > 100)) || (PorcentajeSum === 0 && (CantidadSum>0 || KilosSum>0)) || (ValidaCargo===1 && row && row.length>0 && (row.some(ro => ro.CantEmbarcada !==null)|| row.some(ro => ro.KilogramosEmbarcados!==null) || row.some(ro => ro.Porcentaje!==null))) || Todos===1 ? data66 : ''}"}`,
+    tipoEstructura: 0}
+ 
+    // /* eslint-enable */
+    if(enter===true && EsValido !==null && EsValido=== 1 && (row==='' || row===0 || row===null)){
+    callApi(urlKrakenBloque, 'POST', data85, (res) => {
+      setenter(false)
+     });
+    }
     });
   }
 
@@ -220,7 +259,7 @@ setPrereg(false)
     const urlKrakenVal = `${config.KrakenService}/${24}/${config.Servicio}`;
 
     /* eslint-disable */
-    const data5 = {
+    const data2 = {
       parameters:
         '{"ClaUbicacion":' +
         editBoxValue +
@@ -228,7 +267,7 @@ setPrereg(false)
         2 +
         ',"Parametros":"@pnClaUbicacion=' +
         editBoxValue +
-        ',@psClaVehiculoPorClasificar=' +
+        ''+config.Separador+'@psClaVehiculoPorClasificar=' +
         placa +
         '"}',
       tipoEstructura: 0,
@@ -242,7 +281,7 @@ setPrereg(false)
         67 +
         ',"Parametros":"@pnClaUbicacion=' +
         editBoxValue +
-        ',@pnIdBoleta=' +
+        ''+config.Separador+'@pnIdBoleta=' +
         id +
         '"}',
       tipoEstructura: 0,
@@ -251,31 +290,40 @@ setPrereg(false)
     /* eslint-enable */
 
     async function FuncionData(){
-     callApi(urlKrakenVal, 'POST', data5, (res) => {
+    if(cambionodesc===0 && cambioGuardar===0){
+     await callApi(urlKrakenVal, 'POST', data2, (res) => {
         setplacadato(res.Result0);
+        setObservacionesno(res.Result0[0].Observaciones)
       })
-
+    }
+      await setcambionodesc(0)
+      await setcambioGuardar(0)
     };
 
     async function FuncionCarga(){
-      callApi(urlKrakenVal, 'POST', data67, (res) => {
+      await callApi(urlKrakenVal, 'POST', data67, (res) => {
          setplacadato(res.Result0);
+         setcambionodesc(0)
+         setObservacionesno(res.Result0[0].Observaciones)
        })
  
      };
 
-    if((NomMotivoEntrada===3 || NomMotivoEntrada===9) && placadato ===null){
+    if((NomMotivoEntrada===3 || NomMotivoEntrada===9 || NomMotivoEntrada===110)){
       FuncionData()
     }
 
-    else if(NomMotivoEntrada===1 && placadato ===null){
+    else if(NomMotivoEntrada===1 ){
       FuncionCarga()
     }
+
 
      return()=> {
         isCancelled = true
       }
   }, [Actualizar]);
+
+
 
   useEffect(() => {
     if(placadato && placadato[0].ClaPlanCarga && PlanCarga===null){
@@ -301,10 +349,11 @@ setPrereg(false)
     };
     /* eslint-enable */
 
-    if(NomMotivoEntrada===9 || (NomMotivoEntrada===3 && TipoTraspaso===0))
+    if(NomMotivoEntrada===9 || (NomMotivoEntrada===3 && TipoTraspaso===0)){
     callApi(urlKrakenVal, 'POST', data10, (res) => {
       setcontaminacion(res.Result0);
-    });
+    })
+  }
   }, [])
 
   return (
@@ -312,13 +361,13 @@ setPrereg(false)
       <div className="content" style={{ marginTop: '20px' }}>
 
         {/* Pop up mensaje si material es pesaje parcial */} 
-
-        {row && placadato && poppesaje && (placadato[0].EsPesajeParcial ===1 || pesajeparcial===1 || (row[0] && row[0].EsPesajeParcial===1)) && (row.every(ro => ro.KilosMaterial === 0)|| row.every(ro => ro.PesoRecibido === 0) || (row.every(ro => ro.KilogramosEmbarcados === 0)))? (
+        {row && placadato && poppesaje && (pesajeparcial===1 || (row.every(ro => ro.EsPesajeParcial===1))) && (row.some(ro => (ro.KilosMaterial === 0 || ro.KilosMaterial === null))|| row.some(ro => (ro.PesoRecibido === 0 || ro.PesoRecibido === null)) || (row.some(ro => (ro.KilogramosEmbarcados === 0 || ro.KilogramosEmbarcados === null))))? (
           <PesajeParcial
             placadato={placadato}
             editBoxValue={editBoxValue}
             TipoPatio={TipoPatio}
             row={row}
+            setrow={setrow}
             poppesaje={poppesaje}
             setpoppesaje={setpoppesaje}
             setpesajeparcial={setpesajeparcial}
@@ -330,7 +379,7 @@ setPrereg(false)
         ) : null}
 
         {/* Sección Imagenes */} 
-        {NomMotivoEntrada=== 9 ?
+        {NomMotivoEntrada=== 9 || NomMotivoEntrada=== 1?
         (<Imagenes id={id} editBoxValue={editBoxValue} row={row} NomMotivoEntrada={NomMotivoEntrada} />) :
         (<Imagenespt id={id} editBoxValue={editBoxValue} row={row} NomMotivoEntrada={NomMotivoEntrada} />)}
         {/* Pop up para clasificar un nuevo material */} 
@@ -370,6 +419,9 @@ setPrereg(false)
                       setidmaterialviaje={setidmaterialviaje}
                       Actualizar={Actualizar}
                       setActualizar={setActualizar}
+                      cambioGuardar={cambioGuardar} 
+                      setcambioGuardar={setcambioGuardar}
+                      ValidaCargo={ValidaCargo}
                     />
                   ): ((NomMotivoEntrada===3 && TipoTraspaso===1) && placadato) &&
                   (
@@ -398,14 +450,17 @@ setPrereg(false)
                       Actualizar={Actualizar}
                       setActualizar={setActualizar}
                       setmaterialpt={setmaterialpt}
+                      cambioGuardar={cambioGuardar} 
+                      setcambioGuardar={setcambioGuardar}
                     />
                   )}
               </Modal>
               <CardHeader>
                 <CardTitle className="Titulo_boleta" style={{ margin: '10px' }}>
-                  {NomMotivoEntrada !==1 && (
+                  {(NomMotivoEntrada !==1 && NomMotivoEntrada !==110) && (
                   <i
-                    onClick={row && (placadato[0].EsPesajeParcial!== undefined || placadato[0].EsPesajeParcial!== null) && placadato[0].EsPesajeParcial ===1  && (row.every(ro => ro.KilosMaterial === 0) || row.some(ro => ro.KilosMaterial===0)) || pesajeparcial===1 ? ()=> setpoppesaje(true) : row && row.length=== 1 && row[0].ClaArticuloPreReg  && (row[0].ClaArticuloCompra===null || row[0].ClaMaterialRecibeTraspaso===null)? handleReg  : () => row && setmodaladdOpen(true)}
+                    // onClick={handleReg}
+                    onClick={row && (placadato[0].EsPesajeParcial!== undefined || placadato[0].EsPesajeParcial!== null) && placadato[0].EsPesajeParcial ===1  && ((NomMotivoEntrada ===9 && (row.every(ro => ro.KilosMaterial === 0) || row.some(ro => ro.KilosMaterial===0) && pesajeparcial===1))||(NomMotivoEntrada ===3 && (row.every(ro => ro.PesoRecibido === 0) || row.some(ro => ro.PesoRecibido===0) && pesajeparcial===1))) ? (()=> setpoppesaje(true)) : row && row.length>0 && row.some(ro=> ro.ClaArticuloPreReg)  && (row.every(ro => (NomMotivoEntrada===9 ? !ro.ClaArticuloCompra: NomMotivoEntrada===3 && !ro.ClaMaterialRecibeTraspaso)))? handleReg  : (() => row && setmodaladdOpen(true))}
                     style={{ cursor: 'pointer' }}
                     className="fa fa-plus"
                     aria-hidden="true"
@@ -417,7 +472,9 @@ setPrereg(false)
                   <span style={{ marginLeft: '3vw' }}>Placa:&nbsp;{placa}</span>
                   <span style={{ marginLeft: '3vw' }}>Boleta:&nbsp;{id}</span>
                   {NomMotivoEntrada===1 && placadato &&(<><span style={{marginLeft: '3vw'}}>Plan de carga</span><Input className="plan-carga" onKeyPress={handlePlan} value={PlanCarga} type="number" onChange={handleCarga} style={{display:'inline-flex',marginLeft:'10px'}} /></>)}
-                  {placadato && placadato.length>0 && (<CargoNodescargo row={row} setrow={setrow} setBoxPlanCarga={setBoxPlanCarga} placadato={placadato} setplacadato={setplacadato} setActualizar={setActualizar} NomMotivoEntrada={NomMotivoEntrada} editBoxValue={editBoxValue} Todos={Todos} setTodos={setTodos} TodosChange={TodosChange} setTodosChange={setTodosChange} setValidaCargo={setValidaCargo} Nocargo={Nocargo} setNocargo={setNocargo} setPlanCarga={setPlanCarga} />)}
+                  {(<i className="fas fa-redo" onClick={Refresh} style={{ marginLeft: '3vw',cursor: 'pointer'}} aria-hidden="true"></i>)}
+                  {/* {(NomMotivoEntrada===9 && row && row.some(roc=>(roc.NomZonaDescarga !==null || roc.NomZonaDescarga !==""))) ? (<span style={{ marginLeft: '3vw' }}>Zonas:{row.filter(rol=>rol.NomZonaDescarga).map((rox,index)=>{return <span>&nbsp;{rox.NomZonaDescarga.substring(rox.NomZonaDescarga.indexOf(" ") + 1)}&nbsp;{index !== (row.length-1) && (<span>&#8594;</span>)}</span>})}</span>):null} */}
+                  {placadato && placadato.length>0 && (<CargoNodescargo row={row} ClaUbicacionOrigen={ClaUbicacionOrigen} cambionodesc={cambionodesc} setcambionodesc={setcambionodesc} setrow={setrow} setBoxPlanCarga={setBoxPlanCarga} placadato={placadato} setplacadato={setplacadato} setActualizar={setActualizar} NomMotivoEntrada={NomMotivoEntrada} editBoxValue={editBoxValue} Todos={Todos} setTodos={setTodos} TodosChange={TodosChange} setTodosChange={setTodosChange} setValidaCargo={setValidaCargo} Nocargo={Nocargo} setNocargo={setNocargo} setPlanCarga={setPlanCarga} />)}
                 </CardTitle>
               </CardHeader>
               <CardBody>
@@ -431,7 +488,7 @@ setPrereg(false)
                         <div style={{ textAlign: 'center', paddingTop: '40px' }}>
                           <CircularProgress />
                         </div>
-                      ) : NomMotivoEntrada===9 || NomMotivoEntrada===3 ? (
+                      ) :NomMotivoEntrada===9 || NomMotivoEntrada===3 ? (
                         <Materiales
                           Nocargo={Nocargo}
                           setNocargo={setNocargo}
@@ -481,7 +538,69 @@ setPrereg(false)
                           setTodos={setTodos} 
                           TodosChange={TodosChange} 
                           setTodosChange={setTodosChange}
+                          cambioGuardar={cambioGuardar} 
+                          setcambioGuardar={setcambioGuardar}
                         />
+                      ): NomMotivoEntrada===110 ? 
+                      (
+                        <MaterialesDevolucion 
+                          Savemat={Savemat}
+                          setSavemat={setSavemat}
+                          EsValido={EsValido}
+                          placa={placa}
+                          setEsValido={setEsValido}
+                          Nocargo={Nocargo}
+                          setNocargo={setNocargo}
+                          ValidaCargo={ValidaCargo}
+                          setValidaCargo={setValidaCargo}
+                          setBoxPlanCarga={setBoxPlanCarga}
+                          BoxPlanCarga={BoxPlanCarga}
+                          PlanCarga={PlanCarga}
+                          editOpen={editOpen}
+                          seteditOpen={seteditOpen}
+                          contaminacion={contaminacion}
+                          placadato={placadato}
+                          editBoxValue={editBoxValue}
+                          TipoPatio={TipoPatio}
+                          id={id}
+                          row={row}
+                          setrow={setrow}
+                          material={material}
+                          setmaterial={setmaterial}
+                          materialtodos={materialtodos}
+                          setmaterialtodos={setmaterialtodos}
+                          materialpt={materialpt}
+                          setmaterialpt={setmaterialpt}
+                          setmaterialr={setmaterialr}
+                          setcantidadr={setcantidadr}
+                          setkilosr={setkilosr}
+                          setobservaciones={setobservaciones}
+                          kiloscont={kiloscont}
+                          setkiloscont={setkiloscont}
+                          pesajeparcial={pesajeparcial}
+                          setpesajeparcial={setpesajeparcial}
+                          poppesaje={poppesaje}
+                          setpoppesaje={setpoppesaje}
+                          warning={warning}
+                          setwarning={setwarning}
+                          modaladdOpen={modaladdOpen}
+                          NomMotivoEntrada={NomMotivoEntrada}
+                          setNomMotivoEntrada={setNomMotivoEntrada}
+                          ClaUbicacionOrigen={ClaUbicacionOrigen}
+                          ClaViajeOrigen={ClaViajeOrigen}
+                          Materialviaje={Materialviaje}
+                          ClaFabricacionViaje={ClaFabricacionViaje}
+                          setClaFabricacionViaje={setClaFabricacionViaje}
+                          idmaterialviaje={idmaterialviaje}
+                          Actualizar={Actualizar}
+                          setActualizar={setActualizar}
+                          TipoTraspaso={TipoTraspaso}
+                          Todos={Todos} 
+                          setTodos={setTodos} 
+                          TodosChange={TodosChange} 
+                          setTodosChange={setTodosChange}
+                        />
+
                       ):(
                         <MaterialesXCargar
                           Savemat={Savemat}
@@ -539,8 +658,26 @@ setPrereg(false)
                           setTodos={setTodos} 
                           TodosChange={TodosChange} 
                           setTodosChange={setTodosChange}
+                          ValidaTara={ValidaTara}
+                          setValidaTara={setValidaTara}
                         />
                       )}
+                    </TableContainer>
+                  </Col>
+                </Row>
+              </CardBody>
+            </Card>
+          </Col>
+        </Row>
+        <Row>
+          <Col>
+            <Card>
+              <CardBody>
+                <Row className="detalle-observaciones" style={{width:"100%",margin:"0px"}}>
+                  <Col md={{ size: 12, offset: 0 }} style={{padding:"0px"}}>
+                    <TableContainer component={Paper}> 
+                      {/* Sección de detalles de la boleta/placa */} 
+                      <Observaciones Observacionesno={Observacionesno} row={row} setObservacionesno={setObservacionesno} placadato={placadato} setplacadato={setplacadato} setActualizar={setActualizar} NomMotivoEntrada={NomMotivoEntrada} editBoxValue={editBoxValue} Todos={Todos} />
                     </TableContainer>
                   </Col>
                 </Row>
@@ -569,7 +706,7 @@ setPrereg(false)
                         <CircularProgress color="primary" />
                       </div>
                     ) : (
-                      <DetalleBoleta listas={placadato} editBoxValue={editBoxValue} TipoPatio={TipoPatio} Materialviaje={Materialviaje} setMaterialviaje={setMaterialviaje} TipoTraspaso={TipoTraspaso} setTipoTraspaso={setTipoTraspaso} setmaterial={setmaterial} material={material} NomMotivoEntrada={NomMotivoEntrada} ClaUbicacionOrigen={ClaUbicacionOrigen} ClaViajeOrigen={ClaViajeOrigen} ClaFabricacionViaje={ClaFabricacionViaje} />
+                      <DetalleBoleta placadato={placadato} Todos={Todos} listas={placadato} editBoxValue={editBoxValue} TipoPatio={TipoPatio} Materialviaje={Materialviaje} setMaterialviaje={setMaterialviaje} TipoTraspaso={TipoTraspaso} setTipoTraspaso={setTipoTraspaso} setmaterial={setmaterial} material={material} NomMotivoEntrada={NomMotivoEntrada} ClaUbicacionOrigen={ClaUbicacionOrigen} ClaViajeOrigen={ClaViajeOrigen} ClaFabricacionViaje={ClaFabricacionViaje} />
                     )}
                   </Col>
                 </Row>

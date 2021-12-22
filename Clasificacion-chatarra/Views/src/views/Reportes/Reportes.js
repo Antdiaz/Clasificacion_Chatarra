@@ -80,6 +80,9 @@ function Consulta({
     { label: 'Llantas', key: 'Llantas' },
     { label: 'Tanque', key: 'Tanques' },
     { label: 'Otros', key: 'Otros' },
+    { label: 'Electro/Botes', key: 'ElectroBotes' },
+    { label: 'Electro', key: 'Electro' },
+    { label: 'Botes', key: 'Botes' },
   ]);
   const [HeaderTable, setHeaderTable] = useState([
     { label: 'Patio', key: 'NombreUbicacion' },
@@ -90,6 +93,7 @@ function Consulta({
     { label: 'Materiales', key: 'Materiales' },
     { label: 'Kilos', key: 'PesoNeto' },
     { label: 'Contaminantes', key: 'KilosContaminados' },
+    { label: 'NomMotivoContaminacion', key: 'NomMotivoContaminacion' },
     { label: 'Rechazo', key: 'Rechazo' },
     { label: 'LlantasChico (kgs)', key: 'LlantasCh' },
     { label: 'LlantasMediano (kgs)', key: 'LlantasM' },
@@ -323,7 +327,7 @@ function Consulta({
         </Row>
       )}
       {/* Placas de la Ubicación afectado por los filtros */}
-      <Row className="detalle-materiales">
+      <Row className="detalle-reportes">
         <Col>
           <Card
             style={{ marginTop: '30px', marginLeft: 'auto', marginRight: 'auto' }}
@@ -356,21 +360,24 @@ function Consulta({
                       <TableCell className="table-header" style={{ minWidth: '2vw'}}>
                         {Headers[1].label}
                       </TableCell>
-                      <TableCell className="table-header" style={{ minWidth: '7vw' }}>
+                      <TableCell className="table-header" style={{ minWidth: '8vw' }}>
                         {Headers[2].label}
                       </TableCell>
-                      <TableCell className="table-header" style={{ minWidth: '16vw' }}>
+                      <TableCell className="table-header" style={{ minWidth: '17vw' }}>
                         {Headers[3].label}
                       </TableCell>
-                      <TableCell className="table-header" style={{ minWidth: '10vw' }}>
+                      <TableCell className="table-header" style={{ minWidth: '12vw' }}>
                         {Headers[4].label}
                       </TableCell>
-                      <TableCell className="table-header">{Headers[5].label}</TableCell>
-                      <TableCell className="table-header" style={{ minWidth: '4vw' }}>{Headers[6].label}</TableCell>
+                      <TableCell className="table-header" style={{ minWidth: '5vw' }}>{Headers[5].label}</TableCell>
+                      <TableCell className="table-header" style={{ minWidth: '10vw' }}>{Headers[6].label}</TableCell>
                       <TableCell className="table-header" style={{ minWidth: '3vw' }}>{Headers[7].label}</TableCell>
                       <TableCell className="table-header">{Headers[8].label}</TableCell>
                       <TableCell className="table-header">{Headers[9].label}</TableCell>
                       <TableCell className="table-header">{Headers[10].label}</TableCell>
+                      <TableCell className="table-header">{Headers[11].label}</TableCell>
+                      <TableCell className="table-header">{Headers[12].label}</TableCell>
+                      <TableCell className="table-header">{Headers[13].label}</TableCell>
                     </TableRow>
                   </TableHead>
                 </Table>

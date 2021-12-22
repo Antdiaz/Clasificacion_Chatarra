@@ -6,7 +6,7 @@ import { Row, Col} from 'reactstrap';
 
 
 // Elemento Cascaron para detalle de la placa
-const DetalleBoleta= ({listas,material,setmaterial,editBoxValue,NomMotivoEntrada,ClaUbicacionOrigen,ClaViajeOrigen,setMaterialviaje,TipoTraspaso,setTipoTraspaso,Materialviaje,ClaFabricacionViaje}) => {
+const DetalleBoleta= ({Todos,listas,material,placadato,setmaterial,editBoxValue,NomMotivoEntrada,ClaUbicacionOrigen,ClaViajeOrigen,setMaterialviaje,TipoTraspaso,setTipoTraspaso,Materialviaje,ClaFabricacionViaje}) => {
   const [showResults, setshowResults] = useState(false);
 
     const handleShow = (e) => {
@@ -27,9 +27,11 @@ const DetalleBoleta= ({listas,material,setmaterial,editBoxValue,NomMotivoEntrada
         5 +
         ',"Parametros":"@pnClaUbicacion=' +
         editBoxValue +
-        ',@pnIdListaPrecio=' +
-        listas[0].IdListaPrecio +
-        ',@pnIdBoleta=' +
+        ''+config.Separador+'@pnIdListaPrecio=' +
+        (listas[0].IdListaPrecio ? listas[0].IdListaPrecio : 0) +
+        '' + ((placadato[0].IdAcuerdo === 0 || placadato[0].IdAcuerdo === null) ? '' :(''+config.Separador+'@pnIdAcuerdo='+placadato[0].IdAcuerdo+'')) +
+        '' + ((placadato[0].IdPedidoImportacion === 0 || placadato[0].IdPedidoImportacion === null) ? '' :(''+config.Separador+'@pnIdPedidoImportacion='+placadato[0].IdPedidoImportacion+'')) +
+        ''+config.Separador+'@pnIdBoleta=' +
         listas[0].IdBoleta +
         '"}',
       tipoEstructura: 0,
@@ -41,32 +43,36 @@ const DetalleBoleta= ({listas,material,setmaterial,editBoxValue,NomMotivoEntrada
         editBoxValue +
         ',"ClaServicioJson":29,"Parametros":"@pnClaUbicacion=' +
         editBoxValue +
-        ',@pnClaUbicacionOrigen=' +
+        ''+config.Separador+'@pnClaUbicacionOrigen=' +
         ClaUbicacionOrigen+
-        ',@pnClaViajeOrigen=' +
+        ''+config.Separador+'@pnClaViajeOrigen=' +
         ClaViajeOrigen +
-        ',@pnClaFabricacionViaje=' +
-        ClaFabricacionViaje +
+        '' + ((listas[0].IdFabDefault !== null) ? (''+config.Separador+'@pnClaFabricacionViaje='+listas[0].IdFabDefault+'') : '') +
+        
+        // ''+config.Separador+'@pnClaFabricacionViaje=' +
+        // ClaFabricacionViaje +
         '"}',
       tipoEstructura: 0,
     };
 
     /* eslint-enable */
 
-    if(NomMotivoEntrada===9 && material === null){
+    if(NomMotivoEntrada===9 && material === null && Todos !==1){
+      console.log(data5)
     callApi(urlKrakenService, 'POST', data5, (res) => {
       setmaterial(res.Result0);
     });
 
   }
-  if(NomMotivoEntrada===3 ){
-    if(ClaFabricacionViaje!==0)
+  if(NomMotivoEntrada===3 && Todos !==1 ){
+    console.log(data29)
     callApi(urlKrakenService, 'POST', data29, (res) => {
-      setMaterialviaje(res.Result0);
+      setMaterialviaje(res.Result0.map(v => ({...v,id: Math.floor(Math.random() * 100)})));
       setTipoTraspaso(res.Result0[0].EsPT);
+      console.log(Materialviaje)
     });
   } 
-  }, [ClaFabricacionViaje]);
+  }, []);
 
     return (
       <div>
@@ -85,7 +91,7 @@ const DetalleBoleta= ({listas,material,setmaterial,editBoxValue,NomMotivoEntrada
                     flexDirection: 'column',
                     height: "100%",
                     overflowY: 'hidden',
-                    overflowX: 'auto',
+                    overflowX: 'visible',
                     backgroundColor: '#eeeeee'
                     }}
                   >
@@ -99,10 +105,12 @@ const DetalleBoleta= ({listas,material,setmaterial,editBoxValue,NomMotivoEntrada
                           <div className="dx-field-label block">Transporte :</div>
                           <div className="dx-field-value-static block">{lista.NomTransporte}</div>
                         </div>
-                        <div className="dx-field">
-                          <div className="dx-field-label block">Chofer :</div>
-                          <div className="dx-field-value-static block">{lista.NomChofer}</div>
-                        </div>
+                        {lista.NomChofer ===null ? null : (
+                          <div className="dx-field">
+                            <div className="dx-field-label block">Chofer :</div>
+                            <div className="dx-field-value-static block">{lista.NomChofer}</div>
+                          </div>
+                         )}
                         <div className="dx-field">
                           <div className="dx-field-label block">Transportista :</div>
                           <div className="dx-field-value-static block">{lista.NomTransportista}</div>
@@ -111,23 +119,21 @@ const DetalleBoleta= ({listas,material,setmaterial,editBoxValue,NomMotivoEntrada
                           <div className="dx-field-label block">Boleta :</div>
                           <div className="dx-field-value-static block">{lista.IdBoleta}</div>
                         </div>
-                        {lista.ClaProveedor ==null ? null : (
+                        {lista.ClaProveedor ===null ? null : (
                           <div className="dx-field">
-                            <div className="dx-field-label block">Proveedor:</div>
-                            <div className="dx-field-value-static block">{lista.NomProveedor.split(/\s+/).slice(0,1) + [" "] + lista.NomProveedor.split(/\s+/).slice(2,3)}</div>
+                            <div className="dx-field-label block" style={{overflow: 'visible'}}>Proveedor:</div>
+                            <div className="dx-field-value-static block">{lista.NomProveedorWeb}</div>
                           </div>
                         )}
-                        <div className="dx-field ">
-                          <div className="dx-field-label block">Peso :</div>
-                          <div className="dx-field-value-static block">{lista.PesoEntrada.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}{lista.NomCortoUnidadEntrada}</div>
-                        </div>
+                        {lista.PesoEntrada ===null ? null : (
+                          <div className="dx-field ">
+                            <div className="dx-field-label block">Peso :</div>
+                            <div className="dx-field-value-static block">{lista.PesoEntrada.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}{lista.NomCortoUnidadEntrada}</div>
+                          </div>
+                        )}
                         <div className="dx-field">
                           <div className="dx-field-label block">Documentado :</div>
-                          <div className="dx-field-value-static block">{lista.PesoDocumentado==null ? "Sin documentar": lista.PesoDocumentad0}</div>
-                        </div>
-                        <div className="dx-field">
-                          <div className="dx-field-label block">Tipo :</div>
-                          <div className="dx-field-value-static block">{lista.NomMotivoEntrada}</div>
+                          <div className="dx-field-value-static block">{lista.PesoDocumentado==null ? "Sin documentar": lista.PesoDocumentado.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</div>
                         </div>
                         {lista.ClaveViajeOrigen ==null ? null : (
                           <div className="dx-field">
@@ -137,8 +143,35 @@ const DetalleBoleta= ({listas,material,setmaterial,editBoxValue,NomMotivoEntrada
                         )}
                         <div className="dx-field">
                           <div className="dx-field-label block">Observaciones:</div>
-                          <div className="dx-field-value-static block" style={{witdh: '60%'}} onClick={handleShow}> {lista.Observaciones==null ||lista.Observaciones==="" ?"" : !showResults ? <i className="fas fa-ellipsis-h" style={{ cursor: 'pointer' }}></i>: lista.Observaciones}</div>
+                          <div className="dx-field-value-static block" style={{width: '60%'}} onClick={handleShow}> {lista.Observaciones==null ||lista.Observaciones==="" ?"" : showResults ? <i className="fas fa-ellipsis-h" style={{ cursor: 'pointer' }}></i>: lista.Observaciones}</div>
                         </div>
+                        {NomMotivoEntrada ===110 ?
+                        null:
+                        (
+                          <div className="dx-field">
+                            <div className="dx-field-label block">Fecha entrada:</div>
+                            <div className="dx-field-value-static block" style={{width: '60%'}}> {lista.FechaEntrada.replace(/T.*/, '')}</div>
+                          </div>
+                        )}
+                        <div className="dx-field">
+                          <div className="dx-field-label block">Hora entrada:</div>
+                          <div className="dx-field-value-static block" style={{width: '60%'}}> {lista.HoraEntrada}</div>
+                        </div>
+                        {NomMotivoEntrada ===110 ?
+                        (
+                          <div className="dx-field">
+                            <div className="dx-field-label block">Viaje:</div>
+                            <div className="dx-field-value-static block" style={{witdh: '60%'}}>{lista.IdBoletaOrigenTrasRec} </div>
+                          </div>
+                        ) : null}
+                        {NomMotivoEntrada ===110 ?
+                        (
+                          <div className="dx-field">
+                            <div className="dx-field-label block">Ubicación:</div>
+                            <div className="dx-field-value-static block" style={{witdh: '60%'}}>{lista.NomUbicacionEntradaTraspaso}</div>
+                          </div>
+                        ) : null}
+
                       </div>
                     </div>
                   </div>

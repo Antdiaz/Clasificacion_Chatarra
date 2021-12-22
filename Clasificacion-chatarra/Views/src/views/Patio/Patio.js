@@ -26,11 +26,15 @@ import {
   logOut,
 } from '../../utils/utils';
 
+import { Cookies } from 'react-cookie';
+
+const cookies = new Cookies();
+
 class Patio extends React.Component {
   constructor(props) {
     super(props);
       this.state = {
-      NumbUsuario: getSessionItem('NumUsuario'),
+      NumbUsuario: getSessionItem('Usuario'),
       Usuario: null,
       Patio: null,
       Lugarsesion:0,
@@ -93,6 +97,7 @@ class Patio extends React.Component {
     /* eslint-enable */
 
     await callApi(urlKrakenUsuario, 'POST', data3, (res) => {
+      cookies.set('NumUsuario',res.Result0[0].IdUsuario, { path: '/' })
       this.setUsuario(res.Result0[0].IdUsuario);
     });
 

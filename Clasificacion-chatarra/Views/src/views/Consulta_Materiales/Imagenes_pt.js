@@ -52,6 +52,9 @@ function Imagenes({ id, editBoxValue, row, NomMotivoEntrada }) {
   // Valor que lee Material Superior
   const [Preregistro, setPreregistro] = useState(0);
   const [Manual, setManual] = useState(0);
+  const [Origen, setOrigen] = useState(0);
+  const [FrenteOrigen, setFrenteOrigen] = useState(0);
+
   const customStyles = {
     content: {
       backgroundColor: 'rgba(28, 128, 128, 0.512)',
@@ -64,6 +67,8 @@ function Imagenes({ id, editBoxValue, row, NomMotivoEntrada }) {
   const [Modalmaterial, setModalmaterial] = useState(false);
   const [Modalregistro, setModalregistro] = useState(false);
   const [Modalmanual, setModalmanual] = useState(false);
+  const [ModalOrigen, setModalOrigen] = useState(false);
+  const [ModalFrenteOrigen, setModalFrenteOrigen] = useState(false);
   const [Zoom, setZoom] = useState(false);
   const Material =
     NomMotivoEntrada === 9
@@ -90,9 +95,9 @@ function Imagenes({ id, editBoxValue, row, NomMotivoEntrada }) {
         14 +
         ',"Parametros":"@pnClaUbicacion=' +
         editBoxValue +
-        ',@pnIdBoleta=' +
+        ''+config.Separador+'@pnIdBoleta=' +
         id +
-        ',@pnClaTipoCamaraVideo=1"}',
+        ''+config.Separador+'@pnClaTipoCamaraVideo=1"}',
       tipoEstructura: 0,
     };
 
@@ -104,9 +109,9 @@ function Imagenes({ id, editBoxValue, row, NomMotivoEntrada }) {
         26 +
         ',"Parametros":"@pnClaUbicacion=' +
         editBoxValue +
-        ',@pnIdBoleta=' +
+        ''+config.Separador+'@pnIdBoleta=' +
         id +
-        ',@pnClaArticulo=-1"}',
+        ''+config.Separador+'@pnClaArticulo=-1"}',
       tipoEstructura: 0,
     };
 
@@ -118,9 +123,37 @@ function Imagenes({ id, editBoxValue, row, NomMotivoEntrada }) {
         14 +
         ',"Parametros":"@pnClaUbicacion=' +
         editBoxValue +
-        ',@pnIdBoleta=' +
+        ''+config.Separador+'@pnIdBoleta=' +
         id +
-        ',@pnClaTipoCamaraVideo=2"}',
+        ''+config.Separador+'@pnClaTipoCamaraVideo=2"}',
+      tipoEstructura: 0,
+    };
+
+    const data142 = {
+      parameters:
+        '{"ClaUbicacion":' +
+        editBoxValue +
+        ',"ClaServicioJson":' +
+        14 +
+        ',"Parametros":"@pnClaUbicacion=' +
+        editBoxValue +
+        ''+config.Separador+'@pnIdBoleta=' +
+        id +
+        ''+config.Separador+'@pnClaTipoCamaraVideo=5"}',
+      tipoEstructura: 0,
+    };
+
+    const data143 = {
+      parameters:
+        '{"ClaUbicacion":' +
+        editBoxValue +
+        ',"ClaServicioJson":' +
+        14 +
+        ',"Parametros":"@pnClaUbicacion=' +
+        editBoxValue +
+        ''+config.Separador+'@pnIdBoleta=' +
+        id +
+        ''+config.Separador+'@pnClaTipoCamaraVideo=6"}',
       tipoEstructura: 0,
     };
 
@@ -136,23 +169,31 @@ function Imagenes({ id, editBoxValue, row, NomMotivoEntrada }) {
       tipoEstructura: 0,
     };
     /* eslint-enable */
-    // callApi(urlKrakenService, 'POST', data14, (res) => {
-    //   setFotoplaca(res.Result0.length > 0 ? res.Result0[0].Fotografia : 0);
+    callApi(urlKrakenService, 'POST', data14, (res) => {
+      setFotoplaca(res.Result0.length > 0 ? res.Result0[0].Fotografia : 0);
+    });
+
+    callApi(urlKrakenService, 'POST', data141, (res) => {
+      setMaterialsuperior(res.Result0.length > 0 ? res.Result0[0].Fotografia : 0);
+    });
+
+    // callApi(urlKrakenService, 'POST', data142, (res) => {
+    //   setOrigen(res.Result0.length > 0 ? res.Result0[0].Fotografia : 0);
     // });
 
-    // callApi(urlKrakenService, 'POST', data141, (res) => {
-    //   setMaterialsuperior(res.Result0.length > 0 ? res.Result0[0].Fotografia : 0);
+    // callApi(urlKrakenService, 'POST', data143, (res) => {
+    //   setFrenteOrigen(res.Result0.length > 0 ? res.Result0[0].Fotografia : 0);
     // });
 
-    // callApi(urlKrakenService, 'POST', data26, (res) => {
-    //   setPreregistro(res.Result0.length > 0 ? res.Result0[0].FotoMaterial : 0);
-    // });
+    callApi(urlKrakenService, 'POST', data26, (res) => {
+      setPreregistro(res.Result0.length > 0 ? res.Result0[0].FotoMaterial : 0);
+    });
 
-    // if (Material > 0) {
-    //   callApi(urlKrakenService, 'POST', data40, (res) => {
-    //     setManual(res.Result0.length > 0 ? res.Result0[0].Imagen : 0);
-    //   });
-    // }
+    if (Material > 0) {
+      callApi(urlKrakenService, 'POST', data40, (res) => {
+        setManual(res.Result0.length > 0 ? res.Result0[0].Imagen : 0);
+      });
+    }
     return () => {
       isCancelled = true;
     };
@@ -404,10 +445,10 @@ function Imagenes({ id, editBoxValue, row, NomMotivoEntrada }) {
                 <span>Salida en Ubicación Origen</span>
                 <span
                   onClick={() => {
-                    setModalmanual(true);
+                    setModalOrigen(true);
                   }}
                 >
-                  {Manual ? <ZoomInIcon style={{ float: 'right', cursor: 'pointer' }} /> : null}
+                  {Origen ? <ZoomInIcon style={{ float: 'right', cursor: 'pointer' }} /> : null}
                 </span>
               </CardTitle>
             </CardHeader>
@@ -415,19 +456,19 @@ function Imagenes({ id, editBoxValue, row, NomMotivoEntrada }) {
               <img
                 style={{ width: '100%' }}
                 src={
-                  Manual !== 0 /* eslint-disable */
-                    ? 'data:image/jpg;base64,' + Manual + ''
+                  Origen !== 0 /* eslint-disable */
+                    ? 'data:image/jpg;base64,' + Origen + ''
                     : /* eslint-enable */ ''
                 }
                 alt=""
               />
             </CardBody>
-            <Modal isOpen={Modalmanual} onClose="" ariaHideApp={false} style={customStyles}>
+            <Modal isOpen={ModalOrigen} onClose="" ariaHideApp={false} style={customStyles}>
               <div className="Completo_container">
                 <span
                   className="close-image"
                   onClick={() => {
-                    setModalmanual(false);
+                    setModalOrigen(false);
                   }}
                 >
                   X
@@ -439,13 +480,14 @@ function Imagenes({ id, editBoxValue, row, NomMotivoEntrada }) {
                 >
                   <img
                     style={{
-                      width: Zoom ? '200%' : '150%',
+                      width: Zoom ? '150%' : '70%',
                       cursor: Zoom ? 'zoom-out' : 'zoom-in',
-                      marginLeft: Zoom ? '-40%' : '-40%',
+                      marginLeft: Zoom ? '-40%' : '15%',
+                      marginTop: Zoom ? '30%' : '0%',
                     }}
                     src={
-                      Manual !== 0 /* eslint-disable */
-                        ? 'data:image/jpg;base64,' + Manual + ''
+                      Origen !== 0 /* eslint-disable */
+                        ? 'data:image/jpg;base64,' + Origen + ''
                         : /* eslint-enable */ ''
                     }
                     alt=""
@@ -463,10 +505,10 @@ function Imagenes({ id, editBoxValue, row, NomMotivoEntrada }) {
                 <span>Fotos Origen 1</span>
                 <span
                   onClick={() => {
-                    setModalmanual(true);
+                    setModalFrenteOrigen(true);
                   }}
                 >
-                  {Manual ? <ZoomInIcon style={{ float: 'right', cursor: 'pointer' }} /> : null}
+                  {FrenteOrigen ? <ZoomInIcon style={{ float: 'right', cursor: 'pointer' }} /> : null}
                 </span>
               </CardTitle>
             </CardHeader>
@@ -474,19 +516,19 @@ function Imagenes({ id, editBoxValue, row, NomMotivoEntrada }) {
               <img
                 style={{ width: '100%' }}
                 src={
-                  Manual !== 0 /* eslint-disable */
-                    ? 'data:image/jpg;base64,' + Manual + ''
+                  FrenteOrigen !== 0 /* eslint-disable */
+                    ? 'data:image/jpg;base64,' + FrenteOrigen + ''
                     : /* eslint-enable */ ''
                 }
                 alt=""
               />
             </CardBody>
-            <Modal isOpen={Modalmanual} onClose="" ariaHideApp={false} style={customStyles}>
+            <Modal isOpen={ModalFrenteOrigen} onClose="" ariaHideApp={false} style={customStyles}>
               <div className="Completo_container">
                 <span
                   className="close-image"
                   onClick={() => {
-                    setModalmanual(false);
+                    setModalFrenteOrigen(false);
                   }}
                 >
                   X
@@ -498,13 +540,13 @@ function Imagenes({ id, editBoxValue, row, NomMotivoEntrada }) {
                 >
                   <img
                     style={{
-                      width: Zoom ? '200%' : '150%',
+                      width: Zoom ? '150%' : '70%',
                       cursor: Zoom ? 'zoom-out' : 'zoom-in',
-                      marginLeft: Zoom ? '-40%' : '-40%',
+                      marginLeft: Zoom ? '0%' : '15%',
                     }}
                     src={
-                      Manual !== 0 /* eslint-disable */
-                        ? 'data:image/jpg;base64,' + Manual + ''
+                      FrenteOrigen !== 0 /* eslint-disable */
+                        ? 'data:image/jpg;base64,' + FrenteOrigen + ''
                         : /* eslint-enable */ ''
                     }
                     alt=""

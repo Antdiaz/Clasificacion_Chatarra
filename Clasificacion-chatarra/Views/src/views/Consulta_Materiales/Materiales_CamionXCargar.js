@@ -64,17 +64,19 @@ function Materiales({
   ValidaCargo,
   setValidaCargo,
   Nocargo,
-  setNocargo
+  setNocargo,
+  ValidaTara,
+  setValidaTara
 }) {
   const NumbUsuario = getSessionItem('NumUsuario');
   const ipadress = getSessionItem('Ipaddress');
-  
+  const PorcentajeSum = row ? (row.reduce((acc, val) => acc + val.Porcentaje, 0)) : 0;
+  const CantidadSum=row ? row.reduce((acc, val) => acc + val.CantEmbarcada, 0) : 0;
+  const KilosSum=row ? row.reduce((acc, val) => acc + val.KilogramosEmbarcados, 0) : 0;
 
-  function List({ ro, index, editOpen, seteditOpen,BoxPlanCarga }) {
+  function List({ ro, index, editOpen, seteditOpen,BoxPlanCarga,ValidaTara,setValidaTara,row }) {
     // Valor de elemento individual al querer editar material
-    
     const [modaledit, setmodaledit] = useState(false);
-
     // Estilo de pop up/ wizard para agregar material
     const customStyles = {
       content: {
@@ -88,7 +90,7 @@ function Materiales({
     // Componente cascarón de cada material mostrado
     return (
       <>
-        {ro.ClaArticuloPreReg ? <span className="pre-registro">Pre-registro</span> : null}
+        {ro.ClaArticuloPreReg ? <tr><td className="pre-registro">Pre-registro</td></tr>:null}
         <TableRow key={index}>
           <TableCell
             className="table-content"
@@ -100,23 +102,22 @@ function Materiales({
           </TableCell>
           <TableCell className="table-content">
             {ro.NomArticuloPlanCarga ? ro.NomArticuloPlanCarga.split('-').pop(): 0}{' '}
-            <br /> <span style={{whiteSpace: 'pre-wrap'}}>Observaciones:&nbsp;<span style={{fontSize: "13px"}}>{placadato[0].Observaciones}</span></span>
           </TableCell>
           <TableCell className="table-content" style={{ textAlign: 'center', fontWeight: '600' }}>
             {ro.Porcentaje ? ro.Porcentaje : ro.EsPesajeParcial ? 100 : ro.CantEmbarcada===null && ro.KilogramosEmbarcados===null ? 0 : 'NA'}&nbsp;%
           </TableCell>
           <TableCell className="table-content">
             A embarcar:&nbsp;{ro.CantEmbarcar ? ro.CantEmbarcar.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : 0}&nbsp;{ro.NomUnidad ? ro.NomUnidad: ''} 
-            <br /> {ro.Porcentaje===null || ro.Porcentaje===0 ? 'Embarcado:':''}&nbsp;{ro.Porcentaje===null || ro.Porcentaje===0 ? ro.CantEmbarcada ? ro.CantEmbarcada.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : 0 :''}
-            &nbsp; {ro.Porcentaje===null || ro.Porcentaje===0 ? ro.NomUnidad ? ro.NomUnidad: '' : ''}
+            <br /> {(ro.Porcentaje===null || ro.Porcentaje===0) || ro.EsPesajeParcial===1 ? 'Embarcado:':''}&nbsp;{(ro.Porcentaje===null || ro.Porcentaje===0) || ro.EsPesajeParcial===1 ? ro.CantEmbarcada ? ro.CantEmbarcada.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : 0 :''}
+            &nbsp; {(ro.Porcentaje===null || ro.Porcentaje===0) || ro.EsPesajeParcial===1 ? ro.NomUnidad ? ro.NomUnidad: '' : ''}
           </TableCell>
           <TableCell className="table-content">
-            A embarcar:&nbsp;{ro.KilogramosEmbarcar ? ro.KilogramosEmbarcar.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : 0}&nbsp; Kgs <br />{' '}
-            {ro.Porcentaje===null || ro.Porcentaje===0 ? 'Embarcado:':''}&nbsp;{ro.Porcentaje===null || ro.Porcentaje===0 ? ro.KilogramosEmbarcados ? ro.KilogramosEmbarcados.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : 0:''}&nbsp;{ro.Porcentaje===null || ro.Porcentaje===0 ? 'Kgs':''}
+            A embarcar:&nbsp;{ro.KilogramosEmbarcar ? ro.KilogramosEmbarcar.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : 0}&nbsp; Kg <br />{' '}
+            {(ro.Porcentaje===null || ro.Porcentaje===0) || ro.EsPesajeParcial===1 ? 'Embarcado:':''}&nbsp;{(ro.Porcentaje===null || ro.Porcentaje===0) || ro.EsPesajeParcial===1 ? ro.KilogramosEmbarcados ? ro.KilogramosEmbarcados.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : 0:''}&nbsp;{(ro.Porcentaje===null || ro.Porcentaje===0) || ro.EsPesajeParcial===1 ? 'Kg':''}
           </TableCell>
           <TableCell className="table-content">
             Embarcado:&nbsp;{ro.PesoTaraRecibido ? ro.PesoTaraRecibido.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : 0}
-            &nbsp; Kgs
+            &nbsp; Kg
           </TableCell>
           <TableCell className="table-content">
             Sub-Almacen:&nbsp;{ro.ClaSubAlmacen ? ro.ClaSubAlmacen : ''}
@@ -125,16 +126,16 @@ function Materiales({
             <div
               onClick={
                 row &&
-                ro.EsPesajeParcial ===1 ? 
+                (row.every(ro => ro.EsPesajeParcial !==1)) ? 
                 () => {
-                  setpoppesaje(true);
+                  setmodaledit(true)
                 }
-              :(row.every(ro => (ro.KilogramosEmbarcados === 0 && ro.EsPesajeParcial ===1))) ? (() =>{ setpoppesaje(true)}) : () => {
+              :(ro.EsPesajeParcial &&(row.every(ro => (ro.KilogramosEmbarcados === 0 || ro.KilogramosEmbarcados === null))|| row.every(ro => (ro.CantEmbarcada === 0 || ro.CantEmbarcada === null))) || (row.some(ro => ro.EsPesajeParcial) && (row.every(ro => (ro.KilogramosEmbarcados === 0 || ro.KilogramosEmbarcados === null))|| row.every(ro => ro.CantEmbarcada === 0 || ro.CantEmbarcada === null)))|| (row.every(ro=> ro.EsPesajeParcial===1) && (row.some(ro => (ro.KilogramosEmbarcados === 0 || ro.KilogramosEmbarcados === null))|| row.some(ro => ro.CantEmbarcada === 0 || ro.CantEmbarcada === null)))) ? (() =>{ setpoppesaje(true)}) : () => {
                 setmodaledit(true);
               }
               }
             >
-              <EditIcon style={{ color: ro.EsPesajeParcial===1  ? 'grey':'#ff6a00' , cursor: 'pointer' }} />
+              <EditIcon style={{color: (ro.EsPesajeParcial && (row.every(ro => (ro.KilogramosEmbarcados === 0 || ro.KilogramosEmbarcados === null)|| row.every(ro => (ro.CantEmbarcada === 0 || ro.CantEmbarcada === null))) || row.some(ro => ro.CantEmbarcada === 0 || ro.CantEmbarcada === null))|| (row.some(ro => ro.EsPesajeParcial) && (row.every(ro => (ro.KilogramosEmbarcados === 0 || ro.KilogramosEmbarcados === null))|| row.every(ro => ro.CantEmbarcada === 0 || ro.CantEmbarcada === null)) ) || (row.every(ro=> ro.EsPesajeParcial===1) && (row.some(ro => (ro.KilogramosEmbarcados=== 0 || ro.KilogramosEmbarcados === null))|| row.some(ro => ro.CantEmbarcada === 0 || ro.CantEmbarcada === null))))  ? 'grey':'#ff6a00' , cursor: 'pointer' }} />
             </div>
           </TableCell>
           {/* Pop up para editar un material */} 
@@ -145,6 +146,8 @@ function Materiales({
             style={customStyles}
           >
             <MaterialesXCargar
+              ValidaTara={ValidaTara}
+              setValidaTara={setValidaTara}
               setSavemat={setSavemat}
               BoxPlanCarga={BoxPlanCarga}
               row={row}
@@ -203,11 +206,11 @@ function Materiales({
           68 +
           ',"Parametros":"@pnClaUbicacion=' +
           editBoxValue +
-          ',@psPlanCarga=' +
+          ''+config.Separador+'@psPlanCarga=' +
           (PlanCarga ===null ? 0: PlanCarga ) +
-          ',@pnClaTransporte='+
+          ''+config.Separador+'@pnClaTransporte='+
           placadato[0].ClaTransporte +
-          ',@pnClaTransportista='+
+          ''+config.Separador+'@pnClaTransportista='+
           placadato[0].ClaTransportista +'"}',
         tipoEstructura: 0,
         }
@@ -226,14 +229,14 @@ function Materiales({
       SelectPlanCarga();
       }
     }
-  }, [])
+  }, [PlanCarga])
 
 
   
   
   useEffect(() => {
     let isCancelled = false;
-    const timeout = setTimeout(() => {
+
       const urlKrakenService = `${config.KrakenService}/${24}/${config.Servicio}`;
       /* eslint-disable */
 
@@ -245,74 +248,36 @@ function Materiales({
           63 +
           ',"Parametros":"@pnClaUbicacion=' +
           editBoxValue +
-          ',@pnIdBoleta=' +
+          ''+config.Separador+'@pnIdBoleta=' +
           id +
-          ',@pnIdPlanCarga='+
+          ''+config.Separador+'@pnIdPlanCarga='+
           (PlanCarga ===null ? 0: PlanCarga ) +'"}',
         tipoEstructura: 0,
       };
       /* eslint-enable */
 
-       if (!isCancelled  && NomMotivoEntrada>0 && NomMotivoEntrada===1 && placadato && ((EsValido !==null && EsValido=== 1)||(Savemat===1)) && row===null) {
-        callApi(urlKrakenService, 'POST', data63, (res) => {
+      async function MostrarMaterial(){
+        await callApi(urlKrakenService, 'POST', data63, (res) => {
           setrow(res.Result0);
         });
+      }
+
+       if (!isCancelled && NomMotivoEntrada===1 && placadato && ((EsValido !==null && EsValido=== 1)||(Savemat===1)) && row===null) {
+        MostrarMaterial()
         seteditOpen(true);
         setSavemat(0)
       }
       return()=> {
         isCancelled = true
       }
-    }, 1600);
-  }, [Actualizar, EsValido]);
 
+
+  }, [Actualizar, EsValido]);
 
    // Función que corre servicios antes del render cada que haya un material, solo si el porcentaje total es 100% o si se maneja por cantidad
   // Servicio JSON 13 --> SP=BasSch.BasValidacionClasEntCompraMatPrimaProc <Valida clasificación>
-  useEffect(() => {
-    const urlKrakenService = `${config.KrakenService}/${24}/${config.Servicio}`;
-    if ((row && row.length>0) || (ValidaCargo===1)) {
-      const PorcentajeSum =row &&  row.reduce((acc, val) => acc + val.Porcentaje, 0);
-      const CantidadSum=row && row.reduce((acc, val) => acc + val.CantEmbarcada, 0);
+  
 
-      if ((PorcentajeSum !== null && PorcentajeSum === 100) || (PorcentajeSum === 0 && CantidadSum>0) && (ValidaCargo===1 && row && row.length>0 && (row[0].CantEmbarcada !==null || row[0].KilogramosEmbarcados!==null || row[0].Porcentaje!==null))) {
-        /* eslint-disable */
-        const data66 = {
-          parameters:
-            '{"ClaUbicacion":' +
-            editBoxValue +
-            ',"ClaServicioJson":66,"Parametros":"@pnClaUbicacion=' +
-            editBoxValue +
-            ',@pnIdBoleta=' +
-            placadato[0].IdBoleta +
-            ',@pnClaPlanCarga='+
-            (placadato[0].ClaPlanCarga !== null ? placadato[0].ClaPlanCarga : BoxPlanCarga!==null ? BoxPlanCarga:0)+
-            ',@psClaVehiculoPorClasificar=' +
-            placadato[0].Placas +
-            ',@psPlacas='+
-            placadato[0].Placas+
-            ',@pnEsNoCargoDescargoMaterial='+
-            placadato[0].EsNoCargoDescargoMaterial +
-            ',@pnPesoAtrilesTarimas=' +
-            (placadato[0].PesoAtrilesTarimas !== null ? placadato[0].PesoAtrilesTarimas : 0) +
-            ',@pnClaUsuarioMod=' +
-            NumbUsuario +
-            ',@psNombrePcMod=' +
-            ipadress +
-            ',@pnIdMensaje=,@psMensaje="}',
-          tipoEstructura: 0,
-        };
-        /* eslint-enable */
-        callApi(urlKrakenService, 'POST', data66, (res) => {
-          // console.log(res);
-        });
-      }
-    }
-    setValidaCargo(0)
-    if(Nocargo===1){
-    setNocargo(0)
-    }
-  }, [row]);
 
    // Componente de sección de materiales con sus headers
   function Clasificacion() {
@@ -326,9 +291,9 @@ function Materiales({
               </TableCell>
               <TableCell className="table-header">Material</TableCell>
               <TableCell
-                className="table-header"
+                className={(CantidadSum>0 || (CantidadSum===0 && PorcentajeSum===0)) ? "table-header" : PorcentajeSum<100 ? "yellowporcentaje" :PorcentajeSum>100 && pesajeparcial===1 ? "redporcentaje" : "greenporcentaje"}
               >
-                Porcentaje
+                {PorcentajeSum>0 && CantidadSum===0 && PorcentajeSum}% {(PorcentajeSum<100 && CantidadSum===0) ? (<i className="fas fa-exclamation-triangle" title="No se le podrá dar salida al material hasta que la suma de porcentaje sea 100%"></i>):null}
               </TableCell>
               <TableCell className="table-header">Cantidad</TableCell>
               <TableCell className="table-header">Kilos</TableCell>
@@ -340,7 +305,7 @@ function Materiales({
           <TableBody>
             {row
               ? row.map((ro, index) => (
-                <List ro={ro} key={index} editOpen={editOpen} seteditOpen={seteditOpen} BoxPlanCarga={BoxPlanCarga} />
+                <List ro={ro} row={row} key={index} editOpen={editOpen} seteditOpen={seteditOpen} BoxPlanCarga={BoxPlanCarga} ValidaTara={ValidaTara} setValidaTara={setValidaTara} />
                 ))
               : null}
           </TableBody>

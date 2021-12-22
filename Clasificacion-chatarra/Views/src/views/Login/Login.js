@@ -48,7 +48,6 @@ class Login extends React.Component {
   }
 
   handleSubmit(e) {
-    console.log("hola")
     e.preventDefault();
     const urlWebService = `${config.UrlLoginServer}`;
 
@@ -66,12 +65,9 @@ class Login extends React.Component {
       if (!res.token) {
         showSweetAlert('Error', 'Intenta de nuevo', 'error');
       } else {
-        setSessionData({
-          NomUsuario: res.nombreUsuario,
-          Token: res.token,
-          NumUsuario: data.username,
-        });
-
+        cookies.set('NomUsuario',res.nombreUsuario, { path: '/' })
+        cookies.set('Token',res.token, { path: '/'})
+        cookies.set('Usuario',data.username, { path: '/' })
         cookies.set("PruebaToken", res.token, { path: '/' })
 
         this.setState({

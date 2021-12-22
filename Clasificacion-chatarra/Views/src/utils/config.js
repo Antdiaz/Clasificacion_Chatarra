@@ -5,7 +5,7 @@ const config = {
 
   // ** Desarrollo
   UrlLoginServer: 
-   'https://sweetsrv.azurewebsites.net/LoginSandbox/authenticate',
+    'https://sweetsrv.azurewebsites.net/LoginSandbox/authenticate',
   // 'https://sweetsrv.azurewebsites.net/Login/authenticate',
   UrlApiProject: 'http://localhost:5000/',
 
@@ -17,7 +17,16 @@ const config = {
   // Debugging mode
   DebuggingMode: true,
 
-  Servicio:37
+  // Producción Servicio: 34
+  // Pruebas Servicio:37
+  Servicio:37,
+  // Producción Bloque: 48
+  // Pruebas Bloque:50
+  Bloque:50,
+  Separador:'<@@>',
+  idBote:524225,
+  idElect:301522
+  
   // 3322376
 };
 
