@@ -1,3 +1,4 @@
+
 export const reportes = [
     {
       reporteID: 1,
@@ -14,5 +15,17 @@ export const reportes = [
     {
       reporteID: 4,
       name: "Reporte de Resultados"
+    },
+    {
+      reporteID: 5,
+      name: "Reporte Clasificación Cruzada"
     }
+  ]
+
+  export const reportes2 = [
+
+    {
+      reporteID: 2,
+      name: "Condiciones Operaciones"
+    },
   ]

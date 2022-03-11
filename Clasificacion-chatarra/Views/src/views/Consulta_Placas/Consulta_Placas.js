@@ -4,6 +4,7 @@ import { Row, Col, Button, Input } from 'reactstrap';
 import Items from './Placas';
 import { config } from '../../utils/config';
 import { callApi} from '../../utils/utils';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 function Consulta({
   reValores,
@@ -54,10 +55,10 @@ useEffect(() => {
     tipoEstructura: 0,
   };
  /* eslint-enable */
-
+if(editBoxValue !==6){
  callApi(urlKrakenService, 'POST', data,(res) => {
   setValores(res.Result0.sort((a, b) =>(new Date(( (Math.abs(new Date() - new Date(b.HoraEntrada.replace("T",' ').replace(/-/g,'/').split(".")[0])))/60000)))- new Date(( (Math.abs(new Date() - new Date(a.HoraEntrada.replace("T",' ').replace(/-/g,'/').split(".")[0])))/60000))));
-});
+})};
   }
 
   if(placadato !== null){
@@ -182,9 +183,9 @@ setRefresh(false)
           <div id="formularioTickets">
             {/* Botón para hacer el filtrado */}
             <Button
-              onClick={handleRefresh}
-              className="refresh"
-              style={{color: "white",background:'#5b9cff',border:'0px'}}
+              onClick={Valores ? handleRefresh:null}
+              className={Valores ? "refresh" :"refresh grey"}
+              style={{color: "white",border:'0px'}}
             >
               <i className="fas fa-redo" aria-hidden="true"></i>
             </Button>
@@ -241,90 +242,95 @@ setRefresh(false)
         </Row>
       )}
       {/* Placas de la Ubicación afectado por los filtros */}
-      {Valores && (
-        <Items
-          editBoxValue={editBoxValue}
-          setpesajeparcial={setpesajeparcial}
-          setClaUbicacionOrigen={setClaUbicacionOrigen}
-          setClaViajeOrigen={setClaViajeOrigen}
-          setClaFabricacionViaje={setClaFabricacionViaje}
-          NomMotivoEntrada={NomMotivoEntrada}
-          setNomMotivoEntrada={setNomMotivoEntrada}
-          setrow={setrow}
-          setpoppesaje={setpoppesaje}
-          listas={
-            Datos && filtropesaje
-              ? Valores.filter(
-                  (lista) =>
-                    ([lista.EsPesajeParcial].includes(1) &&
+      {!Valores ? 
+        (
+          <div style={{position:'relative',left: '50%',marginLeft: '-50px',top:'10vh'}}>
+            <CircularProgress />
+          </div>
+        ): (
+          <Items
+            editBoxValue={editBoxValue}
+            setpesajeparcial={setpesajeparcial}
+            setClaUbicacionOrigen={setClaUbicacionOrigen}
+            setClaViajeOrigen={setClaViajeOrigen}
+            setClaFabricacionViaje={setClaFabricacionViaje}
+            NomMotivoEntrada={NomMotivoEntrada}
+            setNomMotivoEntrada={setNomMotivoEntrada}
+            setrow={setrow}
+            setpoppesaje={setpoppesaje}
+            listas={
+              Datos && filtropesaje
+                ? Valores.filter(
+                    (lista) =>
+                      ([lista.EsPesajeParcial].includes(1) &&
+                        (status === 'porclasificar'
+                          ? [lista.EsClasificado].includes(0)
+                          : status === 'clasificado'
+                          ? [lista.EsClasificado].includes(1)
+                          : [lista.EsClasificado]) &&
+                        lista.ClaVehiculoPorClasificar.toLowerCase().includes(Datos.toLowerCase())) ||
+                        (lista.NomChofer ? [lista.NomChofer].includes(Datos.toUpperCase()) : '') ||
+                      (lista.NomProveedor ? lista.NomProveedor.toLowerCase().includes(Datos.toLowerCase()): '') ||
+                      lista.NomMotivoEntrada.toLowerCase().includes(Datos.toLowerCase()) ||
+                      lista.IdBoleta.toString().includes(Datos) ||
+                      lista.PesoEntrada.toString().includes(Datos.replace(/,/g, '')) ||
+                      lista.NomTransporte.includes(Datos.toUpperCase()) ||
+                      ( lista.NomTransportista ?  lista.NomTransportista.includes(Datos.toUpperCase()): '')
+                  )
+                : !Datos && filtropesaje
+                ? Valores.filter(
+                    (lista) =>
+                      [lista.EsPesajeParcial].includes(1) &&
+                      (transporte === 'ferrocarril'
+                        ? [lista.ClaTransporte].includes(8)
+                        : transporte === 'autotransporte'
+                        ? ![lista.ClaTransporte].includes(8)
+                        : [lista.ClaTransporte]) &&
+                      (status === 'porclasificar'
+                        ? [lista.EsClasificado].includes(0)
+                        : status === 'clasificado'
+                        ? [lista.EsClasificado].includes(1)
+                        : [lista.EsClasificado])
+                  )
+                : Datos && !filtropesaje
+                ? Valores.filter(
+                    (lista) =>
+                      ((transporte === 'ferrocarril'
+                        ? [lista.ClaTransporte].includes(8)
+                        : transporte === 'autotransporte'
+                        ? ![lista.ClaTransporte].includes(8)
+                        : [lista.ClaTransporte]) &&
+                        (status === 'porclasificar'
+                          ? [lista.EsClasificado].includes(0)
+                          : status === 'clasificado'
+                          ? [lista.EsClasificado].includes(1)
+                          : [lista.EsClasificado]) &&
+                        lista.ClaVehiculoPorClasificar.toLowerCase().includes(Datos.toLowerCase())) ||
+                      (lista.NomChofer ? [lista.NomChofer].includes(Datos.toUpperCase()) : '')||
+                      (lista.NomProveedor ? lista.NomProveedor.toLowerCase().includes(Datos.toLowerCase()): '') ||
+                      lista.NomMotivoEntrada.toLowerCase().includes(Datos.toLowerCase()) ||
+                      lista.IdBoleta.toString().includes(Datos) ||
+                      lista.PesoEntrada.toString().includes(Datos.replace(/,/g, '')) ||
+                      lista.NomTransporte.includes(Datos.toUpperCase()) ||
+                      ( lista.NomTransportista ?  lista.NomTransportista.includes(Datos.toUpperCase()): '')
+                  )
+                : !Datos &&
+                  !filtropesaje &&
+                  Valores.filter(
+                    (lista) =>
                       (status === 'porclasificar'
                         ? [lista.EsClasificado].includes(0)
                         : status === 'clasificado'
                         ? [lista.EsClasificado].includes(1)
                         : [lista.EsClasificado]) &&
-                      lista.ClaVehiculoPorClasificar.toLowerCase().includes(Datos.toLowerCase())) ||
-                      (lista.NomChofer ? [lista.NomChofer].includes(Datos.toUpperCase()) : '') ||
-                    (lista.NomProveedor ? lista.NomProveedor.toLowerCase().includes(Datos.toLowerCase()): '') ||
-                    lista.NomMotivoEntrada.toLowerCase().includes(Datos.toLowerCase()) ||
-                    lista.IdBoleta.toString().includes(Datos) ||
-                    lista.PesoEntrada.toString().includes(Datos.replace(/,/g, '')) ||
-                    lista.NomTransporte.includes(Datos.toUpperCase()) ||
-                    ( lista.NomTransportista ?  lista.NomTransportista.includes(Datos.toUpperCase()): '')
-                )
-              : !Datos && filtropesaje
-              ? Valores.filter(
-                  (lista) =>
-                    [lista.EsPesajeParcial].includes(1) &&
-                    (transporte === 'ferrocarril'
-                      ? [lista.ClaTransporte].includes(8)
-                      : transporte === 'autotransporte'
-                      ? ![lista.ClaTransporte].includes(8)
-                      : [lista.ClaTransporte]) &&
-                    (status === 'porclasificar'
-                      ? [lista.EsClasificado].includes(0)
-                      : status === 'clasificado'
-                      ? [lista.EsClasificado].includes(1)
-                      : [lista.EsClasificado])
-                )
-              : Datos && !filtropesaje
-              ? Valores.filter(
-                  (lista) =>
-                    ((transporte === 'ferrocarril'
-                      ? [lista.ClaTransporte].includes(8)
-                      : transporte === 'autotransporte'
-                      ? ![lista.ClaTransporte].includes(8)
-                      : [lista.ClaTransporte]) &&
-                      (status === 'porclasificar'
-                        ? [lista.EsClasificado].includes(0)
-                        : status === 'clasificado'
-                        ? [lista.EsClasificado].includes(1)
-                        : [lista.EsClasificado]) &&
-                      lista.ClaVehiculoPorClasificar.toLowerCase().includes(Datos.toLowerCase())) ||
-                    (lista.NomChofer ? [lista.NomChofer].includes(Datos.toUpperCase()) : '')||
-                    (lista.NomProveedor ? lista.NomProveedor.toLowerCase().includes(Datos.toLowerCase()): '') ||
-                    lista.NomMotivoEntrada.toLowerCase().includes(Datos.toLowerCase()) ||
-                    lista.IdBoleta.toString().includes(Datos) ||
-                    lista.PesoEntrada.toString().includes(Datos.replace(/,/g, '')) ||
-                    lista.NomTransporte.includes(Datos.toUpperCase()) ||
-                    ( lista.NomTransportista ?  lista.NomTransportista.includes(Datos.toUpperCase()): '')
-                )
-              : !Datos &&
-                !filtropesaje &&
-                Valores.filter(
-                  (lista) =>
-                    (status === 'porclasificar'
-                      ? [lista.EsClasificado].includes(0)
-                      : status === 'clasificado'
-                      ? [lista.EsClasificado].includes(1)
-                      : [lista.EsClasificado]) &&
-                    (transporte === 'ferrocarril'
-                      ? [lista.ClaTransporte].includes(8)
-                      : transporte === 'autotransporte'
-                      ? ![lista.ClaTransporte].includes(8)
-                      : [lista.ClaTransporte])
-                )
-          }
-        />
+                      (transporte === 'ferrocarril'
+                        ? [lista.ClaTransporte].includes(8)
+                        : transporte === 'autotransporte'
+                        ? ![lista.ClaTransporte].includes(8)
+                        : [lista.ClaTransporte])
+                  )
+            }
+          />
       )}
     </div>
   );

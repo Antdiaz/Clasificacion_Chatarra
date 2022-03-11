@@ -21,12 +21,12 @@ function Listas({ Reportes,Headers,editBoxValue}) {
       <>
         <TableRow>
           <TableCell className="table-content" style={{ textAlign: 'center', fontWeight: '600',minWidth: '15vw' }}>
-            {report.NombrePatio.split(/\s+/).slice(1, 3)}
+            {report.NombreUbicacion.split(/\s+/).slice(1, 3)}
           </TableCell>
           <TableCell className="table-content" style={{ textAlign: 'center',minWidth: '15vw'  }}>
             <div className="toolip">
-              <i className="fas fa-circle fa-2x" style={{color: report.TabletRegistro > 7 ? 'green': (report.TabletRegistro <= 7 && report.TabletRegistro >= 5) ? 'yellow': 'red' }}></i>
-              <span className="tooltiptext">{report.TabletRegistro}</span>
+              <i className="fas fa-circle fa-2x" style={{color: report.TabletaRegistro > 7 ? 'green': (report.TabletaRegistro <= 7 && report.TabletaRegistro >= 5) ? 'yellow': 'red' }}></i>
+              <span className="tooltiptext">{report.TabletaRegistro}</span>
             </div>
           </TableCell>
           <TableCell className="table-content" style={{ textAlign: 'center', padding: '0px',minWidth: '15vw' }}>
@@ -37,8 +37,8 @@ function Listas({ Reportes,Headers,editBoxValue}) {
           </TableCell>
           <TableCell className="table-content" style={{ textAlign: 'center', minWidth: '15vw' }}>
             <div className="toolip">
-              <i className="fas fa-circle fa-2x" style={{color: report.EvidenciaFoto >7 ? 'green': (report.EvidenciaFoto <= 7 && report.EvidenciaFoto >= 5) ? 'yellow': 'red' }}></i>
-              <span className="tooltiptext">{report.EvidenciaFoto}</span>
+              <i className="fas fa-circle fa-2x" style={{color: report.EvidenciaFotografica >7 ? 'green': (report.EvidenciaFotografica <= 7 && report.EvidenciaFotografica >= 5) ? 'yellow': 'red' }}></i>
+              <span className="tooltiptext">{report.EvidenciaFotografica}</span>
             </div>
           </TableCell>
           <TableCell

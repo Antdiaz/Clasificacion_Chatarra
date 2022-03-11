@@ -12,7 +12,7 @@ import { LoadPanel } from 'devextreme-react/load-panel';
 import CustomSelect from '../../../components/Controls/Select';
 import DxButton from 'devextreme-react/button';
 import { Row, Col, Button} from 'reactstrap';
-import { months, years, empleados,turnos} from './data.js';
+import { months, years,turnos} from './data.js';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { Chart,
   LoadingIndicator
@@ -101,13 +101,25 @@ const App = (props) => {
 
   const classes = useStyles(); 
   const theme = useTheme();
-
+const Todos = {BajaLogica: 0,
+  ClaUbicacion: 0,
+  ClaUsuarioMod:0,
+  Claubicacion: 0,
+  FechaBajaLogica: null,
+  FechaFinal: null,
+  FechaInicial: null,
+  FechaUltimaMod: "2021-03-04T21:43:22.78",
+  IdPerfilReferenciado: 260009,
+  IdUsuario: -1,
+  NombrePcMod: "Todos",
+  Orden: 1,
+  nombrecompleto: "Todos"}
   const [loc, setLoc] = useState([]);
   const [locations, setLocations] = useState(props.Patio);
-  const [currMonth, setCurrMonth] = useState(0);
-  const [currYear, setCurrYear] = useState(2020);
+  const [currMonth, setCurrMonth] = useState(-1);
+  const [currYear, setCurrYear] = useState(new Date().getFullYear());
   const [lastYear, setlastYear] = useState(0)
-  const [currEmpleado, setcurrEmpleado] = useState(0);
+  const [currEmpleado, setcurrEmpleado] = useState(-1);
   const [currturno, setCurrturno] = useState(0);
   const [horainicio, sethorainicio] = useState(0)
   const [horafin, sethorafin] = useState(24)
@@ -115,32 +127,14 @@ const App = (props) => {
   const [currArr, setCurrArr] = useState([]);
   const [dataArr, setDataArr] = useState([]);
   const [dummy, setdummy] = useState(0)
+  const [empleadosarray, setempleadosarray] = useState(0)
   const [loading, setloading] = useState(false)
 
-  useEffect(() => {
-    if(dummy===0){
-    const urlKrakenService = `${config.KrakenService}/${24}/${config.Servicio}`;
-/* eslint-disable */
-    const data90 = {
-      // parameters:`{ClaUbicacion:${props.Patio},ClaServicioJson:90,Parametros:@pnClaUbicacion=${props.Patio}${config.Separador}@pnYear=${currYear}${config.Separador}@pnMonth=${currMonth}}`,
-      // tipoEstructura: 0,
-       parameters: '{"ClaUbicacion":26,"ClaServicioJson":90,"Parametros":"@pnClaUbicacion=26'+config.Separador+'@pnYear='+ currYear + '' +config.Separador+'@pnMonth='+ currMonth +''+config.Separador+'@pnHorarioIn='+ horainicio +''+config.Separador+'@pnHorarioFin='+ horafin +'"}',
-       tipoEstructura: 0,
-    };
-  /* eslint-enable */
-  setloading(true)
-    callApi(urlKrakenService, 'POST', data90,(res) => {
-      setdummy(res.Result0);
-      setloading(false);
-    });
-  }
-  }, [dummy])
 
   const onMonthChanged = (e) =>{
     setCurrMonth(e.value);
   }
 
-  console.log(currMonth)
   const onTurnoChanged = (e) =>{
     setCurrturno(e.value);
   if(e.value===0){
@@ -168,14 +162,14 @@ const App = (props) => {
 
 
   useEffect(() => {
-    if(currYear && currMonth !==0 && dummy !==0){
+    if(currYear && currMonth !==-1 && dummy !==0){
 
   // constructing the resulting array containing objects with `year` totals
 
 
     const dataArray = dummy.map((item,index) => {
       return {
-        Mes: index === 0 ? 'Total Mes': `Semana ${index}\n(${item.Boletas} Boletas)`,
+        Mes: index === 0 ? `Total ${item.Mes.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`: `Semana ${index}\n(${item.Boletas.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} Bol.)`,
         MuyBajoRiesgo: Math.round((item.MuyBajoRiesgo/item.Boletas)*100),
         BajoRiesgo: Math.round((item.BajoRiesgo/item.Boletas)*100),
         RiesgoMedio: Math.round((item.RiesgoMedio/item.Boletas)*100),
@@ -184,10 +178,10 @@ const App = (props) => {
     });
     setDataArr(dataArray);
   }
-  else if(currYear && currMonth===0 && dummy !==0){
+  else if(currYear && currMonth===-1 && dummy !==0){
     const dataArray = dummy.map((item,index) => {
       return {
-        Mes: (index === 0 || index === 1) ? `Año ${item.Mes}`: `Mes ${index-1}\n(${item.Boletas} Boletas)`,
+        Mes: `${item.Mes}\n(${item.Boletas.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} Bol.)`,
         MuyBajoRiesgo: Math.round((item.MuyBajoRiesgo/item.Boletas)*100),
         BajoRiesgo: Math.round((item.BajoRiesgo/item.Boletas)*100),
         RiesgoMedio: Math.round((item.RiesgoMedio/item.Boletas)*100),
@@ -197,10 +191,9 @@ const App = (props) => {
     setDataArr(dataArray);
   }
   else{
-    setDataArr('');
+    setDataArr([]);
   }
   }, [dummy]);
-
 
 
  const handleSearch = () => {
@@ -209,14 +202,14 @@ const App = (props) => {
   setloading(true)
   const urlKrakenService = `${config.KrakenService}/${24}/${config.Servicio}`;
   /* eslint-disable */
-      const data90 = {
+      const data103 = {
         // parameters:`{ClaUbicacion:${props.Patio},ClaServicioJson:90,Parametros:@pnClaUbicacion=${props.Patio}${config.Separador}@pnYear=${currYear}${config.Separador}@pnMonth=${currMonth}}`,
         // tipoEstructura: 0,
-         parameters: '{"ClaUbicacion":26,"ClaServicioJson":90,"Parametros":"@pnClaUbicacion=26'+config.Separador+'@pnYear='+ currYear + '' +config.Separador+'@pnMonth='+ currMonth +''+config.Separador+'@pnHorarioIn='+ horainicio +''+config.Separador+'@pnHorarioFin='+ horafin +'"}',
+         parameters: '{"ClaUbicacion":'+ props.editBoxValue + ',"ClaServicioJson":103,"Parametros":"@pnClaUbicacion='+ props.editBoxValue + ''+config.Separador+'@pnYear='+ currYear + '' +config.Separador+'@pnMonth='+ currMonth +''+config.Separador+'@pnHorarioIn='+ horainicio +''+config.Separador+'@pnHorarioFin='+ horafin +''+config.Separador+'@pnEmpleado='+ currEmpleado +'"}',
          tipoEstructura: 0,
       };
     /* eslint-enable */
-      callApi(urlKrakenService, 'POST', data90,(res) => {
+      callApi(urlKrakenService, 'POST', data103,(res) => {
         setdummy(res.Result0);
         setloading(false);
       })
@@ -225,7 +218,7 @@ const App = (props) => {
 
   const customizeTooltip= (pointInfo) =>{
     return {
-      text:`${pointInfo.seriesName}:&nbsp;${pointInfo.valueText}%`
+      text:`${pointInfo.seriesName.split('\r\n')[0]}:&nbsp;${pointInfo.valueText}% Boletas`
     };
   }
 
@@ -239,7 +232,7 @@ const App = (props) => {
     setCurrMonth(null);
     setcurrEmpleado(null);
     setCurrturno(null)
-    setDataArr('')
+    setDataArr([])
   }
   
 
@@ -290,16 +283,16 @@ const App = (props) => {
           <div className={classes.divider}>
             <CustomSelect
               label="Empleado: "
-              data={empleados}
+              data={props.empleados}
               currVal={currEmpleado}
-              dataid="empleadoID"
-              caption="name"
+              dataid="IdUsuario"
+              caption="NombreCompleto"
               onValueChanged={onEmpleadoChanged}
               disabled={false}
             >
             </CustomSelect>
           </div>
-          { props.editBoxValue === 6 && locations !== null ? (
+          {props.editBoxValue === 6 && locations !== null && locations !== undefined ? (
             <div className={classes.chipArea}>
               <span>Ubicaciones</span>
               <Select
@@ -328,8 +321,8 @@ const App = (props) => {
           <div className={classes.buttonArea}>
             <br />
             <Button
-              onClick={handleSearch}
-              className="animation-on-hover float-right"
+              onClick={!loading ? handleSearch : null}
+              className={!loading ? "animation-on-hover float-right": "animation-on-hover float-right grey"}
               color="success"
             >
               <i className="fa fa-search" aria-hidden="true"></i>
@@ -368,22 +361,22 @@ const App = (props) => {
             />
             <CommonSeriesSettings argumentField="Mes" type="stackedBar" />
             <Series
-              name="Muy Bajo Riesgo"
+              name={`Muy Bajo Riesgo \r\n 90%-100%`}
               valueField="MuyBajoRiesgo"
               color="#78AF45"
             />
             <Series
-              name="Bajo Riesgo"
+              name={`Bajo Riesgo \r\n 80%-90%`}
               valueField="BajoRiesgo"
               color="#A9D08E"
             />
             <Series
-              name="Riesgo Medio"
+              name={`Riesgo Medio \r\n 60%-80%`}
               valueField="RiesgoMedio"
               color="#FFD966"
             />
             <Series
-              name="Riesgo Alto"
+              name={`Riesgo Alto \r\n 50%-60%`}
               valueField="RiesgoAlto"
               color="red"
             />

@@ -57,7 +57,7 @@ function Imagenes({ id, editBoxValue, row, NomMotivoEntrada }) {
 
   const customStyles = {
     content: {
-      backgroundColor: 'rgba(28, 128, 128, 0.512)',
+      backgroundColor: 'rgb(128 128 128 / 50%)',
       top: '0%',
       right: '-.5%',
       bottom: '0%',
@@ -189,7 +189,7 @@ function Imagenes({ id, editBoxValue, row, NomMotivoEntrada }) {
       setPreregistro(res.Result0.length > 0 ? res.Result0[0].FotoMaterial : 0);
     });
 
-    if (Material > 0) {
+    if (Material !==false && Material > 0) {
       callApi(urlKrakenService, 'POST', data40, (res) => {
         setManual(res.Result0.length > 0 ? res.Result0[0].Imagen : 0);
       });

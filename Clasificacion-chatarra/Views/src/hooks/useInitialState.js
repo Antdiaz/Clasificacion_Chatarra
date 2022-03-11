@@ -4,15 +4,22 @@ import initialState from '../context/initialState';
 const useInitialState = () => {
   const [state, setState] = useState(initialState);
 
-  const addToFavorites = (payload) => {
+  const addarticulos = (payload) => {
     setState({
       ...state,
-      favoritos: [...state.favoritos, payload],
+      articulos: [payload],
     });
   };
 
+  const addubicacion = (payload) => {
+    setState({
+      ...state,
+    ubicacion: [payload],
+    });
+  };
   return {
-    addToFavorites,
+    addarticulos,
+    addubicacion,
     state,
   };
 };

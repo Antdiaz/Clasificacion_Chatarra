@@ -35,18 +35,20 @@ import contenedors from '../../assets/img/contenedor.png';
 const Elebotes = (props) => {
   // Valores dinámicos locales al editar material
   // Arreglo valores Contaminantes
-  const [refriCh, setrefriCh] = useState(props.report.RefriCh)
-  const [refriM, setrefriM] = useState(props.report.RefriM)
-  const [refriG, setrefriG] = useState(props.report.RefriG)
-  const [lavadora, setlavadora] = useState(0)
-  const [boiler, setboiler] = useState(0)
-  const [secadora, setsecadora] = useState(0)
-  const [Oven, setOven] = useState(0)
-  const [microondas, setmicroondas] = useState(0)
-  const [otros, setotros] = useState(0)
-  const [costal, setcostal] = useState(0)
-  const [megasaco, setmegasaco] = useState(0)
-  const [contenedor, setcontenedor] = useState(0)
+  const [refriCh, setrefriCh] = useState(props.report.RefriCh ? props.report.RefriCh: 0)
+  const [refriM, setrefriM] = useState(props.report.RefriM ? props.report.RefriM : 0)
+  const [refriG, setrefriG] = useState(props.report.RefriG ? props.report.RefriG: 0)
+  const [lavadora, setlavadora] = useState(props.report.Lavadora ? props.report.Lavadora:0)
+  const [boiler, setboiler] = useState(props.report.Boiler ? props.report.Boiler : 0)
+  const [secadora, setsecadora] = useState(props.report.Secadora ? props.report.Secadora: 0)
+  const [Oven, setOven] = useState(props.report.Oven ? props.report.Oven: 0)
+  const [microondas, setmicroondas] = useState(props.report.Microondas ? props.report.Microondas: 0)
+  const [otros, setotros] = useState(props.report.Otros ? props.report.Otros: 0)
+  const [costal, setcostal] = useState(props.report.Costal ? props.report.Costal: 0)
+  const [megasaco, setmegasaco] = useState(props.report.MegaSaco ? props.report.MegaSaco: 0)
+  const [contenedor, setcontenedor] = useState(props.report.Contenedor ? props.report.Contenedor: 0)
+  const [TotalElectros, setTotalElectros] = useState(+refriCh + +refriM + +lavadora + +boiler + +secadora + +Oven + +microondas + +otros)
+  const [TotalBotes, setTotalBotes] = useState(+costal + +megasaco + +contenedor)
   const [Contaminantes, setContaminantes] = useState([
     [
       { nombre: 'Refrigerador Chico', comentario: '50kgs', imagen: smfreezer, id: 1 },
@@ -155,14 +157,14 @@ const Elebotes = (props) => {
             <div className="bote-elect">
               <Row>
                 <Col>Electrodomésticos:</Col>
-                <Col>{0} Kg</Col>
+                <Col>{TotalElectros} Kg</Col>
                 <Col>Total:</Col>
-                <Col>{0} Kg</Col>
+                <Col>{+TotalElectros + +TotalBotes} Kg</Col>
                 <Col></Col>
               </Row>
               <Row>
                 <Col>Botes:</Col>
-                <Col>{0} Kg</Col>
+                <Col>{TotalBotes} Kg</Col>
                 <Col></Col>
                 <Col></Col>
                 <Col></Col>

@@ -33,6 +33,7 @@ import FormControl from '@material-ui/core/FormControl';
 import ListItemText from '@material-ui/core/ListItemText';
 import Select from '@material-ui/core/Select';
 import Checkbox from '@material-ui/core/Checkbox';
+import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
 
 function Consulta({
   Valores,
@@ -322,7 +323,9 @@ function Consulta({
             </form>
           </Col>
           <Col>
-            <i className="fas fa-filter" onClick={handleFiltro} style={{ cursor: 'pointer' }}></i>
+            <Tooltip title="Obtener información">
+              <i className="fas fa-filter" onClick={handleFiltro} style={{ cursor: 'pointer' }}></i>
+            </Tooltip>
           </Col>
         </Row>
       )}

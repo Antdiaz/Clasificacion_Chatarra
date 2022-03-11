@@ -137,7 +137,6 @@ function Boleta({
       }
 
       
-
     async function SelectPlanCarga(){
       await callApi(urlKrakenService, 'POST', data68, (res) => {
         setBoxPlanCarga(res.Result0.length===1 ? res.Result0[0].ClaPlanCarga : '')
@@ -151,6 +150,7 @@ function Boleta({
     }
   }
   }
+
 
   useEffect(() => {
 
@@ -173,15 +173,26 @@ function Boleta({
       ''+config.Separador+'@pnIdPlanCarga=' +
       (PlanCarga ===null ? 0: PlanCarga )+
       ''+config.Separador+'@pnClaPlanCarga=' + 
-      BoxPlanCarga +
+      (BoxPlanCarga ===null || BoxPlanCarga ==='' ? PlanCarga : BoxPlanCarga)+
       ''+config.Separador+'@pnEsTraspaso=1"}',
     tipoEstructura: 0,
     }
 
   /* eslint-enable */
-    if(BoxPlanCarga !==null && EsValido===null && (row==='' || row===0 || row===null)){
+    if(PlanCarga!==null && (PlanCarga!=='' && (Actualizar || enter===true))){
+      console.log(data69)
     callApi(urlKrakenService, 'POST', data69, (res) => {
-      setEsValido(res.Result0[0].EsPCValida)
+      setEsValido(res.Result0[0].EsPCValida);
+     if(res.Result0[0].EsPCValida !==1 && res.Result0[0].Observaciones !== '' && res.Result0[0].Observaciones !== null) { 
+        swal('Error', (`${res.Result0[0].Observaciones}`), 'error', {
+          buttons: {
+            confirm: {
+              text: 'Aceptar',
+              className: 'animation-on-hover btn btn-success',
+            },
+          },
+        });
+      }
       });
   }
   }, [BoxPlanCarga,Actualizar])
@@ -326,8 +337,37 @@ setPrereg(false)
 
 
   useEffect(() => {
+    const urlKrakenService = `${config.KrakenService}/${24}/${config.Servicio}`;
     if(placadato && placadato[0].ClaPlanCarga && PlanCarga===null){
-      setPlanCarga(placadato[0].ClaPlanCarga)
+      setPlanCarga(placadato[0].ClaPlanCarga);
+
+    /* eslint-disable */  
+    const data69={
+      parameters:
+      '{"ClaUbicacion":' +
+      editBoxValue +
+      ',"ClaServicioJson":' +
+      69 +
+      ',"Parametros":"@pnClaUbicacion=' +
+      editBoxValue +
+      ''+config.Separador+'@psClaVehiculoPorClasificar=' +
+      placa +
+      ''+config.Separador+'@pnIdBoleta='+
+      id +
+      ''+config.Separador+'@pnIdPlanCarga=' +
+      (placadato[0].ClaPlanCarga)+
+      ''+config.Separador+'@pnClaPlanCarga=' + 
+      (placadato[0].ClaPlanCarga)+
+      ''+config.Separador+'@pnEsTraspaso=1"}',
+    tipoEstructura: 0,
+    }
+    /* eslint-enable */
+    if(placadato[0].ClaPlanCarga!==null && placadato[0].ClaPlanCarga!=='' && (row==='' || row===0 || row===null)){
+      console.log('hola',data69)
+    callApi(urlKrakenService, 'POST', data69, (res) => {
+      setEsValido(res.Result0[0].EsPCValida);
+      });
+  }
     }
   }, [placadato])
 
@@ -472,9 +512,9 @@ setPrereg(false)
                   <span style={{ marginLeft: '3vw' }}>Placa:&nbsp;{placa}</span>
                   <span style={{ marginLeft: '3vw' }}>Boleta:&nbsp;{id}</span>
                   {NomMotivoEntrada===1 && placadato &&(<><span style={{marginLeft: '3vw'}}>Plan de carga</span><Input className="plan-carga" onKeyPress={handlePlan} value={PlanCarga} type="number" onChange={handleCarga} style={{display:'inline-flex',marginLeft:'10px'}} /></>)}
-                  {(<i className="fas fa-redo" onClick={Refresh} style={{ marginLeft: '3vw',cursor: 'pointer'}} aria-hidden="true"></i>)}
+                  {placadato ? (<i className="fas fa-redo" onClick={Refresh} style={{ marginLeft: '3vw',cursor: 'pointer'}} aria-hidden="true"></i>) :null}
                   {/* {(NomMotivoEntrada===9 && row && row.some(roc=>(roc.NomZonaDescarga !==null || roc.NomZonaDescarga !==""))) ? (<span style={{ marginLeft: '3vw' }}>Zonas:{row.filter(rol=>rol.NomZonaDescarga).map((rox,index)=>{return <span>&nbsp;{rox.NomZonaDescarga.substring(rox.NomZonaDescarga.indexOf(" ") + 1)}&nbsp;{index !== (row.length-1) && (<span>&#8594;</span>)}</span>})}</span>):null} */}
-                  {placadato && placadato.length>0 && (<CargoNodescargo row={row} ClaUbicacionOrigen={ClaUbicacionOrigen} cambionodesc={cambionodesc} setcambionodesc={setcambionodesc} setrow={setrow} setBoxPlanCarga={setBoxPlanCarga} placadato={placadato} setplacadato={setplacadato} setActualizar={setActualizar} NomMotivoEntrada={NomMotivoEntrada} editBoxValue={editBoxValue} Todos={Todos} setTodos={setTodos} TodosChange={TodosChange} setTodosChange={setTodosChange} setValidaCargo={setValidaCargo} Nocargo={Nocargo} setNocargo={setNocargo} setPlanCarga={setPlanCarga} />)}
+                  {placadato && placadato.length>0 && (<CargoNodescargo pesajeparcial={pesajeparcial} row={row} ClaUbicacionOrigen={ClaUbicacionOrigen} cambionodesc={cambionodesc} setcambionodesc={setcambionodesc} setrow={setrow} setBoxPlanCarga={setBoxPlanCarga} placadato={placadato} setplacadato={setplacadato} setActualizar={setActualizar} NomMotivoEntrada={NomMotivoEntrada} editBoxValue={editBoxValue} Todos={Todos} setTodos={setTodos} TodosChange={TodosChange} setTodosChange={setTodosChange} setValidaCargo={setValidaCargo} Nocargo={Nocargo} setNocargo={setNocargo} setPlanCarga={setPlanCarga} />)}
                 </CardTitle>
               </CardHeader>
               <CardBody>

@@ -1,5 +1,6 @@
 const initialState = {
-  favoritos: [],
+  articulos: [],
+  ubicacion: [],
 };
 
 export default initialState;

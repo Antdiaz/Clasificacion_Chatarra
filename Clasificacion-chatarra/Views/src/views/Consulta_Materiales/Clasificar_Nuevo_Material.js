@@ -708,7 +708,7 @@ const NuevoMaterial = (props) => {
   // Función para cambiar del paso 1 (Clasificación de Material) & paso 2 (Contaminación)
 
   const handleBack = () => {
-    props.setpoppesaje(true);
+    // props.setpoppesaje(true);
     props.setmodaladdOpen(false);
   };
 
@@ -768,7 +768,7 @@ const NuevoMaterial = (props) => {
   // Servicio JSON 12 --> SP= BasSch.BasRegistraMaterialClasEntCompraMatPrimaProc <Registra material a clasificar>
 
   const handleSubmit = () => {
-    props.setpoppesaje(true);
+    // props.setpoppesaje(true);
     const urlKrakenService = `${config.KrakenService}/${24}/${config.Servicio}`;
     const urlKrakenBloque = `${config.KrakenService}/${24}/${config.Bloque}`;
     /* eslint-disable */
@@ -805,6 +805,15 @@ const NuevoMaterial = (props) => {
     async function GuardaCompra(){
       console.log(data83)
       callApi(urlKrakenBloque, 'POST', data83, (res) => {
+        res.Mensaje !== undefined &&
+        swal('Error', (`${res.Mensaje}`), 'error', {
+          buttons: {
+            confirm: {
+              text: 'Aceptar',
+              className: 'animation-on-hover btn btn-success',
+            },
+          },
+        });
         props.setcambioGuardar(1);
         props.setActualizar(true);
         setTimeout(() =>{
@@ -861,6 +870,15 @@ const NuevoMaterial = (props) => {
         async function FuncionData()  {
           console.log(data84)
           callApi(urlKrakenBloque, 'POST', data84, (res) => {
+            res.Mensaje !== undefined &&
+        swal('Error', (`${res.Mensaje}`), 'error', {
+          buttons: {
+            confirm: {
+              text: 'Aceptar',
+              className: 'animation-on-hover btn btn-success',
+            },
+          },
+        });
                   props.setcambioGuardar(1);
                   props.setActualizar(true);
                   setTimeout(() =>{

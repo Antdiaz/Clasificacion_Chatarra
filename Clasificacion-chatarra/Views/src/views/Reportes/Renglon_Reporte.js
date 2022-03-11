@@ -137,7 +137,7 @@ function Listas({ Reportes,Headers,editBoxValue}) {
               : '-'}
           </TableCell>
           <TableCell className="table-content" style={{ textAlign: 'center',minWidth: '7vw' }}>
-            {report.KilosContaminados > 0 || report.LlantasCh>0 || report.LlantasM>0 || report.Cilindro>0 || report.Boyas>0 || report.Tanque>0? (
+            {report.KilosElecbot > 0 ? (
               <div>
                 {report.KilosElecbot && report.KilosElecbot}&nbsp;{report.KilosElecbot && 'Kg'}
                 <br />
@@ -150,7 +150,7 @@ function Listas({ Reportes,Headers,editBoxValue}) {
             )}
           </TableCell>
           <TableCell className="table-content" style={{ textAlign: 'center',minWidth: '7vw' }}>
-            {report.LlantasCh > 0 || report.LlantasM > 0 || report.LlantasG > 0 ? (
+            {report.RefriCh > 0 || report.RefriM > 0 || report.RefriG > 0 || report.Oven>0 || report.Otros>0 || report.Micro>0 || report.Boiler>0 || report.Secadora>0 || report.Lavadora>0 ? (
               <div>
                 {+report.RefriCh + +report.RefriM + +report.RefriG + +report.Oven + +report.Otros + +report.Micro + +report.Boiler + +report.Secadora + +report.Lavadora}
                 &nbsp;
@@ -165,7 +165,7 @@ function Listas({ Reportes,Headers,editBoxValue}) {
             )}
           </TableCell>
           <TableCell className="table-content" style={{ textAlign: 'center' }}>
-            {report.LlantasCh > 0 || report.LlantasM > 0 || report.LlantasG > 0 ? (
+            {report.Costal > 0 || report.MegaSaco > 0 || report.Contenedor> 0 ? (
               <div>
                 {+report.Costal + +report.MegaSaco + +report.Contenedor}
                 &nbsp;

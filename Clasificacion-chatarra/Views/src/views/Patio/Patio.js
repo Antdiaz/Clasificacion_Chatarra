@@ -97,6 +97,7 @@ class Patio extends React.Component {
     /* eslint-enable */
 
     await callApi(urlKrakenUsuario, 'POST', data3, (res) => {
+      console.log('adios');
       cookies.set('NumUsuario',res.Result0[0].IdUsuario, { path: '/' })
       this.setUsuario(res.Result0[0].IdUsuario);
     });
@@ -109,6 +110,7 @@ class Patio extends React.Component {
     /* eslint-enable */
     if(this.state.Patio===null && this.state.Usuario!==null)
     await callApi(urlKrakenPlanta, 'POST', data2, (res) => {
+      console.log('PatioPatio')
       this.setPatio(res.Result0);
     });
 

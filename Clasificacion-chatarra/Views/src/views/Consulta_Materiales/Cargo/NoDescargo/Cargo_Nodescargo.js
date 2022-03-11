@@ -6,11 +6,22 @@ import FormGroup from '@material-ui/core/FormGroup';
 import { callApi, getSessionItem } from '../../../../utils/utils';
 import {config} from '../../../../utils/config'
 import { SettingsRemoteTwoTone } from '@material-ui/icons';
+import Modal from 'react-modal';
 
-function Cargo_Nodescargo({ClaUbicacionOrigen,cambionodesc,setcambionodesc,setPlanCarga,placadato,editBoxValue,setBoxPlanCarga,NomMotivoEntrada,setActualizar,row,setrow,Todos,setTodos,TodosChange,setTodosChange,setValidaCargo,Nocargo,setNocargo}) {
+function Cargo_Nodescargo({ClaUbicacionOrigen,cambionodesc,setcambionodesc,setPlanCarga,pesajeparcial,placadato,editBoxValue,setBoxPlanCarga,NomMotivoEntrada,setActualizar,row,setrow,Todos,setTodos,TodosChange,setTodosChange,setValidaCargo,Nocargo,setNocargo}) {
     const ipadress = getSessionItem('Ipaddress');
     const NumbUsuario = getSessionItem('NumUsuario');
     const Token = getSessionItem('Token');
+    const [modaledit, setmodaledit] = useState(false);
+
+    const customStyles = {
+      content: {
+        background: 'rgba(128, 128, 128, 0.212)',
+        top: '0%',
+        right: '-.5%',
+        bottom: '0%',
+      },
+    };
 
     useEffect(() => {
     if(placadato){
@@ -238,6 +249,15 @@ function Cargo_Nodescargo({ClaUbicacionOrigen,cambionodesc,setcambionodesc,setPl
         
       };
 
+      const handleFinal = () => {
+        setTodos(1);
+        setmodaledit(false);
+        if(TodosChange===0){
+          setTodosChange(1)
+        }
+        
+      };
+
     
     const IOSSwitch = withStyles((theme) => ({
         root: {
@@ -293,7 +313,21 @@ function Cargo_Nodescargo({ClaUbicacionOrigen,cambionodesc,setcambionodesc,setPl
       });
     return (
       <>
-        <FormControlLabel style={{height: "27px",float:'right',width:'20%'}} control={<IOSSwitch checked={Todos === 1} onChange={handleTodos} disabled={cambionodesc === 1} name="checkedB" />} label={NomMotivoEntrada===1 ? "No cargo material" :"No descargo material"} />
+        <FormControlLabel style={{height: "27px",float:'right',width:'20%'}} control={<IOSSwitch checked={Todos === 1} onChange={pesajeparcial===1 && Todos===0 ? () => setmodaledit(true):handleTodos} disabled={cambionodesc === 1} name="checkedB" />} label={NomMotivoEntrada===1 ? "No cargo material" :"No descargo material"} />
+        <Modal
+          isOpen={modaledit}
+          onClose={() => setmodaledit(true)}
+          ariaHideApp={false}
+          style={customStyles}
+        >
+          <div className="Warning">
+            <div className="warning-container">
+              <span className="warning-close" style={{cursor:"pointer"}} onClick={() => setmodaledit(false)}>X</span>
+              <div>¿Seguro que deseas eliminar todos los materiales?&nbsp; &nbsp; &nbsp; <span style={{cursor:"pointer"}} onClick={handleFinal}>SI</span>&nbsp; &nbsp; &nbsp; &nbsp;<span style={{cursor:"pointer"}} onClick={() => setmodaledit(false)}>NO</span></div>
+              <div style={{fontSize: '1vw'}}>(No podrás recuperar los pesajes parciales)</div>
+            </div>
+          </div>
+        </Modal>
       </>
     )
 }

@@ -12,6 +12,8 @@ import {
   Button,
   Input as Inputs,
 } from 'reactstrap';
+import {IconButton} from '@material-ui/core';
+import Tooltip from '@mui/material/Tooltip';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -23,9 +25,10 @@ import { CommonSeriesSettingsHoverStyle } from 'devextreme-react/chart';
 import Modal from 'react-modal';
 import { callApi, getSessionItem } from '../../../utils/utils';
 import { config } from '../../../utils/config';
+import SearchIcon from '@mui/icons-material/Search';
 import Listas from './Renglon_Condicion';
 import { makeStyles } from '@material-ui/core/styles';
-import {dummy} from './data.js';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 function Consulta({
   editBoxValue,
@@ -40,6 +43,25 @@ function Consulta({
     { label: 'Huella Digital', key: 'Materiales' },
     { label: 'Clasificación Celular/App', key: 'Kilos' },
   ]);
+
+  const [dummy, setdummy] = useState(0);
+  const [loading, setloading] = useState(false);
+  const handleOnclick = () =>{
+    setdummy([])
+    setloading(true)
+    const urlKrakenService = `${config.KrakenService}/${24}/${config.Servicio}`;
+    /* eslint-disable */
+    const data95 = {
+      parameters: '{"ClaUbicacion":' + editBoxValue + ',"ClaServicioJson":' + 95 + ',"Parametros":"@pnClaUbicacion=' + editBoxValue +'"}',
+      tipoEstructura: 0,
+    };
+    /* eslint-enable */
+    callApi(urlKrakenService, 'POST', data95,(res) => {
+    setdummy(res.Result0)
+    setloading(false)
+    });
+    
+  }
 
 
   const useStyles = makeStyles((theme) => ({
@@ -88,7 +110,11 @@ function Consulta({
           >
             <CardHeader>
               <CardTitle style={{ margin: '10px', textAlign: 'end' }}>
-                               
+                <Tooltip title="Mostrar Datos">
+                  <IconButton style={{color:'white'}} onClick={!loading ? handleOnclick : null}>
+                    <SearchIcon />
+                  </IconButton>
+                </Tooltip>             
               </CardTitle>
             </CardHeader>
             <CardBody>
@@ -117,10 +143,16 @@ function Consulta({
                 </Table>
                 <Table>
                   <TableBody>
-                    <Listas
-                      editBoxValue={editBoxValue}
-                      Reportes={dummy}
-                    />
+                    {dummy !== 0 && dummy !== [] ? (
+                      <Listas
+                        editBoxValue={editBoxValue}
+                        Reportes={dummy}
+                      />
+                    ):loading && (
+                      <div style={{position:'absolute',left: '50%',marginLeft: '-50px',top:'300px'}}>
+                        <CircularProgress />
+                      </div>
+                      )} 
                   </TableBody>
                 </Table>
               </TableContainer>

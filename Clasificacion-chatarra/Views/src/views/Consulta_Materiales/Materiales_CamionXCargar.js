@@ -73,8 +73,7 @@ function Materiales({
   const PorcentajeSum = row ? (row.reduce((acc, val) => acc + val.Porcentaje, 0)) : 0;
   const CantidadSum=row ? row.reduce((acc, val) => acc + val.CantEmbarcada, 0) : 0;
   const KilosSum=row ? row.reduce((acc, val) => acc + val.KilogramosEmbarcados, 0) : 0;
-
-  function List({ ro, index, editOpen, seteditOpen,BoxPlanCarga,ValidaTara,setValidaTara,row }) {
+  function List({ ro, index, editOpen, seteditOpen,BoxPlanCarga,PlanCarga,ValidaTara,setValidaTara,row }) {
     // Valor de elemento individual al querer editar material
     const [modaledit, setmodaledit] = useState(false);
     // Estilo de pop up/ wizard para agregar material
@@ -182,6 +181,7 @@ function Materiales({
               ClaUbicacionOrigen={ClaUbicacionOrigen}
               Actualizar={Actualizar}
               setActualizar={setActualizar}
+              PlanCarga={PlanCarga}
             />
           </Modal>
         </TableRow>
@@ -305,7 +305,7 @@ function Materiales({
           <TableBody>
             {row
               ? row.map((ro, index) => (
-                <List ro={ro} row={row} key={index} editOpen={editOpen} seteditOpen={seteditOpen} BoxPlanCarga={BoxPlanCarga} ValidaTara={ValidaTara} setValidaTara={setValidaTara} />
+                <List ro={ro} row={row} key={index} PlanCarga={PlanCarga} editOpen={editOpen} seteditOpen={seteditOpen} BoxPlanCarga={BoxPlanCarga} ValidaTara={ValidaTara} setValidaTara={setValidaTara} />
                 ))
               : null}
           </TableBody>

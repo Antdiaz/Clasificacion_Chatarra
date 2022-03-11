@@ -32,6 +32,7 @@ import smbag from '../../assets/img/little-bag.png';
 import bag from '../../assets/img/bag.png';
 import contenedors from '../../assets/img/contenedor.png';
 
+
 // imagenes de Contaminantes
 import LlantaC from '../../assets/img/LlantaC.png';
 import LlantaG from '../../assets/img/LlantaG.png';
@@ -212,12 +213,17 @@ const Material = (props) => {
   const Rowies = props.row.filter((rox)=> (props.NomMotivoEntrada===9 ? rox.ClaArticuloCompra !== props.ro.ClaArticuloCompra : props.NomMotivoEntrada===3 && rox.ClaMaterialRecibeTraspaso !== props.ro.ClaMaterialRecibeTraspaso))
 
   useEffect(() => {
+    const abortController = new AbortController()
     if(props.NomMotivoEntrada===3){
     props.setClaArticuloRemisionado(props.ro.ClaArticuloRemisionado)
+    }
+    return function cancel() {
+      abortController.abort()
     }
   }, [])
   
   useEffect(() => {
+    const abortController = new AbortController()
     Rowies && Rowies.forEach(electros => {
 
   const urlKrakenService = `${config.KrakenService}/${24}/${config.Servicio}`;
@@ -261,11 +267,14 @@ const Material = (props) => {
       }
     }})
   })
+  return function cancel() {
+      abortController.abort()
+    }
   }, [])
 
   useEffect(() => {
 
-
+    const abortController = new AbortController()
     const urlKrakenService = `${config.KrakenService}/${24}/${config.Servicio}`;
     /* eslint-disable */
     if((Rowies.length===1 || Rowies.length===2) && (Rowies[0].ClaArticuloCompra || Rowies[0].ClaMaterialRecibeTraspaso)){
@@ -326,9 +335,13 @@ const Material = (props) => {
       setLlantasGrande3(res.Result0.length ? (res.Result0[5].Cantidad !==null ? res.Result0[5].Cantidad : 0) : 0)
     })
 setlistacontaminaciones3(1)}
+return()=> {
+  isCancelled = true
+}
   }}, [])
 
   useEffect(() => {
+    const abortController = new AbortController()
     const urlKrakenService = `${config.KrakenService}/${24}/${config.Servicio}`;
   
     /* eslint-disable */
@@ -365,9 +378,13 @@ setlistacontaminaciones3(1)}
       setcontenedor(res.Result0.filter(electrobotes => electrobotes.ClaArticulo === props.ro.ClaArticuloCompra && electrobotes.ClaArtSupTipo===12)[0].Cantidad)
       
     }})}
+    return function cancel() {
+      abortController.abort()
+    }
   }, [])
 
   useEffect(() => {
+    const abortController = new AbortController()
     if(materiales && materiales.some(material => material.ClaArticuloCompra === idmaterial)){
       setTodos(0)
   }
@@ -402,21 +419,28 @@ setlistacontaminaciones3(1)}
     setLlantasGrande(res.Result0.length ? (res.Result0[5].Cantidad !==null ? res.Result0[5].Cantidad : 0) : 0)
   })} 
   setlistacontaminaciones1(1)
+  return function cancel() {
+      abortController.abort()
+    }
   }, [])
 
   useEffect(() => {
-
+    const abortController = new AbortController()
     if(props.ro.KilosContaminados && NantCont!==0){
     setNantCont(+props.ro.KilosContaminados - (+Bollas*+50 + +Cilindro*+100 + +Tanque*+200 + +LlantasChico*+25 + +LlantasMediano*+50 + +LlantasGrande*+100))
   }
   else{
     setNantCont(0)
   }
+  return function cancel() {
+      abortController.abort()
+    }
 }, [Bollas,LlantasMediano,LlantasChico,Cilindro,Tanque,LlantasGrande])
   // Función que corre servicios antes del render cada que haya un cambio de material
   // Servicio JSON 6 --> SP= AmpSch.AmpClaArticuloDatosSel <Consultar datos Material>
   // Servicio JSON 7 --> SP= AmpSch.AmpClaSubAlmacenArticuloCmb <Consultar listado Subalmacenes>
   useEffect(() => {
+    const abortController = new AbortController()
     const urlKrakenService = `${config.KrakenService}/${24}/${config.Servicio}`;
     /* eslint-disable */
     const data6 = {
@@ -497,6 +521,9 @@ setlistacontaminaciones3(1)}
       });
     }
   }
+  return function cancel() {
+      abortController.abort()
+    }
   }, [idmaterial]);
 
 
@@ -752,6 +779,7 @@ if(ElectBotecheck===1 && ((idmaterial===config.idBote) || (idmaterial===config.i
   // Servicio JSON 8 --> SP= AmpSch.AmpClaSubAlmacenDatosSel <Consultar datos subalmacen>
 
   useEffect(() => {
+    const abortController = new AbortController()
     const urlKrakenService = `${config.KrakenService}/${24}/${config.Servicio}`;
     /* eslint-disable */
     const data8 = {
@@ -806,10 +834,14 @@ if(ElectBotecheck===1 && ((idmaterial===config.idBote) || (idmaterial===config.i
       });
     }
     }
+    return function cancel() {
+      abortController.abort()
+    }
   }, [nomsubalmacen, subalmacen, subalmacenes]);
 
   // Función que pone valor determinado de subalmacén si es único
   useEffect(() => {
+    const abortController = new AbortController()
     if (subalmacenes.length === 1) {
       if(props.NomMotivoEntrada===9){
       setsubalmacen(subalmacenes[0].ClaSubAlmacenCompra);
@@ -820,11 +852,15 @@ if(ElectBotecheck===1 && ((idmaterial===config.idBote) || (idmaterial===config.i
       setnomsubalmacen(subalmacenes[0].NomSubAlmacenTraspaso);
     }
   }
+  return function cancel() {
+      abortController.abort()
+    }
   }, [subalmacenes]);
 
   // Función que elimina material que el usuario desee (Se usa el parámetro de AccionSP = 3 para eliminar)
   // Servicio JSON 12 --> SP= BasSch.BasRegistraMaterialClasEntCompraMatPrimaProc <Registra material a clasificar>
   const handledelete = () => {
+    props.setcambio(-1)
     const urlKrakenService = `${config.KrakenService}/${24}/${config.Servicio}`;
     const urlKrakenBloque = `${config.KrakenService}/${24}/${config.Bloque}`;
     /* eslint-disable */
@@ -875,7 +911,7 @@ if(ElectBotecheck===1 && ((idmaterial===config.idBote) || (idmaterial===config.i
     });
   }
 
-    props.setpoppesaje(true);
+    // props.setpoppesaje(true);
     props.setmodaledit(false);
     props.seteditOpen(false);
     props.setClaArticuloRemisionado(0)
@@ -891,7 +927,8 @@ props.setActualizar(false)
   // Servicio JSON 11 --> SP= BasSch.BasGuardarClasEntCompraMatPrimaProc <Guarda clasificación>
   // Servicio JSON 12 --> SP= BasSch.BasRegistraMaterialClasEntCompraMatPrimaProc <Registra material a clasificar>
   const handleClose = () => {
-    props.setpoppesaje(true);
+    // props.setpoppesaje(true);
+    props.setcambio(-1)
     const urlKrakenService = `${config.KrakenService}/${24}/${config.Servicio}`;
     const urlKrakenBloque = `${config.KrakenService}/${24}/${config.Bloque}`;
 
@@ -953,6 +990,7 @@ props.setActualizar(false)
           [`@pnClaUbicacion=${props.editBoxValue}${config.Separador}@pnIdBoleta=${props.placadato[0].IdBoleta}${config.Separador}@pnClaUbicacionOrigen=${props.ClaUbicacionOrigen}${config.Separador}@pnClaViajeOrigen=${props.ClaViajeOrigen}${config.Separador}@pnEsNoCargoDescargoMaterial=0${config.Separador}@psNombrePcMod='${ipadress}'${config.Separador}@pnClaUsuarioMod=${NumbUsuario}`]
         
 
+          
           const data84 ={ parameters: `{"ClaUbicacion":${props.editBoxValue},"Token":"${Token}","ClaServicioJson":"84","IdBoleta":"${props.placadato[0].IdBoleta}","EnBloque":"${1}","Encabezado":"${data36}","Detalle":"${data37}${data37g ? data37g.join("") : ''}","Validacion":"${(((PorcentajeSum !== null && (PorcentajeSum === 100)) || (PorcentajeSum === 0 && CantidadSum>0) || (props.ValidaCargo===1 && props.row && props.row.length>0 && (props.row[0].CantidadMaterial !==null || props.row[0].KilosMaterial!==null || props.row[0].PorcentajeMaterial!==null)&& (PorcentajeSum !== null && PorcentajeSum === 100) || (PorcentajeSum === 0 && CantidadSum>0))) || pesajeparcial===1) ? data38 : ''}"}`,
         tipoEstructura: 0}
 
@@ -962,6 +1000,15 @@ props.setActualizar(false)
     async function GuardaCompra(){
       console.log(data83)
       callApi(urlKrakenBloque, 'POST', data83, (res) => {
+        res.Mensaje !== undefined &&
+        swal('Error', (`${res.Mensaje}`), 'error', {
+          buttons: {
+            confirm: {
+              text: 'Aceptar',
+              className: 'animation-on-hover btn btn-success',
+            },
+          },
+        });
         props.setcambioGuardar(1);
         props.setActualizar(true);
         setTimeout(() =>{
@@ -969,118 +1016,22 @@ props.setActualizar(false)
           }, 50);
       })
 
-      // console.log(data11)
-      // await callApi(urlKrakenService, 'POST', (data11), (res) => {
-      //   console.log('hola',res)
-      //   callApi(urlKrakenService, 'POST', data12, (res) => {
-      //    console.log(data12);
-      //   const guardados= Rowies && Promise.all(Rowies.map(async(element,index)=>{
-      //     /* eslint-disable */
-      //     const data121 = {
-      //       parameters:
-      //         '{"ClaUbicacion":' +
-      //         props.editBoxValue +
-      //         ',"ClaServicioJson":12,"Parametros":"@pnClaUbicacion=' +
-      //         props.editBoxValue +
-      //         ''+config.Separador+'@pnIdBoleta=' +
-      //         props.placadato[0].IdBoleta +
-      //         ''+config.Separador+'@pnClaArticuloCompra=' +
-      //         element.ClaArticuloCompra +
-      //         ''+config.Separador+'@pnCantidadMaterial=' +
-      //         element.CantidadMaterial+
-      //         ''+config.Separador+'@pnKilosMaterial=' +
-      //         element.KilosMaterial +
-      //         ''+config.Separador+'@pnKilosReales=' +
-      //         element.KilosReales +
-      //         ''+config.Separador+'@pnKilosContaminados=' +
-    
-      //         (element.KilosContaminados ? element.KilosContaminados: 0)+
-      //         ''+config.Separador+'@pnKilosDocumentados=' +
-      //         (element.KilosDocumentados ? element.KilosDocumentados : 0) +
-      //         ''+config.Separador+'@pnPorcentajeMaterial=' +
-      //         element.PorcentajeMaterial +
-      //         ''+config.Separador+'@pnEsPesajeParcial=' +
-      //         element.EsPesajeParcial +
-      //         ''+config.Separador+'@pnClaAlmacen=' +
-      //         element.ClaAlmacen +
-      //         ''+config.Separador+'@pnClaSubAlmacenCompra=' +
-      //         element.ClaSubAlmacenCompra +
-      //         ''+config.Separador+'@pnClaMotivoContaminacion=' +
-      //         (element.ClaMotivoContaminacion ? element.ClaMotivoContaminacion: '') +
-      //         ''+config.Separador+'@pnEsNoCargoDescargoMaterial=' +
-      //         props.placadato[0].EsNoCargoDescargoMaterial +
-      //         ''+config.Separador+'@pnClaProveedor=' +
-      //         props.placadato[0].ClaProveedor +
-      //         ''+config.Separador+'@pnIdListaPrecio=' +
-      //         props.placadato[0].IdListaPrecio +
-      //         ''+config.Separador+'@pnClaTipoOrdenCompra='+config.Separador+'@pnClaOrdenCompra='+config.Separador+'@pnClaUbicacionProveedor=' +
-      //         props.placadato[0].ClaUbicacionProveedor +
-      //         ''+config.Separador+'@psClaReferenciaCompra=' +
-      //         element.ClaReferenciaCompra +
-      //         ''+config.Separador+'@pnIdRenglon=' +
-      //         (element.IdRenglon ? element.IdRenglon : '') +
-      //         ''+ (''+config.Separador+'@psClaArtSupTipo=1|2|3|4|5|6|7|8|9|10|11|12|') +
-      //         ''+ ((''+config.Separador+'@psValorArtSupTipo='+((index + 1) === 1 ? electrobots: electrobots2))) +
-      //         ''+config.Separador+'@pnClaArticuloPreReg=' +
-      //         (element.ClaArticuloPreReg ? element.ClaArticuloPreReg : '') +
-      //         ''+config.Separador+'@pnKilosElectrodomesticos='+
-      //           (element.ELECTRODOMESTICOS)+
-      //         ''+config.Separador+'@pnKilosBote=' +
-      //           (element.Bote) +
-      //           ''+config.Separador+'@pnObservaciones=' +
-      //           (element.Observaciones) +
-      //         ''+config.Separador+'@psNombrePcMod=' +
-      //         ipadress +
-      //         ''+config.Separador+'@pnClaUsuarioMod=' +
-      //         NumbUsuario +
-      //         ''+config.Separador+'@pnAccionSp="}',
-      //       tipoEstructura: 0,
-      //     };
-    
-      //   /* eslint-enable */
-      //   if(element.ClaArticuloCompra){
-      //   if(props.TipoPatio ===4 && index<2){
-      //   await callApi(urlKrakenService, 'POST', data121, (res) => {
-      //     console.log(data121)
-      //     if((index + 1) === Rowies.length){
-      //       props.setcambioGuardar(1);
-      //       props.setActualizar(true);
-      //       setTimeout(() =>{
-      //             props.setActualizar(false)
-      //           }, 50);
-      //     }
-      //   })
-      //     }
-        
-      //   if(props.TipoPatio ===9 && index<14){
-      //   await callApi(urlKrakenService, 'POST', data121, (res) => {
-      //     if((index + 1) === Rowies.length){
-      //       props.setcambioGuardar(1);
-      //       props.setActualizar(true);
-      //       setTimeout(() =>{
-      //             props.setActualizar(false)
-      //           }, 50);
-      //     }
-      //   })
-      //     }
-      //   }
-      //   })
-      //     );
-      //     if(!Rowies.length){
-      //       props.setcambioGuardar(1);
-      //       props.setActualizar(true);
-      //       setTimeout(() =>{
-      //             props.setActualizar(false)
-      //           }, 50);
-      //     }
-      //    })
-      //   });
+     
     }
 
 
       async function FuncionData(){
         console.log(data84)
         callApi(urlKrakenBloque, 'POST', data84, (res) => {
+          res.Mensaje !== undefined &&
+          swal('Error', (`${res.Mensaje}`), 'error', {
+            buttons: {
+              confirm: {
+                text: 'Aceptar',
+                className: 'animation-on-hover btn btn-success',
+              },
+            },
+          });
                 props.setcambioGuardar(1);
                 props.setActualizar(true);
                 setTimeout(() =>{
@@ -1106,7 +1057,8 @@ props.setActualizar(false)
  
   // Función para cambiar del paso 1 (Clasificación de Material) & paso 2 (Contaminación)
   const handleBack = () => {
-    props.setpoppesaje(true);
+    // props.setpoppesaje(true);
+    props.setcambio(-1)
     props.setmodaledit(false);
   };
 

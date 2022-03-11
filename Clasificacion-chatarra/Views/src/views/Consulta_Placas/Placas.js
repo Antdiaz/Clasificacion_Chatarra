@@ -62,7 +62,7 @@ const Items = ({
                     lista.ClaVehiculoPorClasificar ? lista.ClaVehiculoPorClasificar : 'Sin dato'
                   }/Boleta:${lista.IdBoleta}`}
                 >
-                  {lista.ClaMotivoEntrada !==102 && lista.ClaMotivoEntrada !==111 ? (<i className="fa fa-info-circle fa-2x" title="Más información / Clasificación" onClick={() => {setpoppesaje(true);setrow(0);setNomMotivoEntrada(lista.ClaMotivoEntrada);setClaUbicacionOrigen(lista.ClaUbicacionOrigen);setClaViajeOrigen(lista.ClaViajeOrigen);setpesajeparcial(0);}} aria-hidden="true"></i>):null}
+                  {lista.ClaMotivoEntrada !==102 && lista.ClaMotivoEntrada !==111 ? (<i className="fa fa-info-circle fa-2x" title="Más información / Clasificación" onClick={() => {setpoppesaje(false);setrow(0);setNomMotivoEntrada(lista.ClaMotivoEntrada);setClaUbicacionOrigen(lista.ClaUbicacionOrigen);setClaViajeOrigen(lista.ClaViajeOrigen);setpesajeparcial(0);}} aria-hidden="true"></i>):null}
                 </Link>
                 <div className="form" style={{ width: '100%' }}>
                   <div className="dx-fieldset">

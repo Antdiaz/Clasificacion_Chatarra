@@ -1,5 +1,6 @@
 import React, {useCallback,useState, useEffect,useRef,useMemo} from 'react';
 import DataSource from "devextreme/data/data_source";
+import swal from 'sweetalert';
 import {
   CardHeader,
   Row,
@@ -143,7 +144,7 @@ const terminado = () => {
       props.editBoxValue +
       ',"ClaServicioJson":' +
       58 +
-      ',"Parametros":"@psValor='+ focusValue +'"}',
+      ',"Parametros":"@psValor='+ focusValue.replace('"', '%22') +'"}',
     tipoEstructura: 0,
   };
    /* eslint-enable */
@@ -414,7 +415,7 @@ const terminado = () => {
   // Función para cambiar del paso 1 (Clasificación de Material) & paso 2 (Contaminación)
 
   const handleBack = () => {
-    props.setpoppesaje(true);
+    // props.setpoppesaje(true);
     props.setmodaladdOpen(false);
   };
 
@@ -435,7 +436,7 @@ const terminado = () => {
   // Servicio JSON 12 --> SP= BasSch.BasRegistraMaterialClasEntCompraMatPrimaProc <Registra material a clasificar>
 
   const handleSubmit = () => {
-    props.setpoppesaje(true);
+    // props.setpoppesaje(true);
     const urlKrakenBloque = `${config.KrakenService}/${24}/${config.Bloque}`;
     const urlKrakenService = `${config.KrakenService}/${24}/${config.Servicio}`;
 
@@ -469,6 +470,15 @@ const terminado = () => {
      
       console.log(data84)
           callApi(urlKrakenBloque, 'POST', data84, (res) => {
+            res.Mensaje !== undefined &&
+        swal('Error', (`${res.Mensaje}`), 'error', {
+          buttons: {
+            confirm: {
+              text: 'Aceptar',
+              className: 'animation-on-hover btn btn-success',
+            },
+          },
+        });
       props.setcambioGuardar(1)
       props.setActualizar(true);
       setTimeout(() =>{

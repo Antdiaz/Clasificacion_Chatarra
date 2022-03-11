@@ -72,6 +72,7 @@ function Materiales({
   const [electrobots, setelectrobots] = useState('0|0|0|0|0|0|0|0|0|0|0|0|')
   const [electrobots2, setelectrobots2] = useState('0|0|0|0|0|0|0|0|0|0|0|0|')
   const [ClaArticuloRemisionado, setClaArticuloRemisionado] = useState(0)
+  const [cambio,setcambio] = useState(-1)
   const [observacion, setobservacion] = useState(placadato[0].Observaciones ? placadato[0].Observaciones:'');
   const [newdrop, setnewdrop] = useState(false);
   const prevnewdrop = usePrevious(newdrop)
@@ -87,18 +88,29 @@ function Materiales({
     const ref = useRef();
     // Store current value in ref
     useEffect(() => {
+      const abortController = new AbortController()
       ref.current = value;
+       return function cancel() {
+      abortController.abort()
+    }
     }, [value]); // Only re-run if value changes
     // Return previous value (happens before update in useEffect above)
     return ref.current;
   }
 
-  function List({ ro, index, editOpen, seteditOpen,ClaArticuloRemisionado,setClaArticuloRemisionado }) {
+  function List({ ro, index, editOpen,cambio,setcambio,seteditOpen,ClaArticuloRemisionado,setClaArticuloRemisionado }) {
     // Valor de elemento individual al querer editar material
     
     
     const [modaledit, setmodaledit] = useState(false);
 
+    useEffect(() => {
+      if(cambio===index){
+      setmodaledit(true)
+      }
+    }, [cambio]);
+
+    
     // Estilo de pop up/ wizard para agregar material
     const customStyles = {
       content: {
@@ -162,31 +174,34 @@ function Materiales({
                 Sub-Almacen:&nbsp;{NomMotivoEntrada===9 ? ro.ClaSubAlmacenCompra : NomMotivoEntrada===3 ? ro.ClaSubAlmacenTraspaso : ''}
               </TableCell>
               <TableCell className="table-content">
-                <div
-                  onClick={
-                    row &&
-                    (row.every(ro => ro.EsPesajeParcial !==1)) ? 
-                    () => {
-                      setmodaledit(true)
+                <div>
+                  <EditIcon 
+                    onClick={
+                      row &&
+                      (row.every(ro => ro.EsPesajeParcial !==1)) ? 
+                      () => {
+                        setcambio(index);
+                        setmodaledit(true);
+                      }
+                    :(ro.EsPesajeParcial &&(row.every(ro => (ro.KilosMaterial === 0 || ro.KilosMaterial === null))|| row.every(ro => (ro.PesoRecibido === 0 || ro.PesoRecibido === null))) || (row.some(ro => ro.EsPesajeParcial) && (row.every(ro => (ro.KilosMaterial === 0 || ro.KilosMaterial === null))|| row.every(ro => ro.PesoRecibido === 0 || ro.PesoRecibido === null)) && (NomMotivoEntrada===9 ? !ro.ClaArticuloCompra: NomMotivoEntrada===3 && !ro.ClaveMaterialRecibeTraspaso))|| (row.every(ro=> ro.EsPesajeParcial===1) && (row.some(ro => (ro.KilosMaterial === 0 || ro.KilosMaterial === null))|| row.some(ro => ro.PesoRecibido === 0 || ro.PesoRecibido === null)))) ? (() =>{ setpoppesaje(true)}) : () => {
+                      setmodaledit(true);
                     }
-                  :(ro.EsPesajeParcial &&(row.every(ro => (ro.KilosMaterial === 0 || ro.KilosMaterial === null))|| row.every(ro => (ro.PesoRecibido === 0 || ro.PesoRecibido === null))) || (row.some(ro => ro.EsPesajeParcial) && (row.every(ro => (ro.KilosMaterial === 0 || ro.KilosMaterial === null))|| row.every(ro => ro.PesoRecibido === 0 || ro.PesoRecibido === null)) && (NomMotivoEntrada===9 ? !ro.ClaArticuloCompra: NomMotivoEntrada===3 && !ro.ClaveMaterialRecibeTraspaso))|| (row.every(ro=> ro.EsPesajeParcial===1) && (row.some(ro => (ro.KilosMaterial === 0 || ro.KilosMaterial === null))|| row.some(ro => ro.PesoRecibido === 0 || ro.PesoRecibido === null)))) ? (() =>{ setpoppesaje(true)}) : () => {
-                    setmodaledit(true);
-                  }
-                  }
-                >
-                  <EditIcon style={{ color: (ro.EsPesajeParcial && (row.every(ro => (ro.KilosMaterial === 0 || ro.KilosMaterial === null)|| row.every(ro => (ro.PesoRecibido === 0 || ro.PesoRecibido === null))) || row.some(ro => ro.PesoRecibido === 0 || ro.PesoRecibido === null))|| (row.some(ro => ro.EsPesajeParcial) && (row.every(ro => (ro.KilosMaterial === 0 || ro.KilosMaterial === null))|| row.every(ro => ro.PesoRecibido === 0 || ro.PesoRecibido === null)) && (NomMotivoEntrada===9 ? !ro.ClaArticuloCompra: NomMotivoEntrada===3 && !ro.ClaveMaterialRecibeTraspaso)) || (row.every(ro=> ro.EsPesajeParcial===1) && (row.some(ro => (ro.KilosMaterial === 0 || ro.KilosMaterial === null))|| row.some(ro => ro.PesoRecibido === 0 || ro.PesoRecibido === null))))? 'grey':'#ff6a00' , cursor: 'pointer' }} />
+                    }
+                    style={{ color: (ro.EsPesajeParcial && (row.every(ro => (ro.KilosMaterial === 0 || ro.KilosMaterial === null)|| row.every(ro => (ro.PesoRecibido === 0 || ro.PesoRecibido === null))) || row.some(ro => ro.PesoRecibido === 0 || ro.PesoRecibido === null))|| (row.some(ro => ro.EsPesajeParcial) && (row.every(ro => (ro.KilosMaterial === 0 || ro.KilosMaterial === null))|| row.every(ro => ro.PesoRecibido === 0 || ro.PesoRecibido === null)) && (NomMotivoEntrada===9 ? !ro.ClaArticuloCompra: NomMotivoEntrada===3 && !ro.ClaveMaterialRecibeTraspaso)) || (row.every(ro=> ro.EsPesajeParcial===1) && (row.some(ro => (ro.KilosMaterial === 0 || ro.KilosMaterial === null))|| row.some(ro => ro.PesoRecibido === 0 || ro.PesoRecibido === null))))? 'grey':'#ff6a00' , cursor: 'pointer' }} 
+                  />
                 </div>
               </TableCell>
               {/* Pop up para editar un material */} 
               <Modal
                 isOpen={modaledit}
-                onClose={() => modaledit(false)}
+                onClose={() => modaledit(true)}
                 ariaHideApp={false}
                 style={customStyles}
               >
                 {(NomMotivoEntrada===9 || (NomMotivoEntrada===3 && TipoTraspaso===0) && placadato) ?
                   (
                     <Material
+                      setcambio={setcambio}
                       row={row}
                       setrow={setrow}
                       seteditOpen={seteditOpen}
@@ -233,6 +248,7 @@ function Materiales({
                       editOpen={editOpen}
                       key={index}
                       ro={ro}
+                      setcambio={setcambio}
                       material={material}
                       materialtodos={materialtodos}
                       materialpt={materialpt}
@@ -276,7 +292,7 @@ function Materiales({
     // Función que corre servicios antes del render cada que haya un cambio de material y cada que se cierra un wizard
   // Servicio JSON 3 --> SP= AmpSch.AmpClaConsultaVehiculoMaterialClasificacionSel <Consultar Materiales Clasificados>
   useEffect(() => {
-    let isCancelled = false;
+    const abortController = new AbortController()
     const timeout = setTimeout(() => {
       const urlKrakenService = `${config.KrakenService}/${24}/${config.Servicio}`;
       /* eslint-disable */
@@ -328,8 +344,10 @@ function Materiales({
         tipoEstructura: 0,
       };
       /* eslint-enable */
-      if (!isCancelled && NomMotivoEntrada>0 && NomMotivoEntrada===9) {
+      if (NomMotivoEntrada>0 && NomMotivoEntrada===9) {
+        console.log(data3)
       callApi(urlKrakenService, 'POST', data3, (res) => {
+        console.log(data3)
         if(Todos===0){
          setrow(res.Result0);}
          else if(Todos===1){
@@ -337,7 +355,7 @@ function Materiales({
          }
       });
       seteditOpen(true);}
-      else if (!isCancelled && NomMotivoEntrada>0 && NomMotivoEntrada===3) {
+      else if (NomMotivoEntrada>0 && NomMotivoEntrada===3) {
         callApi(urlKrakenService, 'POST', data27, (res) => {
           if(Todos===0){
             setrow(res.Result0);}
@@ -348,21 +366,22 @@ function Materiales({
         seteditOpen(true);
       }
 
-      else if (!isCancelled && NomMotivoEntrada>0 && NomMotivoEntrada===1) {
+      else if (NomMotivoEntrada>0 && NomMotivoEntrada===1) {
         callApi(urlKrakenService, 'POST', data63, (res) => {
           setrow(res.Result0);
         });
         seteditOpen(true);
       }
-      return()=> {
-        isCancelled = true
-      }
+       return function cancel() {
+      abortController.abort()
+    }
     }, 800);
   }, [Actualizar]);
 
    // Función que corre servicios antes del render cada que haya un material, solo si el porcentaje total es 100% o si se maneja por cantidad
   // Servicio JSON 13 --> SP=BasSch.BasValidacionClasEntCompraMatPrimaProc <Valida clasificación>
   useEffect(() => {
+    const abortController = new AbortController()
     const urlKrakenService = `${config.KrakenService}/${24}/${config.Servicio}`;
 
 
@@ -378,10 +397,13 @@ function Materiales({
     if(Nocargo===1){
     setNocargo(0)
     }
+    return function cancel() {
+      abortController.abort()
+    }
   }, [row,!newdrop]);
 
   useEffect(() => {
-
+    const abortController = new AbortController()
     const urlKrakenService = `${config.KrakenService}/${24}/${config.Servicio}`;
     /* eslint-disable */
     if(NomMotivoEntrada===3 && TipoTraspaso===0){
@@ -418,6 +440,9 @@ function Materiales({
         setmaterialtodos(res.Result0);
         });
     }
+    return function cancel() {
+      abortController.abort()
+    }
   }, [idmaterialviaje,ClaArticuloRemisionado])
 
 
@@ -435,6 +460,7 @@ function Materiales({
     }
 
     useEffect(() => {
+      const abortController = new AbortController()
       if(newdrop===true){
     const urlKrakenService = `${config.KrakenService}/${24}/${config.Servicio}`;
     const urlKrakenBloque = `${config.KrakenService}/${24}/${config.Bloque}`;
@@ -548,7 +574,11 @@ function Materiales({
       if(row && newdrop === true && NomMotivoEntrada===9 && row.every(ro => ro.ClaArticuloCompra != null)){
         GuardaMateriales()
     }
-    }}, [newdrop])
+    }
+    return function cancel() {
+      abortController.abort()
+    }
+  }, [newdrop])
 
     return (
       <DragDropContext onDragEnd={handleDragEnd}>
@@ -580,7 +610,7 @@ function Materiales({
                   <TableBody>
                     {row
                       ? row.map((ro, index) => (
-                        <List ro={ro} key={index} index={index} editOpen={editOpen} ClaArticuloRemisionado={ClaArticuloRemisionado} setClaArticuloRemisionado={setClaArticuloRemisionado} seteditOpen={seteditOpen} />
+                        <List ro={ro} key={index} cambio={cambio} setcambio={setcambio} index={index} editOpen={editOpen} ClaArticuloRemisionado={ClaArticuloRemisionado} setClaArticuloRemisionado={setClaArticuloRemisionado} seteditOpen={seteditOpen} />
                         ))
                       : null}
                     {provided.placeholder}

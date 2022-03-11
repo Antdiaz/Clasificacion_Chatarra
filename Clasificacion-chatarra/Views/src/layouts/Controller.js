@@ -38,7 +38,7 @@ class Admin extends React.Component {
       poppesaje:true,
       warning:false,
       filtropesaje:false,
-      showResults:false,
+      showResults:true,
       transporte:'todos',
       status:'todos',
       NomMotivoEntrada:0,
@@ -174,6 +174,7 @@ class Admin extends React.Component {
     /* eslint-enable */
 
     await callApi(urlKrakenUsuario, 'POST', data3, (res) => {
+      console.log('hola')
       this.setUsuario(res.Result0[0].IdUsuario);
     });
     /* eslint-disable */
@@ -184,6 +185,7 @@ class Admin extends React.Component {
     /* eslint-enable */
     if(this.state.Patio===null){
     await this.state.Usuario && callApi(urlKrakenPlanta, 'POST', data2, (res) => {
+      console.log('PatioController')
       this.setPatio(res.Result0);
     });
   }
@@ -192,9 +194,10 @@ class Admin extends React.Component {
     });
 
     // console.log(data)
+    if(this.state.editBoxValue !==6){
     await callApi(urlKrakenService, 'POST', data,(res) => {
       this.setValores(res.Result0.sort((a, b) =>(new Date(( (Math.abs(new Date() - new Date(b.HoraEntrada.replace("T",' ').replace(/-/g,'/').split(".")[0])))/60000)))- new Date(( (Math.abs(new Date() - new Date(a.HoraEntrada.replace("T",' ').replace(/-/g,'/').split(".")[0])))/60000))));
-    });
+    })};
       fetch('https://api.ipify.org?format=json')
       .then(results => results.json())
       .then(data => setSessionData({
@@ -250,9 +253,10 @@ class Admin extends React.Component {
 
       /* eslint-enable */
       // console.log(data)
+      if(this.state.editBoxValue !==6){
         callApi(urlKrakenService, 'POST', data, (res) => {
         this.setValores(res.Result0.sort((a, b) =>(new Date(( (Math.abs(new Date() - new Date(b.HoraEntrada.replace("T",' ').replace(/-/g,'/').split(".")[0])))/60000)))- new Date(( (Math.abs(new Date() - new Date(a.HoraEntrada.replace("T",' ').replace(/-/g,'/').split(".")[0])))/60000))));
-      });
+      })};
   },50);
     }
 
@@ -287,7 +291,7 @@ class Admin extends React.Component {
         return this.getRoutes(prop.views);
       }
       if (prop.layout === '/Clasificacion-Chatarra') {
-        if (prop.path === '/Placas' || prop.path === '/Reportes' || prop.path === '/Indicadores' || prop.path === '/Reportes_Uso') {
+        if (prop.path === '/Placas' || prop.path === '/Reportes' || prop.path === '/Indicadores' || prop.path === '/Reportes_Uso' || prop.path === '/ZonaDescarga' ) {
           return (
             <Route
               path={prop.layout + prop.path}

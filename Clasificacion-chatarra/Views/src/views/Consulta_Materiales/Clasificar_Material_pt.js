@@ -14,10 +14,11 @@ import { withStyles } from '@material-ui/core/styles';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
-import { callApi, getSessionItem } from '../../utils/utils';
+import { callApi,showSweetAlert, getSessionItem } from '../../utils/utils';
 import { config } from '../../utils/config';
 import SelectBox from 'devextreme-react/select-box';
 import WarningIcon from '@material-ui/icons/Warning';
+import swal from 'sweetalert';
 
 const Material = (props) => {
   const [Todos, setTodos] = useState(0);
@@ -349,6 +350,7 @@ const Material = (props) => {
   // Servicio JSON 12 --> SP= BasSch.BasRegistraMaterialClasEntCompraMatPrimaProc <Registra material a clasificar>
 
   const handledelete = () => {
+    props.setcambio(-1)
     const urlKrakenService = `${config.KrakenService}/${24}/${config.Servicio}`;
     const urlKrakenBloque = `${config.KrakenService}/${24}/${config.Bloque}`;
     /* eslint-disable */
@@ -375,7 +377,7 @@ const Material = (props) => {
       // console.log(res);
     });
 
-    props.setpoppesaje(true);
+    // props.setpoppesaje(true);
     props.setmodaledit(false);
     props.seteditOpen(false);
 
@@ -389,7 +391,8 @@ const Material = (props) => {
   // Servicio JSON 11 --> SP= BasSch.BasGuardarClasEntCompraMatPrimaProc <Guarda clasificación>
   // Servicio JSON 12 --> SP= BasSch.BasRegistraMaterialClasEntCompraMatPrimaProc <Registra material a clasificar>
   const handleClose = () => {
-    props.setpoppesaje(true);
+    props.setcambio(-1)
+    // props.setpoppesaje(true);
     const urlKrakenService = `${config.KrakenService}/${24}/${config.Servicio}`;
     const urlKrakenBloque = `${config.KrakenService}/${24}/${config.Bloque}`;
 
@@ -424,6 +427,15 @@ const Material = (props) => {
       /* eslint-disable */
       console.log(data84)
       callApi(urlKrakenBloque, 'POST', data84, (res) => {
+        res.Mensaje !== undefined &&
+        swal('Error', (`${res.Mensaje}`), 'error', {
+          buttons: {
+            confirm: {
+              text: 'Aceptar',
+              className: 'animation-on-hover btn btn-success',
+            },
+          },
+        });
       props.setActualizar(true);
           setTimeout(() =>{
             props.setActualizar(false)
@@ -442,7 +454,8 @@ const Material = (props) => {
 
   // Función para cambiar del paso 1 (Clasificación de Material) & paso 2 (Contaminación)
   const handleBack = () => {
-    props.setpoppesaje(true);
+    // props.setpoppesaje(true);
+    props.setcambio(-1)
     props.setmodaledit(false);
   };
 

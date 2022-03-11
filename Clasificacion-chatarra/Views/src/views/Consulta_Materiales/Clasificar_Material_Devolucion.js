@@ -18,8 +18,9 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
 // imagenes de botes/Electrodomésticos
 import SelectBox from 'devextreme-react/select-box';
-import { callApi, getSessionItem } from '../../utils/utils';
+import { callApi,showSweetAlert, getSessionItem } from '../../utils/utils';
 import { config } from '../../utils/config';
+
 
 const ClasificarDev = (props) => {
   const [Todos, setTodos] = useState(0);
@@ -286,7 +287,7 @@ console.log(data33)
   // Función para cambiar del paso 1 (Clasificación de Material) & paso 2 (Contaminación)
 
   const handleBack = () => {
-    props.setpoppesaje(true);
+     props.setmodaledit(false)
   };
 
   const productsDataSource = new DataSource({
@@ -303,7 +304,7 @@ console.log(data33)
   // Servicio JSON 11 --> SP= BasSch.BasGuardarClasEntCompraMatPrimaProc <Guarda clasificación>
   // Servicio JSON 12 --> SP= BasSch.BasRegistraMaterialClasEntCompraMatPrimaProc <Registra material a clasificar>
   const handleSubmit = () => {
-    props.setpoppesaje(true);
+    // props.setpoppesaje(true);
     const urlKrakenService = `${config.KrakenService}/${24}/${config.Servicio}`;
 
     /* eslint-disable */
@@ -350,7 +351,7 @@ console.log(data33)
         props.ro.ClaUnidad +
         ''+config.Separador+'@pnClaAlmacen='+
         almacen +
-        ''+config.Separador+'@pnIdRenglon=1'+config.Separador+'@pnClaSubAlmacenCompra='+ subalmacen +''+config.Separador+'@psClaReferenciaDevTra='+ ((Referencia !==0 && Referencia !==null)? Referencia :Referencia2 )+''+config.Separador+'@pnCantidadRecibida=' +
+        ''+config.Separador+'@pnIdRenglon=1'+config.Separador+'@pnClaSubAlmacenCompra='+ subalmacen +''+config.Separador+'@psClaReferenciaDevTra='+ `'${Referencia !==0 && Referencia !==null ? Referencia :Referencia2 }'`+''+config.Separador+'@pnCantidadRecibida=' +
         (kilosr > 0 && Datosmaterial
         ? kilosr /Datosmaterial[0].PesoTeoricoKgs
             : cantidadr==='' ? 0 : cantidadr) +
@@ -380,9 +381,19 @@ console.log(data33)
     async function FuncionData() {
       props.setrow('');
       await callApi(urlKrakenService, 'POST', data72, (res) => {
+        res.Mensaje !== undefined &&
+        swal('Error', (`${res.Mensaje}`), 'error', {
+          buttons: {
+            confirm: {
+              text: 'Aceptar',
+              className: 'animation-on-hover btn btn-success',
+            },
+          },
+        });
         // console.log(res);
       });
       await callApi(urlKrakenService, 'POST', data73, (res) => {
+        
         // console.log(res);
       });
       props.setActualizar(true);
