@@ -23,19 +23,25 @@ function Listas({ Reportes,Headers,editBoxValue}) {
           <TableCell className="table-content" style={{ textAlign: 'center', fontWeight: '600',minWidth: '15vw' }}>
             {report.NombreUbicacion.split(/\s+/).slice(1, 3)}
           </TableCell>
-          <TableCell className="table-content" style={{ textAlign: 'center',minWidth: '15vw'  }}>
+          <TableCell className="table-content" style={{ textAlign: 'center',minWidth: '10vw'  }}>
             <div className="toolip">
               <i className="fas fa-circle fa-2x" style={{color: report.TabletaRegistro > 7 ? 'green': (report.TabletaRegistro <= 7 && report.TabletaRegistro >= 5) ? 'yellow': 'red' }}></i>
               <span className="tooltiptext">{report.TabletaRegistro}</span>
             </div>
           </TableCell>
-          <TableCell className="table-content" style={{ textAlign: 'center', padding: '0px',minWidth: '15vw' }}>
+          <TableCell className="table-content" style={{ textAlign: 'center', minWidth: '17vw' }}>
+            <div className="toolip">
+              <i className="fas fa-circle fa-2x" style={{color: report.Kiosko >7 ? 'green': (report.Kiosko <= 7 && report.Kiosko >= 5) ? 'yellow': 'red' }}></i>
+              <span className="tooltiptext">{report.Kiosko}</span>
+            </div>
+          </TableCell>
+          <TableCell className="table-content" style={{ textAlign: 'center', padding: '0px',minWidth: '8vw' }}>
             <div className="toolip">
               <i className="fas fa-circle fa-2x" style={{color: report.CodigoQR > 7 ? 'green': (report.CodigoQR <= 7 && report.CodigoQR >= 5) ? 'yellow': 'red' }}></i>
               <span className="tooltiptext">{report.CodigoQR}</span>
             </div>
           </TableCell>
-          <TableCell className="table-content" style={{ textAlign: 'center', minWidth: '15vw' }}>
+          <TableCell className="table-content" style={{ textAlign: 'center', minWidth: '17vw' }}>
             <div className="toolip">
               <i className="fas fa-circle fa-2x" style={{color: report.EvidenciaFotografica >7 ? 'green': (report.EvidenciaFotografica <= 7 && report.EvidenciaFotografica >= 5) ? 'yellow': 'red' }}></i>
               <span className="tooltiptext">{report.EvidenciaFotografica}</span>
@@ -43,7 +49,7 @@ function Listas({ Reportes,Headers,editBoxValue}) {
           </TableCell>
           <TableCell
             className="table-content"
-            style={{ textAlign: 'center', padding: '0px', minWidth: '15vw' }}
+            style={{ textAlign: 'center', padding: '0px', minWidth: '10vw' }}
           >
             <div className="toolip">
               <i className="fas fa-circle fa-2x" style={{color: report.Huella > 7 ? 'green': (report.Huella <= 7 && report.Huella >= 5) ? 'yellow': 'red' }}></i>

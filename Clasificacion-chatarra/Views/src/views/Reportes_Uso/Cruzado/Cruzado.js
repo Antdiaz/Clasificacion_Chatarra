@@ -121,7 +121,7 @@ const columns =([
   {id: 'PesoNeto',key:6, label: 'Peso Neto',minWidth: 170,align: 'center',format: (value) => `${value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} Kg`},  
   {id: 'ClaCUP',key:7, label: 'CUP',minWidth: 170,align: 'center', },
   {id: 'FechaGeneracion',key:8, label: 'Fecha Generación',minWidth: 170,align: 'center',format: (value) => value.toString().split('T')[0] },
-  {id: 'PreRegistro',key:9, label: 'Pre-Registro',minWidth: 300,align:'left',format: (value) => value.toFixed(2),tooltip:`Pre-Registro Proveedor` },
+  {id: 'PreRegistro',key:9, label: 'Pre-Registro',minWidth: 300,align:'center',format: (value) => value.toFixed(2),tooltip:`Pre-Registro Proveedor` },
   {id: 'PreRegistroDate',key:10, label: 'Fecha Pre-Registro',minWidth: 170,align: 'center',format: (value) => value.toFixed(2), },
   {id: 'Registro',key:11, label: 'Registro',minWidth: 300,align: 'left',format: (value) => value.toFixed(2),tooltip:`Registro Control de Acceso` },
   {id: 'RegistroDate',key:12, label: 'Fecha Registro',minWidth: 170,align: 'center',format: (value) => value.toFixed(2), },
@@ -133,8 +133,8 @@ const columns =([
   {id: 'GruaDate',key:18, label: 'Fecha Grúa',minWidth: 170,align: 'center',format: (value) => value.toFixed(2), },
   {id: 'BasculaSalida',key:19, label: 'Báscula Salida',minWidth: 300,align: 'left',format: (value) => value.toFixed(2),tooltip:`Pesada salida camión` },
   {id: 'BasculaSalidaDate',key:20, label: 'Fecha Báscula Salida',minWidth: 170,align: 'center',format: (value) => value.toFixed(2), },
-  {id: 'Coincidencias',key:21, label: 'Total Coincidencias',minWidth: 170,align: 'center',format: (value) => value,tooltip:`Riesgo Alto: 0-3 \xa0\xa0\xa0 Riesgo Medio: 3-4 \xa0\xa0\xa0\xa0 Bajo Riesgo: 4-5` },
-  {id: 'Coincidencias',key:22, label: 'Semaforo',minWidth: 170,align: 'center',tooltip:`Riesgo Alto: 0-3 \xa0\xa0\xa0 Riesgo Medio: 3-4 \xa0\xa0\xa0\xa0 Bajo Riesgo: 4-5` },
+  {id: 'Coincidencias',key:21, label: 'Total Coincidencias',minWidth: 170,align: 'center',format: (value) => value,tooltip:`Riesgo Alto: < 3 \xa0\xa0\xa0 Riesgo Medio: 3-4 \xa0\xa0\xa0\xa0 Bajo Riesgo: 4-5` },
+  {id: 'Coincidencias',key:22, label: 'Semaforo',minWidth: 170,align: 'center',tooltip:`Riesgo Alto: < 3 \xa0\xa0\xa0 Riesgo Medio: 3-4 \xa0\xa0\xa0\xa0 Bajo Riesgo: 4-5` },
 ]);
 
 
@@ -143,6 +143,7 @@ export default function ColumnGroupingTable({editBoxValue}) {
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [locations, setLocations] = useState(editBoxValue);
   const [currMonth, setCurrMonth] = useState(-1);
+  const [currdias, setCurrdias] = useState(-1);
   const [currYear, setCurrYear] = useState(new Date().getFullYear());
   const [lastYear, setlastYear] = useState(0)
   const [currturno, setCurrturno] = useState(0);
@@ -156,6 +157,7 @@ export default function ColumnGroupingTable({editBoxValue}) {
   const [searchopen, setsearchopen] = useState(false)
   const [filtros, setfiltros] = useState()
   const [busqueda, setbusqueda] = useState("")
+  const [dias,setdias] = useState([{id:-1,dia:"Todos"}])
   const theme = useTheme();
 
   const [HeaderTable, setHeaderTable] = useState([
@@ -239,7 +241,7 @@ export default function ColumnGroupingTable({editBoxValue}) {
           const data107 = {
             // parameters:`{ClaUbicacion:${props.Patio},ClaServicioJson:90,Parametros:@pnClaUbicacion=${props.Patio}${config.Separador}@pnYear=${currYear}${config.Separador}@pnMonth=${currMonth}}`,
             // tipoEstructura: 0,
-             parameters: '{"ClaUbicacion":'+ editBoxValue + ',"ClaServicioJson":107,"Parametros":"@pnClaUbicacion='+ editBoxValue + ''+config.Separador+'@pnYear='+ currYear + '' +config.Separador+'@pnMonth='+ currMonth +''+config.Separador+'@pnHorarioIn='+ horainicio +''+config.Separador+'@pnHorarioFin='+ horafin +'"}',
+             parameters: '{"ClaUbicacion":'+ editBoxValue + ',"ClaServicioJson":107,"Parametros":"@pnYear='+ currYear + '' +config.Separador+'@pnMonth='+ currMonth +''+config.Separador+'@pnHorarioIn='+ horainicio +''+config.Separador+'@pnHorarioFin='+ horafin +''+config.Separador+'@pnDia='+ currdias +'"}',
              tipoEstructura: 0,
           };
         /* eslint-enable */
@@ -267,10 +269,29 @@ export default function ColumnGroupingTable({editBoxValue}) {
   }
   }
 
+  const ondiaChanged = (e) => {
+    setCurrdias(e.value);
+  }
   const onMonthChanged = (e) =>{
     setCurrMonth(e.value);
+    if(e.value===(-1)){
+      setdias([{id:-1,dia:"Todos"}])
+    }
+    else if(e.value=== 4 || e.value=== 6 || e.value=== 9  || e.value=== 11){
+      setdias([...Array(30 - 1 + 1).keys()].map(x => { return {"id": x + 1,"dia": x + 1} }).concat({id:-1,dia:"Todos"}));
+    }
+
+    else if(e.value=== 1 || e.value=== 3 || e.value=== 5  || e.value=== 7 || e.value=== 8 || e.value=== 10 || e.value=== 12){
+      setdias([...Array(31 - 1 + 1).keys()].map(x => { return {"id": x + 1,"dia": x + 1} }).concat({id:-1,dia:"Todos"}))
+    }
+
+    else {
+      setdias([...Array(28 - 1 + 1).keys()].map(x => { return {"id": x + 1,"dia": x + 1} }).concat({id:-1,dia:"Todos"}))
+
+    }
   }
 
+  console.log(dias)
   const onYearChanged = (e) =>{
     setCurrYear(e.value);
   }
@@ -323,31 +344,18 @@ export default function ColumnGroupingTable({editBoxValue}) {
           >
           </CustomSelect>
         </div>
-        {editBoxValue === 6 && locations !== null ? (
-          <div className={classes.chipArea}>
-            <span>Ubicaciones</span>
-            <Select
-              multiple
-              value={loc}
-              onChange={handleChange}
-              input={<Input />}
-              renderValue={(selected) => selected.join(', ')}
-              MenuProps={MenuProps}
-            >
-              {locations.map((location) => (
-                <MenuItem key={location.ClaUbicacion} value={location.ClaUbicacion}>
-                  <Checkbox 
-                    style={{
-                    color: "#ff6a00",
-                  }}
-                    checked={loc.indexOf(location.ClaUbicacion) > -1}
-                  />
-                  <ListItemText primary={location.NombreCorto} />
-                </MenuItem>
-        ))}
-            </Select>
-          </div>
-      ) : null}
+        <div className={classes.divider}>
+          <CustomSelect
+            label="Días: "
+            data={dias}
+            currVal={currdias}
+            dataid="id"
+            caption="dia"
+            onValueChanged={ondiaChanged}
+            disabled={false}
+          >
+          </CustomSelect>
+        </div>
         
         <div className={classes.buttonArea}>
           <br />
@@ -454,6 +462,10 @@ export default function ColumnGroupingTable({editBoxValue}) {
                 {loading ? (
                   <div style={{position:'absolute',left: '50%',marginLeft: '-50px',top:'300px'}}>
                     <CircularProgress />
+                  </div>
+                ): dummy.length===0 ? (
+                  <div style={{position:'absolute',left: '50%',marginLeft: '-50px',top:'300px'}}>
+                    No hay datos
                   </div>
                 ):
                 filtros && filtros !== "" ? filtros.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)

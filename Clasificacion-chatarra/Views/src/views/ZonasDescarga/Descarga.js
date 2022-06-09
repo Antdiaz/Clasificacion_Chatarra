@@ -6,6 +6,7 @@ import AddIcon from '@mui/icons-material/Add';
 import swal from 'sweetalert';
 import Modal from 'react-modal';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import { CSVLink } from 'react-csv';
 import {
   Card,
   CardText,
@@ -17,6 +18,7 @@ import {
   Col,
   Input as Inputs,
 } from 'reactstrap';
+import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
 import {
   randomCreatedDate,
   randomEmail,
@@ -25,7 +27,7 @@ import {
 } from '@mui/x-data-grid-generator';
 import { callApi, getSessionItem } from '../../utils/utils';
 import { config } from '../../utils/config';
-import { Fab, makeStyles } from '@material-ui/core';
+import { Fab, IconButton, makeStyles } from '@material-ui/core';
 import TextField from '@mui/material/TextField';
 import { CellWifi } from '@material-ui/icons';
 import CheckInput from 'components/Controls/CheckInput';
@@ -72,6 +74,24 @@ export default function ValidateRowModelControlGrid({ editBoxValue, Valores }) {
     event.stopPropagation();
   }, []);
 
+  const [HeaderTable, setHeaderTable] = useState([
+    {key: 'ClaArticulo', label: 'ClaArticulo'},
+    {key: 'ClaveArticulo', label: 'ClaveArticulo'},
+    {key: 'NomArticulo', label: 'NomArticulo'},
+    {key: 'ClaZonaDescarga', label: 'ClaZonaDescarga'},
+    {key: 'ClaveZonaDescarga', label: 'ClaveZonaDescarga'},
+    {key: 'NomZonaDescarga', label: 'NomZonaDescarga'},
+
+  ]);
+  
+    const csvReport = Zonas !== null
+    ? {
+        data: Zonas,
+        headers: HeaderTable,
+        filename: 'ZonasDescarga.csv',
+      }
+    : 0;
+
   console.log(NomZonaedit, NomZonaeditnew, ClaveZonaedit, ClaArticuloedit);
   useEffect(() => {
     if (editBoxValue !== 6) {
@@ -80,17 +100,21 @@ export default function ValidateRowModelControlGrid({ editBoxValue, Valores }) {
       /* eslint-disable */
       const data108 = {
         parameters: `{"ClaUbicacion":${editBoxValue},"ClaServicioJson":108,"Parametros":"@pnClaUbicacion=${editBoxValue}${
-          CurrArticulo !== '' ? config.Separador + '@pnClaArticulo=' + CurrArticulo : ''
-        }${CurrClaZona !== '' ? config.Separador + '@pnClaZona=' + CurrClaZona : ''}${
-          CurrNomZona !== '' ? config.Separador + '@psNomZonaDescarga=' + `${CurrNomZona}` : ''
+          CurrArticulo !== '' && CurrArticulo !== null ? config.Separador + '@pnClaArticulo=' + CurrArticulo : ''
+        }${CurrClaZona !== '' && CurrClaZona !== null ? config.Separador + '@pnClaZona=' + CurrClaZona : ''}${
+          CurrNomZona !== '' && CurrNomZona !== null ? config.Separador + '@psNomZonaDescarga=' + `${CurrNomZona}` : ''
         }"}`,
         tipoEstructura: 0,
       };
       /* eslint-enable */
       callApi(urlKrakenService, 'POST', data108, (res) => {
-        setfiltronomzona(res.Result0);
-        setfiltroclamat(res.Result0);
-        setfiltroclazona(res.Result0);
+        setfiltronomzona(res.Result0.filter((v,i) => {
+          return res.Result0.map((val)=> val.NomZonaDescarga).indexOf(v.NomZonaDescarga) === i
+        }));
+        setfiltroclamat(res.Result0.map(row => { return {NomArticulo:`${row.ClaveArticulo} - ${row.NomArticulo}`,ClaArticulo:row.ClaArticulo}}));
+        setfiltroclazona(res.Result0.filter((v,i) => {
+          return res.Result0.map((val)=> val.ClaveZonaDescarga).indexOf(v.ClaveZonaDescarga) === i
+        }));
         setloading(false);
       });
     }
@@ -102,7 +126,7 @@ export default function ValidateRowModelControlGrid({ editBoxValue, Valores }) {
     const data110 = {
       parameters: `{"ClaUbicacion":${editBoxValue},"ClaServicioJson":110,"Parametros":"@pnClaUbicacion=${editBoxValue}${
         config.Separador
-      }@pnClaArticulo=${ClaArticulo}${config.Separador}@pnClaZonaDescarga=${ClaveZona}${
+      }@pnClaArticulo=${ClaArticulo}${config.Separador}@pnClaveZonaDescarga=${ClaveZona}${
         config.Separador
       }@psNomZonaDescarga=${NomZona}${config.Separador}@pnBajaLogica=${0}${
         config.Separador
@@ -118,9 +142,9 @@ export default function ValidateRowModelControlGrid({ editBoxValue, Valores }) {
       /* eslint-disable */
       const data108 = {
         parameters: `{"ClaUbicacion":${editBoxValue},"ClaServicioJson":108,"Parametros":"@pnClaUbicacion=${editBoxValue}${
-          CurrArticulo !== '' ? config.Separador + '@pnClaArticulo=' + CurrArticulo : ''
-        }${CurrClaZona !== '' ? config.Separador + '@pnClaZona=' + CurrClaZona : ''}${
-          CurrNomZona !== '' ? config.Separador + '@psNomZonaDescarga=' + `${CurrNomZona}` : ''
+          CurrArticulo !== '' && CurrArticulo !== null ? config.Separador + '@pnClaArticulo=' + CurrArticulo : ''
+        }${CurrClaZona !== '' && CurrClaZona !== null ? config.Separador + '@pnClaZona=' + CurrClaZona : ''}${
+          CurrNomZona !== ''  && CurrNomZona !== null ? config.Separador + '@psNomZonaDescarga=' + `${CurrNomZona}` : ''
         }"}`,
         tipoEstructura: 0,
       };
@@ -133,7 +157,7 @@ export default function ValidateRowModelControlGrid({ editBoxValue, Valores }) {
 
   const handleeditstart = (e) => {
     setNomZonaedit(e.row.NomZonaDescarga);
-    setClaveZonaedit(e.row.ClaZonaDescarga);
+    setClaveZonaedit(e.row.ClaveZonaDescarga);
     setClaArticuloedit(e.row.ClaArticulo);
     setindex(e.row.id);
   };
@@ -152,8 +176,8 @@ export default function ValidateRowModelControlGrid({ editBoxValue, Valores }) {
     const data110 = {
       parameters: `{"ClaUbicacion":${editBoxValue},"ClaServicioJson":110,"Parametros":"@pnClaUbicacion=${editBoxValue}${
         config.Separador
-      }@pnClaArticulo=${e.row.ClaArticulo}${config.Separador}@pnClaZonaDescarga=${
-        e.row.ClaZonaDescarga
+      }@pnClaArticulo=${e.row.ClaArticulo}${config.Separador}@pnClaveZonaDescarga=${
+        e.row.ClaveZonaDescarga
       }${config.Separador}@psNomZonaDescarga=${e.row.NomZonaDescarga}${
         config.Separador
       }@pnBajaLogica=${1}${config.Separador}@pnClaUsuarioMod=${NumbUsuario}${
@@ -162,15 +186,16 @@ export default function ValidateRowModelControlGrid({ editBoxValue, Valores }) {
       tipoEstructura: 0,
     };
     /* eslint-enable */
+    console.log(data110)
     callApi(urlKrakenService, 'POST', data110, (res) => {
       setmodals(false);
       const urlKrakenService = `${config.KrakenService}/${24}/${config.Servicio}`;
       /* eslint-disable */
       const data108 = {
         parameters: `{"ClaUbicacion":${editBoxValue},"ClaServicioJson":108,"Parametros":"@pnClaUbicacion=${editBoxValue}${
-          CurrArticulo !== '' ? config.Separador + '@pnClaArticulo=' + CurrArticulo : ''
-        }${CurrClaZona !== '' ? config.Separador + '@pnClaZona=' + CurrClaZona : ''}${
-          CurrNomZona !== '' ? config.Separador + '@psNomZonaDescarga=' + `${CurrNomZona}` : ''
+          CurrArticulo !== '' && CurrArticulo !== null ? config.Separador + '@pnClaArticulo=' + CurrArticulo : ''
+        }${CurrClaZona !== '' && CurrClaZona !== null ? config.Separador + '@pnClaZona=' + CurrClaZona : ''}${
+          CurrNomZona !== ''  && CurrNomZona !== null ? config.Separador + '@psNomZonaDescarga=' + `${CurrNomZona}` : ''
         }"}`,
         tipoEstructura: 0,
       };
@@ -240,15 +265,16 @@ export default function ValidateRowModelControlGrid({ editBoxValue, Valores }) {
   }));
   const classes = useStyles();
   const handleSearch = () => {
+    document.querySelector('.MuiDataGrid-virtualScroller').scrollTop = 0;
     if (editBoxValue !== 6) {
       setloading(true);
       const urlKrakenService = `${config.KrakenService}/${24}/${config.Servicio}`;
       /* eslint-disable */
       const data108 = {
         parameters: `{"ClaUbicacion":${editBoxValue},"ClaServicioJson":108,"Parametros":"@pnClaUbicacion=${editBoxValue}${
-          CurrArticulo !== '' ? config.Separador + '@pnClaArticulo=' + CurrArticulo : ''
-        }${CurrClaZona !== '' ? config.Separador + '@pnClaZona=' + CurrClaZona : ''}${
-          CurrNomZona !== '' ? config.Separador + '@psNomZonaDescarga=' + `${CurrNomZona}` : ''
+          CurrArticulo !== '' && CurrArticulo !== null ? config.Separador + '@pnClaArticulo=' + CurrArticulo : ''
+        }${CurrClaZona !== ''  && CurrClaZona !== null? config.Separador + '@pnClaZona=' + CurrClaZona : ''}${
+          CurrNomZona !== ''  && CurrNomZona !== null? config.Separador + '@psNomZonaDescarga=' + `${CurrNomZona}` : ''
         }"}`,
         tipoEstructura: 0,
       };
@@ -279,7 +305,7 @@ export default function ValidateRowModelControlGrid({ editBoxValue, Valores }) {
     const data110 = {
       parameters: `{"ClaUbicacion":${editBoxValue},"ClaServicioJson":110,"Parametros":"@pnClaUbicacion=${editBoxValue}${
         config.Separador
-      }@pnClaArticulo=${ClaArticuloedit}${config.Separador}@pnClaZonaDescarga=${
+      }@pnClaArticulo=${ClaArticuloedit}${config.Separador}@pnClaveZonaDescarga=${
         ClaveZonaeditnew !== '' ? ClaveZonaeditnew : ClaveZonaedit
       }${config.Separador}${ClaveZonaedit !== null ? '@pnClaZonaDescargaAnterior=' : ''}${
         ClaveZonaedit !== null ? ClaveZonaedit : ''
@@ -330,7 +356,7 @@ export default function ValidateRowModelControlGrid({ editBoxValue, Valores }) {
         index !== '' && model[index] !== undefined ? model[index].NomZonaDescarga.value : ''
       );
       setClaveZonaeditnew(
-        index !== '' && model[index] !== undefined ? model[index].ClaZonaDescarga.value : ''
+        index !== '' && model[index] !== undefined ? model[index].ClaveZonaDescarga.value : ''
       );
       setEditRowsModel(model);
     },
@@ -341,6 +367,7 @@ export default function ValidateRowModelControlGrid({ editBoxValue, Valores }) {
     setCurrArticulo('');
     setCurrClaZona('');
     setCurrNomZona('');
+    setZonas([]);
   };
 
   const onArtChanged = (e) => {
@@ -398,10 +425,10 @@ export default function ValidateRowModelControlGrid({ editBoxValue, Valores }) {
           <Select
             label="Clave Zona:&nbsp;&nbsp; "
             currVal={CurrClaZona}
-            data={filtroclazona.filter((filtro) => filtro.ClaZonaDescarga !== null)}
+            data={filtroclazona.filter((filtro) => filtro.ClaveZonaDescarga !== null)}
             onValueChanged={onClaChanged}
-            caption="ClaZonaDescarga"
-            dataid="ClaZonaDescarga"
+            caption="ClaveZonaDescarga"
+            dataid="ClaveZonaDescarga"
           >
           </Select>
         </div>
@@ -448,15 +475,28 @@ export default function ValidateRowModelControlGrid({ editBoxValue, Valores }) {
       )}
       <Card style={{ width: '84%', margin: 'auto', marginTop: '50px' }}>
         <CardHeader>
-          <input
-            value={BajaLogica}
-            onClick={handleBaja}
-            type="checkbox"
-            style={{ float: 'right', marginTop: '3px' }}
-          />
-          <span style={{ color: 'white', fontSize: '12px', float: 'right' }}>
-            Ver Bajas Lógicas{' '}
-          </span>
+          <div style={{display: "inline-flex",float:"right"}}>
+            {Zonas !== null ? (
+              <CSVLink {...csvReport} style={{ color: 'white' }}>
+                <Tooltip title="Exportar a Excel">
+                  <IconButton style={{color:'white'}}>
+                    <i className="fas fa-file-download" style={{ cursor: 'pointer' }}></i>
+                  </IconButton>
+                </Tooltip>
+              </CSVLink>
+              ) : null}  
+            <div>
+              <input
+                value={BajaLogica}
+                onClick={handleBaja}
+                type="checkbox"
+                style={{marginTop:"21px",marginRight:"2px"}}
+              />
+              <span style={{ color: 'white', fontSize: '12px', float: 'right',marginTop:"20px"}}>
+                Bajas Lógicas{' '}
+              </span>
+            </div>
+          </div>
         </CardHeader>
         <Paper sx={{ width: '100%' }}>
           <Box
@@ -537,7 +577,7 @@ const columns = [
     headerAlign: 'center',
   },
   {
-    field: 'ClaZonaDescarga',
+    field: 'ClaveZonaDescarga',
     headerName: 'Clave Zona Descarga',
     width: 200,
     editable: true,

@@ -91,13 +91,15 @@ class Patio extends React.Component {
     /* eslint-disable */
 
     const data3 = {
-      parameters: '{"Usuario":' + this.state.NumbUsuario + '}',
+      parameters: `{"Usuario":"${this.state.NumbUsuario}"}`,
       tipoEstructura: 0,
     };
     /* eslint-enable */
 
+    console.log(data3)
     await callApi(urlKrakenUsuario, 'POST', data3, (res) => {
       console.log('adios');
+      console.log(data3)
       cookies.set('NumUsuario',res.Result0[0].IdUsuario, { path: '/' })
       this.setUsuario(res.Result0[0].IdUsuario);
     });

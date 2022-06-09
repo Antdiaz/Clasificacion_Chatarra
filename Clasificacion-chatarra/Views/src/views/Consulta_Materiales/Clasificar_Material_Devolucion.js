@@ -324,7 +324,7 @@ console.log(data33)
         ''+config.Separador+'@pnClaViajeDevolucionTraspaso='+ 
         props.placadato[0].ClaViajeDevolucionTraspaso+
         ''+config.Separador+'@psObservaciones=' +
-        (observaciones ? observaciones.replace('#', '%23'):'') +
+        (observaciones ? observaciones.replace('#', '%23').replace(/\r\n|\n/gi,'').replace(/\\/g,""):'') +
         ''+config.Separador+'@pnEsRevisionEfectuada=' +
         (props.placadato[0].EsRevisionEfectuada !==null ? props.placadato[0].EsRevisionEfectuada:0) +
         ''+config.Separador+'@pnEsNoCargoDescargoMaterial=' +
@@ -351,7 +351,7 @@ console.log(data33)
         props.ro.ClaUnidad +
         ''+config.Separador+'@pnClaAlmacen='+
         almacen +
-        ''+config.Separador+'@pnIdRenglon=1'+config.Separador+'@pnClaSubAlmacenCompra='+ subalmacen +''+config.Separador+'@psClaReferenciaDevTra='+ `'${Referencia !==0 && Referencia !==null ? Referencia :Referencia2 }'`+''+config.Separador+'@pnCantidadRecibida=' +
+        ''+config.Separador+'@pnIdRenglon=1'+config.Separador+'@pnClaSubAlmacenCompra='+ subalmacen +''+config.Separador+'@psClaReferenciaDevTra='+ `${Referencia !==0 && Referencia !==null ? Referencia :Referencia2 }`+''+config.Separador+'@pnCantidadRecibida=' +
         (kilosr > 0 && Datosmaterial
         ? kilosr /Datosmaterial[0].PesoTeoricoKgs
             : cantidadr==='' ? 0 : cantidadr) +

@@ -90,14 +90,16 @@ function Imagenes({ id, editBoxValue, row, NomMotivoEntrada }) {
         tipoEstructura: 0,
       };
       /* eslint-enable */
+      // console.log(data14)
       callApi(urlKrakenService, 'POST', data14, (res) => {
-        console.log(res)
+        // console.log('placa',res)
         setFotoplaca(res.Result0.length > 0 ? res.Result0[0].Fotografia : 0);
       });
 
+      // console.log(data141)
       callApi(urlKrakenService, 'POST', data141, (res) => {
-        console.log(res)
-        setMaterialsuperior(res.Result0.length > 0 ? res.Result0[1].Fotografia : 0);
+        // console.log('super',res)
+        setMaterialsuperior(res.Result0.length > 0 ? res.Result0[0].Fotografia : 0);
       });
 
      callApi(urlKrakenService, 'POST', data26, (res) => {

@@ -386,7 +386,7 @@ table.scroll tbody > tr > td {
   justify-items: center;
 }
 
-.css-41abqd-MuiTableContainer-root {
+.MuiTableContainer-root {
   min-height: 400px;
 }
 

@@ -30,14 +30,6 @@ export const years = [
   {
     yearID: new Date().getFullYear() - 3,
     name: `${new Date().getFullYear()-3}`
-  },
-  {
-    yearID: new Date().getFullYear() - 4,
-    name: `${new Date().getFullYear()-4}`
-  },
-  {
-    yearID: new Date().getFullYear() - 5,
-    name: `${new Date().getFullYear()-5}`
   }
 ]
 

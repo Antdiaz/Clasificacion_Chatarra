@@ -242,7 +242,12 @@ const Todos = {BajaLogica: 0,
           <div style={{position:'absolute',left: '50%',marginLeft: '-50px',top:'500px'}}>
             <CircularProgress />
           </div>
-          ) : null}
+          ) : dataArr ===[] || dataArr.length===0 ? 
+          (
+            <div style={{position:'absolute',left: '50%',marginLeft: '-50px',top:'500px'}}>
+              No hay Datos
+            </div>
+            ):null}
         <Paper className={classes.paper}>
           <div className={classes.divider}>
             <CustomSelect
@@ -376,7 +381,7 @@ const Todos = {BajaLogica: 0,
               color="#FFD966"
             />
             <Series
-              name={`Riesgo Alto \r\n 50%-60%`}
+              name={`Riesgo Alto \r\n < 60%`}
               valueField="RiesgoAlto"
               color="red"
             />

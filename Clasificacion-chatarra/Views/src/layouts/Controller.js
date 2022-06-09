@@ -10,6 +10,7 @@ import { config } from '../utils/config';
 import { callApi, getSessionItem, setSessionData,logOut } from '../utils/utils';
 import Boleta from 'views/Consulta_Materiales/Boleta_Pantalla';
 
+
 class Admin extends React.Component {
   constructor(props) {
     super(props);
@@ -158,9 +159,11 @@ class Admin extends React.Component {
     };
 
     const data3 = {
-      parameters: '{"Usuario":' + this.state.NumbUsuario + '}',
+      parameters: `{"Usuario":"${this.state.NumbUsuario}"}`,
       tipoEstructura: 0,
     };
+
+    console.log(data3)
 
     const data50 = {
       parameters:

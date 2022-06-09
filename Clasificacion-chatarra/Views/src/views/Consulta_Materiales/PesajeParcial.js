@@ -29,7 +29,7 @@ function PesajeParcial(props) {
         if(props.NomMotivoEntrada===9){
 
           const data11 = 
-          [ `@pnClaUbicacion=${props.editBoxValue}${config.Separador}@pnIdBoleta=${props.placadato[0].IdBoleta}${config.Separador}@psObservaciones='${(props.placadato[0].Observaciones ? props.placadato[0].Observaciones.replace('#', '%23'): '')}'${config.Separador}@pnEsRevisionEfectuada=${props.placadato[0].EsRevisionEfectuada}${config.Separador}@pnClaTipoClasificacion=${props.placadato[0].ClaTipoClasificacion}${config.Separador}@pnEsNoCargoDescargoMaterial=0${config.Separador}@psNombrePcMod='${ipadress}'${config.Separador}@pnClaUsuarioMod=${NumbUsuario}${config.Separador}@psOrigen='WEB'`];
+          [ `@pnClaUbicacion=${props.editBoxValue}${config.Separador}@pnIdBoleta=${props.placadato[0].IdBoleta}${config.Separador}@psObservaciones='${(props.placadato[0].Observaciones ? props.placadato[0].Observaciones.replace('#', '%23').replace(/\r\n|\n/gi,'').replace(/['\']/g,''): '')}'${config.Separador}@pnEsRevisionEfectuada=${props.placadato[0].EsRevisionEfectuada}${config.Separador}@pnClaTipoClasificacion=${props.placadato[0].ClaTipoClasificacion}${config.Separador}@pnEsNoCargoDescargoMaterial=0${config.Separador}@psNombrePcMod='${ipadress}'${config.Separador}@pnClaUsuarioMod=${NumbUsuario}${config.Separador}@psOrigen='WEB'`];
       
           const data12= props.row && props.row.map((element,index)=>{
             if(element.ClaArticuloCompra && element.KilosMaterial===0){
@@ -54,7 +54,7 @@ function PesajeParcial(props) {
 
       if(props.NomMotivoEntrada===3 ){
         const data36 = 
-        [ `@pnClaUbicacion=${props.editBoxValue}${config.Separador}@pnIdBoleta=${props.placadato[0].IdBoleta}${config.Separador}@pnClaViajeOrigen=${props.placadato[0].ClaViajeOrigen}${config.Separador}@pnClaUbicacionOrigen=${props.placadato[0].ClaUbicacionOrigen}${config.Separador}@pnClaTransporte=${props.placadato[0].ClaTransporte}${config.Separador}@pnClaTransportista=${props.placadato[0].ClaTransportista}${config.Separador}@psNomTransportista='${props.placadato[0].NomTransportista}'${config.Separador}@psNomChofer='${(props.placadato[0].NomChofer !== null ? props.placadato[0].NomChofer: 0)}'${config.Separador}@psPlacas='${props.placadato[0].Placas}'${config.Separador}@pnPesoDocumentado=${(props.placadato[0].PesoDocumentado ? props.placadato[0].PesoDocumentado :0)}${config.Separador}@psObservaciones='${(props.placadato[0].Observaciones ? props.placadato[0].Observaciones.replace('#', '%23'): '')}'${config.Separador}@pnEsRevisionEfectuada=${(props.placadato[0].EsRevisionEfectuada ? props.placadato[0].EsRevisionEfectuada : 0)}${config.Separador}@pnClaTipoClasificacion=${props.placadato[0].ClaTipoClasificacion}${config.Separador}@pnEsNoCargoDescargoMaterial=0${config.Separador}@psNombrePcMod='${ipadress}'${config.Separador}@pnClaUsuarioMod=${NumbUsuario}${config.Separador}@psOrigen='WEB'`];
+        [ `@pnClaUbicacion=${props.editBoxValue}${config.Separador}@pnIdBoleta=${props.placadato[0].IdBoleta}${config.Separador}@pnClaViajeOrigen=${props.placadato[0].ClaViajeOrigen}${config.Separador}@pnClaUbicacionOrigen=${props.placadato[0].ClaUbicacionOrigen}${config.Separador}@pnClaTransporte=${props.placadato[0].ClaTransporte}${config.Separador}@pnClaTransportista=${props.placadato[0].ClaTransportista}${config.Separador}@psNomTransportista='${props.placadato[0].NomTransportista}'${config.Separador}@psNomChofer='${(props.placadato[0].NomChofer !== null ? props.placadato[0].NomChofer: 0)}'${config.Separador}@psPlacas='${props.placadato[0].Placas}'${config.Separador}@pnPesoDocumentado=${(props.placadato[0].PesoDocumentado ? props.placadato[0].PesoDocumentado :0)}${config.Separador}@psObservaciones='${(props.placadato[0].Observaciones ? props.placadato[0].Observaciones.replace('#', '%23').replace(/\r\n|\n/gi,'').replace(/['\']/g,''): '')}'${config.Separador}@pnEsRevisionEfectuada=${(props.placadato[0].EsRevisionEfectuada ? props.placadato[0].EsRevisionEfectuada : 0)}${config.Separador}@pnClaTipoClasificacion=${props.placadato[0].ClaTipoClasificacion}${config.Separador}@pnEsNoCargoDescargoMaterial=0${config.Separador}@psNombrePcMod='${ipadress}'${config.Separador}@pnClaUsuarioMod=${NumbUsuario}${config.Separador}@psOrigen='WEB'`];
     
   
         const data37= props.row && props.row.map((element,index)=>{
@@ -69,7 +69,7 @@ function PesajeParcial(props) {
         [`@pnClaUbicacion=${props.editBoxValue}${config.Separador}@pnIdBoleta=${props.placadato[0].IdBoleta}${config.Separador}@pnClaUbicacionOrigen=${props.placadato[0].ClaUbicacionOrigen}${config.Separador}@pnClaViajeOrigen=${props.placadato[0].ClaViajeOrigen}${config.Separador}@pnEsNoCargoDescargoMaterial=0${config.Separador}@psNombrePcMod='${ipadress}'${config.Separador}@pnClaUsuarioMod=${NumbUsuario}`]
       
     
-        const data84 ={ parameters: `{"ClaUbicacion":${props.editBoxValue},"Token":"${Token}","ClaServicioJson":"84","IdBoleta":"${props.placadato[0].IdBoleta}","EnBloque":"${1}","Encabezado":"${data36}","Detalle":"${data37}","Validacion":"${props.row.length>1 ? data38 : ''}"}`,
+        const data84 ={ parameters: `{"ClaUbicacion":${props.editBoxValue},"Token":"${Token}","ClaServicioJson":"84","IdBoleta":"${props.placadato[0].IdBoleta}","EnBloque":"${1}","Encabezado":"${data36}","Detalle":"${data37.join('')}","Validacion":"${props.row.length>1 ? data38 : ''}"}`,
       tipoEstructura: 0}
 
       console.log(data84)
@@ -78,7 +78,7 @@ function PesajeParcial(props) {
         })}
 
       if(props.NomMotivoEntrada===1 ){
-        const data64 = [ `@pnClaUbicacion=${props.editBoxValue}${config.Separador}@pnIdBoleta=${props.placadato[0].IdBoleta}${config.Separador}@psPlacas='${props.placadato[0].Placas}'${config.Separador}@pnIdPlanCarga=${(props.BoxPlanCarga ? props.BoxPlanCarga : props.placadato[0].ClaPlanCarga )}${config.Separador}@psObservaciones='${props.placadato[0].Observaciones}'${config.Separador}@pnEsRevisionEfectuada=${props.placadato[0].EsRevisionEfectuada}${config.Separador}@pnEsNoCargoDescargoMaterial=0${config.Separador}@psNombrePcMod='${ipadress}'${config.Separador}@pnClaUsuarioMod=${NumbUsuario}${config.Separador}@psOrigen='WEB'`];
+        const data64 = [ `@pnClaUbicacion=${props.editBoxValue}${config.Separador}@pnIdBoleta=${props.placadato[0].IdBoleta}${config.Separador}@psPlacas='${props.placadato[0].Placas}'${config.Separador}@pnIdPlanCarga=${(props.BoxPlanCarga ? props.BoxPlanCarga : props.placadato[0].ClaPlanCarga )}${config.Separador}@psObservaciones='${props.placadato[0].Observaciones.replace(/\r\n|\n/gi,'').replace(/['\']/g,'')}'${config.Separador}@pnEsRevisionEfectuada=${props.placadato[0].EsRevisionEfectuada}${config.Separador}@pnEsNoCargoDescargoMaterial=0${config.Separador}@psNombrePcMod='${ipadress}'${config.Separador}@pnClaUsuarioMod=${NumbUsuario}${config.Separador}@psOrigen='WEB'`];
 
 
 
@@ -94,9 +94,9 @@ function PesajeParcial(props) {
         [`@pnClaUbicacion=${props.editBoxValue}${config.Separador}@pnIdBoleta=${props.placadato[0].IdBoleta}${config.Separador}@pnClaPlanCarga=${(props.placadato[0].ClaPlanCarga !== null ? props.placadato[0].ClaPlanCarga : props.BoxPlanCarga!==null ? props.BoxPlanCarga:0)}${config.Separador}@psClaVehiculoPorClasificar='${props.placadato[0].Placas}'${config.Separador}@psPlacas='${props.placadato[0].Placas}'${config.Separador}@pnEsNoCargoDescargoMaterial=${(props.placadato[0].EsNoCargoDescargoMaterial !==null ? props.placadato[0].EsNoCargoDescargoMaterial : 0)}${config.Separador}@pnPesoAtrilesTarimas=${(props.ValidaTara!==0 ? props.ValidaTara : props.placadato[0].PesoAtrilesTarimas !== null ? props.placadato[0].PesoAtrilesTarimas : 0)}${config.Separador}@psNombrePcMod='${ipadress}'${config.Separador}@pnClaUsuarioMod=${NumbUsuario}`]
       
     
-        const data85 ={ parameters: `{"ClaUbicacion":${props.editBoxValue},"Token":"${Token}","ClaServicioJson":"85","IdBoleta":"${props.placadato[0].IdBoleta}","EnBloque":"${1}","Encabezado":"${data64}","Detalle":"${data65}","Validacion":"${''}"}`,
+        const data85 ={ parameters: `{"ClaUbicacion":${props.editBoxValue},"Token":"${Token}","ClaServicioJson":"85","IdBoleta":"${props.placadato[0].IdBoleta}","EnBloque":"${1}","Encabezado":"${data64}","Detalle":"${data65.join('')}","Validacion":"${''}"}`,
         tipoEstructura: 0};
-
+        console.log(data85)
         callApi(urlKrakenBloque, 'POST', data85, (res) => {
           // console.log(res);
         })}

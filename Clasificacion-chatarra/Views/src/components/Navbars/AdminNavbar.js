@@ -5,8 +5,6 @@ import classnames from 'classnames';
 // nodejs library to set properties for components
 import { getSessionItem, logOut,setSessionData } from '../../utils/utils';
 import PropTypes from 'prop-types';
-
-
 // import images
 import {
   Collapse,
@@ -23,7 +21,7 @@ import {
 } from 'reactstrap';
 import team4 from '../../assets/img/default-avatar.png';
 import logo from '../../assets/img/deaceroLogo.PNG';
-import { Link } from 'react-router-dom';
+import { Link,useLocation } from 'react-router-dom';
 // reactstrap components
 
 AdminNavbar.defaultProps = {
@@ -50,6 +48,8 @@ function AdminNavbar({ theme, Patio, editBoxValue, seteditBoxValue,TipoPatio,set
     },
   };
 
+  const location = useLocation();
+
   const onValueChanged = (e) => {
     seteditBoxValue(e.value);
     setTipoPatio(e.component.option("selectedItem").ClaTipoUbicacion)
@@ -73,7 +73,7 @@ function AdminNavbar({ theme, Patio, editBoxValue, seteditBoxValue,TipoPatio,set
           <Collapse navbar isOpen>
             <Nav className="align-items-left" navbar>
               <img src={logo} alt="deaceroLogo" />
-              <div style={{verticalAlign:'center',paddingTop:'2.5%',paddingLeft: '5%',fontWeight: '600',fontSize: '20px',color:'white',fontFamily: 'Roboto, RobotoFallback, "Noto Kufi Arabic", Helvetica, Arial, sans-serif'}}>Clasificación Chatarra</div>
+              <div style={{verticalAlign:'center',paddingTop:'2.5%',width:'20vw',paddingLeft: '5%',fontWeight: '600',fontSize: '20px',color:'white',fontFamily: 'Roboto, RobotoFallback, "Noto Kufi Arabic", Helvetica, Arial, sans-serif'}}>{location.pathname === "/Clasificacion-Chatarra/Placas" ? "Clasificación Chatarra" : location.pathname === "/Clasificacion-Chatarra/Reportes" ? "Reporte Contaminación":location.pathname === "/Clasificacion-Chatarra/ZonaDescarga" ? "Zonas de Descarga" : "Reporte Indicadores"}</div>
             </Nav>
             <Nav className="align-items-center ml-md-auto " navbar />
             <Nav className="align-items-center ml-auto ml-md-0" navbar>

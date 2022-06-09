@@ -187,7 +187,7 @@ const MaterialesXCargar = (props) => {
     const urlKrakenBloque = `${config.KrakenService}/${24}/${config.Bloque}`;
     
     /* eslint-disable */
-    const data64 = [ `@pnClaUbicacion=${props.editBoxValue}${config.Separador}@pnIdBoleta=${props.placadato[0].IdBoleta}${config.Separador}@psPlacas='${props.placadato[0].Placas}'${config.Separador}@pnIdPlanCarga=${(props.PlanCarga ? props.PlanCarga : props.placadato[0].ClaPlanCarga )}${config.Separador}@psObservaciones='${observaciones ? observaciones.replace('#', '%23'):''}'${config.Separador}@pnEsRevisionEfectuada=${props.placadato[0].EsRevisionEfectuada}${config.Separador}@pnEsNoCargoDescargoMaterial=0${config.Separador}@psNombrePcMod='${ipadress}'${config.Separador}@pnClaUsuarioMod=${NumbUsuario}${config.Separador}@psOrigen='WEB'`];
+    const data64 = [ `@pnClaUbicacion=${props.editBoxValue}${config.Separador}@pnIdBoleta=${props.placadato[0].IdBoleta}${config.Separador}@psPlacas='${props.placadato[0].Placas}'${config.Separador}@pnIdPlanCarga=${(props.PlanCarga ? props.PlanCarga : props.placadato[0].ClaPlanCarga )}${config.Separador}@psObservaciones='${observaciones ? observaciones.replace('#', '%23').replace(/\r\n|\n/gi,'').replace(/\\/g,""):''}'${config.Separador}@pnEsRevisionEfectuada=${props.placadato[0].EsRevisionEfectuada}${config.Separador}@pnEsNoCargoDescargoMaterial=0${config.Separador}@psNombrePcMod='${ipadress}'${config.Separador}@pnClaUsuarioMod=${NumbUsuario}${config.Separador}@psOrigen='WEB'`];
 
     const data65 = 
     [`@@TransactionSAMP:@pnClaUbicacion=${props.editBoxValue}${config.Separador}@pnIdBoleta=${props.placadato[0].IdBoleta}${config.Separador}@psClaVehiculoPorClasificar='${props.placadato[0].IdTagVehiculoPorClasificar}'${config.Separador}@psPlacas='${props.placadato[0].Placas}'${config.Separador}@pnClaPlanCarga=${(props.PlanCarga ? props.PlanCarga : props.placadato[0].ClaPlanCarga )}${config.Separador}@pnOrdenAcomodo=${props.ro.OrdenAcomodo}${config.Separador}@pnIdFabricacion=${props.ro.IdFabricacion}${config.Separador}@pnIdFabricacionDet=${props.ro.IdFabricacionDet}${config.Separador}@pnIdRenglon=1${config.Separador}@pnClaArticuloPlanCarga=${props.ro.ClaArticuloPlanCarga}${config.Separador}@pnClaAlmacen=${almacen}${config.Separador}@pnClaSubAlmacen=${subalmacen}${config.Separador}@psClaReferencia='${((Referencia !==0 && Referencia !==null)? Referencia :Referencia2 )}'${config.Separador}@pnClaTipoReferencia=${TipoReferencia !==0 && TipoReferencia !==null && TipoReferencia}${config.Separador}@pnCantEmbarcada=${(kilosr > 0 && Datosmaterial ? kilosr /Datosmaterial[0].PesoTeoricoRecibido : cantidadr==='' ? 0 : cantidadr)}${config.Separador}@pnKilogramosEmbarcados=${(cantidadr > 0 && Datosmaterial ? cantidadr *  Datosmaterial[0].PesoTeoricoRecibido : kilosr==='' ? 0 : kilosr)}${config.Separador}@pnPorcentaje=${(pesajeparcial===1 ? 100 : (porcentajer==='' ? 0 : porcentajer))}${config.Separador}@pnCantEmbarcar=${props.ro.CantEmbarcar}${config.Separador}@pnKilogramosEmbarcar=${props.ro.KilogramosEmbarcar}${config.Separador}@pnEsPesajeParcial=${pesajeparcial}${config.Separador}@pnEsOrdenMaquilaInterna=0${config.Separador}@pnIdOrdenMaquila=0${config.Separador}@pnKilogramosReales=0${config.Separador}@psComentarios='${observaciones}'${config.Separador}@pnEsNoCargoDescargoMaterial=0${config.Separador}@pnAccionSp=3${config.Separador}@pnPesoAtriles=${kilosTara}${config.Separador}@psNombrePcMod='${ipadress}'${config.Separador}@pnClaUsuarioMod=${NumbUsuario}`]
@@ -197,12 +197,11 @@ const MaterialesXCargar = (props) => {
   
    
 
-    const data85 ={ parameters: `{"ClaUbicacion":${props.editBoxValue},"Token":"${Token}","ClaServicioJson":"85","IdBoleta":"${props.placadato[0].IdBoleta}","EnBloque":"${1}","Encabezado":"${data64}","Detalle":"${data65}","Validacion":"${CantidadSum>0 || pesajeparcial===1 ? data66 : ''}"}`,
+    const data85 ={ parameters: `{"ClaUbicacion":${props.editBoxValue},"Token":"${Token}","ClaServicioJson":"85","IdBoleta":"${props.placadato[0].IdBoleta}","EnBloque":"${1}","Encabezado":"${data64}","Detalle":"${data65}","Validacion":"${CantidadSum-cantidadr > 0 || pesajeparcial===1 ? data66 : ''}"}`,
     tipoEstructura: 0}
   
     // usage
     /* eslint-enable */
-
     callApi(urlKrakenBloque, 'POST', data85, (res) => {
       // console.log(res);
       // props.setpoppesaje(true);
@@ -352,7 +351,7 @@ console.log(Referencia)
     const urlKrakenBloque = `${config.KrakenService}/${24}/${config.Bloque}`;
     /* eslint-disable */
 
-    const data64 = [ `@pnClaUbicacion=${props.editBoxValue}${config.Separador}@pnIdBoleta=${props.placadato[0].IdBoleta}${config.Separador}@psPlacas='${props.placadato[0].Placas}'${config.Separador}@pnIdPlanCarga=${(props.PlanCarga ? props.PlanCarga : props.placadato[0].ClaPlanCarga )}${config.Separador}@psObservaciones='${observaciones ? observaciones.replace('#', '%23'):''}'${config.Separador}@pnEsRevisionEfectuada=${props.placadato[0].EsRevisionEfectuada}${config.Separador}@pnEsNoCargoDescargoMaterial=0${config.Separador}@psNombrePcMod='${ipadress}'${config.Separador}@pnClaUsuarioMod=${NumbUsuario}${config.Separador}@psOrigen='WEB'`];
+    const data64 = [ `@pnClaUbicacion=${props.editBoxValue}${config.Separador}@pnIdBoleta=${props.placadato[0].IdBoleta}${config.Separador}@psPlacas='${props.placadato[0].Placas}'${config.Separador}@pnIdPlanCarga=${(props.PlanCarga ? props.PlanCarga : props.placadato[0].ClaPlanCarga )}${config.Separador}@psObservaciones='${observaciones ? observaciones.replace('#', '%23').replace(/\r\n|\n/gi,'').replace(/\\/g,""):''}'${config.Separador}@pnEsRevisionEfectuada=${props.placadato[0].EsRevisionEfectuada}${config.Separador}@pnEsNoCargoDescargoMaterial=0${config.Separador}@psNombrePcMod='${ipadress}'${config.Separador}@pnClaUsuarioMod=${NumbUsuario}${config.Separador}@psOrigen='WEB'`];
 
     const data65 = 
     [`@@TransactionSAMP:@pnClaUbicacion=${props.editBoxValue}${config.Separador}@pnIdBoleta=${props.placadato[0].IdBoleta}${config.Separador}@psClaVehiculoPorClasificar='${props.placadato[0].IdTagVehiculoPorClasificar}'${config.Separador}@psPlacas='${props.placadato[0].Placas}'${config.Separador}@pnClaPlanCarga=${(props.PlanCarga ? props.PlanCarga : props.placadato[0].ClaPlanCarga )}${config.Separador}@pnOrdenAcomodo=${props.ro.OrdenAcomodo}${config.Separador}@pnIdFabricacion=${props.ro.IdFabricacion}${config.Separador}@pnIdFabricacionDet=${props.ro.IdFabricacionDet}${config.Separador}@pnIdRenglon=1${config.Separador}@pnClaArticuloPlanCarga=${props.ro.ClaArticuloPlanCarga}${config.Separador}@pnClaAlmacen=${almacen}${config.Separador}@pnClaSubAlmacen=${subalmacen}${config.Separador}@psClaReferencia='${((Referencia !==0 && Referencia !==null)? Referencia :Referencia2 )}'${config.Separador}@pnClaTipoReferencia=${TipoReferencia !==0 && TipoReferencia !==null && TipoReferencia}${config.Separador}@pnCantEmbarcada=${(kilosr > 0 && Datosmaterial ? kilosr /Datosmaterial[0].PesoTeoricoRecibido : cantidadr==='' ? 0 : cantidadr)}${config.Separador}@pnKilogramosEmbarcados=${(cantidadr > 0 && Datosmaterial ? cantidadr *  Datosmaterial[0].PesoTeoricoRecibido : kilosr==='' ? 0 : kilosr)}${config.Separador}@pnPorcentaje=${(pesajeparcial===1 ? 100 : (porcentajer==='' ? 0 : porcentajer))}${config.Separador}@pnCantEmbarcar=${props.ro.CantEmbarcar}${config.Separador}@pnKilogramosEmbarcar=${props.ro.KilogramosEmbarcar}${config.Separador}@pnEsPesajeParcial=${pesajeparcial}${config.Separador}@pnEsOrdenMaquilaInterna=0${config.Separador}@pnIdOrdenMaquila=0${config.Separador}@pnKilogramosReales=0${config.Separador}@psComentarios='${observaciones}'${config.Separador}@pnEsNoCargoDescargoMaterial=0${config.Separador}@pnAccionSp=2${config.Separador}@pnPesoAtriles=${kilosTara && kilosTara !== '' ? kilosTara:0}${config.Separador}@psNombrePcMod='${ipadress}'${config.Separador}@pnClaUsuarioMod=${NumbUsuario}`]
@@ -371,10 +370,9 @@ console.log(Referencia)
 
     
     async function FuncionData() {
-      console.log('hola',data85)
       callApi(urlKrakenBloque, 'POST', data85, (res) => {
-        res.Mensaje !== undefined &&
-        swal('Error', (`${res.Mensaje}`), 'error', {
+        res.Result0[0].Mensaje !== 'OK' &&
+        swal('Error', (`${res.Result0[0].Mensaje}`), 'error', {
           buttons: {
             confirm: {
               text: 'Aceptar',

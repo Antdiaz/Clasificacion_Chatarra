@@ -5,6 +5,7 @@ import { reportes, reportes2 } from './data.js';
 import Graficas from './Indicadores/Indicadores.js';
 import Condiciones from './Condiciones/Condicion.js';
 import Apego from './Apego/Apego';
+import Immex from './Immex/Immex';
 import Resultados from './Resultados/Resultados.js';
 import Cruzado from './Cruzado/Cruzado.js';
 import { callApi, getSessionItem } from '../../utils/utils';
@@ -36,7 +37,7 @@ function PantallaGeneral({ editBoxValue, Valores }) {
   const [empleados, setempleados] = useState([]);
 
   useEffect(() => {
-    if (Valores) {
+    if (Valores && editBoxValue !==6) {
       const urlKrakenService = `${config.KrakenService}/${24}/${config.Servicio}`;
       /* eslint-disable */
       const data105 = {
@@ -63,7 +64,7 @@ function PantallaGeneral({ editBoxValue, Valores }) {
 
   const classes = useStyles();
 
-  return Valores ? (
+  return Valores || editBoxValue ===6 ? (
     <div className="pantalla-reportes">
       <Paper className={classes.paper}>
         <div className="reportes_uso">
@@ -85,6 +86,7 @@ function PantallaGeneral({ editBoxValue, Valores }) {
         {currReporte === 3 && <Apego empleados={empleados} editBoxValue={editBoxValue} />}
         {currReporte === 4 && <Resultados empleados={empleados} editBoxValue={editBoxValue} />}
         {currReporte === 5 && <Cruzado editBoxValue={editBoxValue} />}
+        {currReporte === 6 && <Immex editBoxValue={editBoxValue} />}
       </div>
     </div>
   ) : (

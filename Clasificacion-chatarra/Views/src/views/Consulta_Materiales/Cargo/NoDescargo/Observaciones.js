@@ -75,7 +75,7 @@ function Observaciones({Observacionesno,row,setObservacionesno,placadato,editBox
       const KilosSumc=row && row.reduce((acc, val) => acc + val.KilogramosEmbarcados, 0);
 
         const data11 = 
-        [ `@pnClaUbicacion=${editBoxValue}${config.Separador}@pnIdBoleta=${placadato[0].IdBoleta}${config.Separador}@psObservaciones='${(Observacionesno ? Observacionesno.replace('#', '%23'): '')}'${config.Separador}@pnEsRevisionEfectuada=${placadato[0].EsRevisionEfectuada}${config.Separador}@pnClaTipoClasificacion=${placadato[0].ClaTipoClasificacion}${config.Separador}@pnEsNoCargoDescargoMaterial=${Todos}${config.Separador}@psNombrePcMod='${ipadress}'${config.Separador}@pnClaUsuarioMod=${NumbUsuario}${config.Separador}@psOrigen='WEB'`];
+        [ `@pnClaUbicacion=${editBoxValue}${config.Separador}@pnIdBoleta=${placadato[0].IdBoleta}${config.Separador}@psObservaciones='${(Observacionesno ? Observacionesno.replace('#', '%23').replace('\r\n', '').replace(/\\/g,""): '')}'${config.Separador}@pnEsRevisionEfectuada=${placadato[0].EsRevisionEfectuada}${config.Separador}@pnClaTipoClasificacion=${placadato[0].ClaTipoClasificacion}${config.Separador}@pnEsNoCargoDescargoMaterial=${Todos}${config.Separador}@psNombrePcMod='${ipadress}'${config.Separador}@pnClaUsuarioMod=${NumbUsuario}${config.Separador}@psOrigen='WEB'`];
 
         
         const data12g= 
@@ -92,7 +92,7 @@ function Observaciones({Observacionesno,row,setObservacionesno,placadato,editBox
     
         
         const data36 = 
-        [ `@pnClaUbicacion=${editBoxValue}${config.Separador}@pnIdBoleta=${placadato[0].IdBoleta}${config.Separador}@pnClaViajeOrigen=${placadato[0].ClaViajeOrigen}${config.Separador}@pnClaUbicacionOrigen=${placadato[0].ClaUbicacionOrigen}${config.Separador}@pnClaTransporte=${placadato[0].ClaTransporte}${config.Separador}@pnClaTransportista=${placadato[0].ClaTransportista}${config.Separador}@psNomTransportista='${placadato[0].NomTransportista}'${config.Separador}@psNomChofer='${(placadato[0].NomChofer !== null ? placadato[0].NomChofer: 0)}'${config.Separador}@psPlacas='${placadato[0].Placas}'${config.Separador}@pnPesoDocumentado=${placadato[0].PesoDocumentado}${config.Separador}@psObservaciones='${(Observacionesno ? Observacionesno.replace('#', '%23'):'')}'${config.Separador}@pnEsRevisionEfectuada=${(placadato[0].EsRevisionEfectuada ? placadato[0].EsRevisionEfectuada : 0)}${config.Separador}@pnClaTipoClasificacion=${placadato[0].ClaTipoClasificacion}${config.Separador}@pnEsNoCargoDescargoMaterial=${Todos}${config.Separador}@psNombrePcMod='${ipadress}'${config.Separador}@pnClaUsuarioMod=${NumbUsuario}${config.Separador}@psOrigen='WEB'`];
+        [ `@pnClaUbicacion=${editBoxValue}${config.Separador}@pnIdBoleta=${placadato[0].IdBoleta}${config.Separador}@pnClaViajeOrigen=${placadato[0].ClaViajeOrigen}${config.Separador}@pnClaUbicacionOrigen=${placadato[0].ClaUbicacionOrigen}${config.Separador}@pnClaTransporte=${placadato[0].ClaTransporte}${config.Separador}@pnClaTransportista=${placadato[0].ClaTransportista}${config.Separador}@psNomTransportista='${placadato[0].NomTransportista}'${config.Separador}@psNomChofer='${(placadato[0].NomChofer !== null ? placadato[0].NomChofer: 0)}'${config.Separador}@psPlacas='${placadato[0].Placas}'${config.Separador}@pnPesoDocumentado=${placadato[0].PesoDocumentado}${config.Separador}@psObservaciones='${(Observacionesno ? Observacionesno.replace('#', '%23').replace(/\r\n|\n/gi,'').replace(/\\/g,""):'')}'${config.Separador}@pnEsRevisionEfectuada=${(placadato[0].EsRevisionEfectuada ? placadato[0].EsRevisionEfectuada : 0)}${config.Separador}@pnClaTipoClasificacion=${placadato[0].ClaTipoClasificacion}${config.Separador}@pnEsNoCargoDescargoMaterial=${Todos}${config.Separador}@psNombrePcMod='${ipadress}'${config.Separador}@pnClaUsuarioMod=${NumbUsuario}${config.Separador}@psOrigen='WEB'`];
 
         
         const data37g= row && row.map((element,index)=>{
@@ -110,7 +110,7 @@ function Observaciones({Observacionesno,row,setObservacionesno,placadato,editBox
           tipoEstructura: 0}
         
         
-          const data64 =  [ `@pnClaUbicacion=${editBoxValue}${config.Separador}@pnIdBoleta=${placadato[0].IdBoleta}${config.Separador}@psPlacas='${placadato[0].Placas}'${config.Separador}@pnIdPlanCarga=${(placadato[0].ClaPlanCarga !== null ? placadato[0].ClaPlanCarga : 0)}${config.Separador}@psObservaciones='${(Observacionesno ? Observacionesno.replace('#', '%23'):'') }'${config.Separador}@pnEsRevisionEfectuada=${placadato[0].EsRevisionEfectuada}${config.Separador}@pnEsNoCargoDescargoMaterial=${Todos}${config.Separador}@psNombrePcMod='${ipadress}'${config.Separador}@pnClaUsuarioMod=${NumbUsuario}${config.Separador}@psOrigen='WEB'`];
+          const data64 =  [ `@pnClaUbicacion=${editBoxValue}${config.Separador}@pnIdBoleta=${placadato[0].IdBoleta}${config.Separador}@psPlacas='${placadato[0].Placas}'${config.Separador}@pnIdPlanCarga=${(placadato[0].ClaPlanCarga !== null ? placadato[0].ClaPlanCarga : 0)}${config.Separador}@psObservaciones='${(Observacionesno ? Observacionesno.replace('#', '%23').replace('\r\n', '').replace(/\\/g,""):'') }'${config.Separador}@pnEsRevisionEfectuada=${placadato[0].EsRevisionEfectuada}${config.Separador}@pnEsNoCargoDescargoMaterial=${Todos}${config.Separador}@psNombrePcMod='${ipadress}'${config.Separador}@pnClaUsuarioMod=${NumbUsuario}${config.Separador}@psOrigen='WEB'`];
     
           
           const data66 =
@@ -134,7 +134,7 @@ function Observaciones({Observacionesno,row,setObservacionesno,placadato,editBox
             ''+config.Separador+'@pnIdBoletaOrigenTrasRec='+
             placadato[0].IdBoletaOrigenTrasRec+
             ''+config.Separador+'@psObservaciones=' +
-            (Observacionesno ? Observacionesno.replace('#', '%23'):'') +
+            (Observacionesno ? Observacionesno.replace('#', '%23').replace(/\r\n|\n/gi,'').replace(/\\/g,""):'') +
             ''+config.Separador+'@pnEsRevisionEfectuada=' +
             (placadato[0].EsRevisionEfectuada !==null ? placadato[0].EsRevisionEfectuada:0) +
             ''+config.Separador+'@pnEsNoCargoDescargoMaterial=' +
@@ -215,7 +215,7 @@ function Observaciones({Observacionesno,row,setObservacionesno,placadato,editBox
 
 
         const data11 = 
-        [ `@pnClaUbicacion=${editBoxValue}${config.Separador}@pnIdBoleta=${placadato[0].IdBoleta}${config.Separador}@psObservaciones='${(Observacionesno ? Observacionesno.replace('#', '%23'):'')}'${config.Separador}@pnEsRevisionEfectuada=${placadato[0].EsRevisionEfectuada}${config.Separador}@pnClaTipoClasificacion=${placadato[0].ClaTipoClasificacion}${config.Separador}@pnEsNoCargoDescargoMaterial=${Todos}${config.Separador}@psNombrePcMod='${ipadress}'${config.Separador}@pnClaUsuarioMod=${NumbUsuario}${config.Separador}@psOrigen='WEB'`];
+        [ `@pnClaUbicacion=${editBoxValue}${config.Separador}@pnIdBoleta=${placadato[0].IdBoleta}${config.Separador}@psObservaciones='${(Observacionesno ? Observacionesno.replace('#', '%23').replace(/\\/g,""):'')}'${config.Separador}@pnEsRevisionEfectuada=${placadato[0].EsRevisionEfectuada}${config.Separador}@pnClaTipoClasificacion=${placadato[0].ClaTipoClasificacion}${config.Separador}@pnEsNoCargoDescargoMaterial=${Todos}${config.Separador}@psNombrePcMod='${ipadress}'${config.Separador}@pnClaUsuarioMod=${NumbUsuario}${config.Separador}@psOrigen='WEB'`];
 
         
         const data12g= 
@@ -232,7 +232,7 @@ function Observaciones({Observacionesno,row,setObservacionesno,placadato,editBox
     
         
         const data36 = 
-        [ `@pnClaUbicacion=${editBoxValue}${config.Separador}@pnIdBoleta=${placadato[0].IdBoleta}${config.Separador}@pnClaViajeOrigen=${placadato[0].ClaViajeOrigen}${config.Separador}@pnClaUbicacionOrigen=${placadato[0].ClaUbicacionOrigen}${config.Separador}@pnClaTransporte=${placadato[0].ClaTransporte}${config.Separador}@pnClaTransportista=${placadato[0].ClaTransportista}${config.Separador}@psNomTransportista='${placadato[0].NomTransportista}'${config.Separador}@psNomChofer='${(placadato[0].NomChofer !== null ? placadato[0].NomChofer: 0)}'${config.Separador}@psPlacas='${placadato[0].Placas}'${config.Separador}@pnPesoDocumentado=${placadato[0].PesoDocumentado}${config.Separador}@psObservaciones='${(Observacionesno ? Observacionesno.replace('#', '%23'):'')}'${config.Separador}@pnEsRevisionEfectuada=${(placadato[0].EsRevisionEfectuada ? placadato[0].EsRevisionEfectuada : 0)}${config.Separador}@pnClaTipoClasificacion=${placadato[0].ClaTipoClasificacion}${config.Separador}@pnEsNoCargoDescargoMaterial=${Todos}${config.Separador}@psNombrePcMod='${ipadress}'${config.Separador}@pnClaUsuarioMod=${NumbUsuario}${config.Separador}@psOrigen='WEB'`];
+        [ `@pnClaUbicacion=${editBoxValue}${config.Separador}@pnIdBoleta=${placadato[0].IdBoleta}${config.Separador}@pnClaViajeOrigen=${placadato[0].ClaViajeOrigen}${config.Separador}@pnClaUbicacionOrigen=${placadato[0].ClaUbicacionOrigen}${config.Separador}@pnClaTransporte=${placadato[0].ClaTransporte}${config.Separador}@pnClaTransportista=${placadato[0].ClaTransportista}${config.Separador}@psNomTransportista='${placadato[0].NomTransportista}'${config.Separador}@psNomChofer='${(placadato[0].NomChofer !== null ? placadato[0].NomChofer: 0)}'${config.Separador}@psPlacas='${placadato[0].Placas}'${config.Separador}@pnPesoDocumentado=${placadato[0].PesoDocumentado}${config.Separador}@psObservaciones='${(Observacionesno ? Observacionesno.replace(/\r\n|\n/gi,'').replace(/\\/g,""):'')}'${config.Separador}@pnEsRevisionEfectuada=${(placadato[0].EsRevisionEfectuada ? placadato[0].EsRevisionEfectuada : 0)}${config.Separador}@pnClaTipoClasificacion=${placadato[0].ClaTipoClasificacion}${config.Separador}@pnEsNoCargoDescargoMaterial=${Todos}${config.Separador}@psNombrePcMod='${ipadress}'${config.Separador}@pnClaUsuarioMod=${NumbUsuario}${config.Separador}@psOrigen='WEB'`];
 
         
         const data37g= row && row.map((element,index)=>{
@@ -250,7 +250,7 @@ function Observaciones({Observacionesno,row,setObservacionesno,placadato,editBox
           tipoEstructura: 0}
         
         
-          const data64 = NomMotivoEntrada===1 && [ `@pnClaUbicacion=${editBoxValue}${config.Separador}@pnIdBoleta=${placadato[0].IdBoleta}${config.Separador}@psPlacas='${placadato[0].Placas}'${config.Separador}@pnIdPlanCarga=${(placadato[0].ClaPlanCarga !== null ? placadato[0].ClaPlanCarga : 0)}${config.Separador}@psObservaciones='${(Observacionesno ? Observacionesno.replace('#', '%23'):'') }'${config.Separador}@pnEsRevisionEfectuada=${placadato[0].EsRevisionEfectuada}${config.Separador}@pnEsNoCargoDescargoMaterial=${Todos}${config.Separador}@psNombrePcMod='${ipadress}'${config.Separador}@pnClaUsuarioMod=${NumbUsuario}${config.Separador}@psOrigen='WEB'`];
+          const data64 = NomMotivoEntrada===1 && [ `@pnClaUbicacion=${editBoxValue}${config.Separador}@pnIdBoleta=${placadato[0].IdBoleta}${config.Separador}@psPlacas='${placadato[0].Placas}'${config.Separador}@pnIdPlanCarga=${(placadato[0].ClaPlanCarga !== null ? placadato[0].ClaPlanCarga : 0)}${config.Separador}@psObservaciones='${(Observacionesno ? Observacionesno.replace('#', '%23').replace(/\r\n|\n/gi,'').replace(/\\/g,""):'') }'${config.Separador}@pnEsRevisionEfectuada=${placadato[0].EsRevisionEfectuada}${config.Separador}@pnEsNoCargoDescargoMaterial=${Todos}${config.Separador}@psNombrePcMod='${ipadress}'${config.Separador}@pnClaUsuarioMod=${NumbUsuario}${config.Separador}@psOrigen='WEB'`];
     
           
           const data66 =
@@ -274,7 +274,7 @@ function Observaciones({Observacionesno,row,setObservacionesno,placadato,editBox
             ''+config.Separador+'@pnIdBoletaOrigenTrasRec='+
             placadato[0].IdBoletaOrigenTrasRec+
             ''+config.Separador+'@psObservaciones=' +
-            (Observacionesno ? Observacionesno.replace('#', '%23'):'') +
+            (Observacionesno ? Observacionesno.replace('#', '%23').replace(/\r\n|\n/gi,'').replace(/\\/g,""):'') +
             ''+config.Separador+'@pnEsRevisionEfectuada=' +
             (placadato[0].EsRevisionEfectuada !==null ? placadato[0].EsRevisionEfectuada:0) +
             ''+config.Separador+'@pnEsNoCargoDescargoMaterial=' +

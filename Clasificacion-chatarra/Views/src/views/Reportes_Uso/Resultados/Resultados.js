@@ -137,7 +137,7 @@ const columns =([
   {id: 'ControlAcceso', label: 'Pre-Registro \xa0\xa0\xa0 5%',minWidth: 140,align: 'center',format: (value) => value.toFixed(2),tooltip:"El proveedor utilizó la herramienta de pre-registrarse" },
   {id: 'RequiereAutorizacion', label: 'Sin Autorización \xa0\xa0\xa0 5%',minWidth: 170,align: 'center',format: (value) => value.toFixed(2),tooltip:"Los procesos funcionaron sin necesitar autorización " },
   {id: 'Calificacion', label: 'Calificacion',minWidth: 170,align: 'center',format: (value) => `${value}%`, },
-  {id: 'NivelRiesgo', label: 'Nivel de Riesgo',minWidth: 170,align: 'center',format: (value) => `${value}%`,tooltip:`Riesgo Alto: 50%-60% \xa0\xa0\xa0 Riesgo Medio: 60%-80% \xa0\xa0\xa0\xa0 Bajo Riesgo:  80%-90% \xa0\xa0\xa0\xa0\xa0\xa0\xa0 Muy Bajo Riesgo: 90%-100%` }
+  {id: 'NivelRiesgo', label: 'Nivel de Riesgo',minWidth: 170,align: 'center',format: (value) => `${value}%`,tooltip:`Riesgo Alto: < 60% \xa0\xa0\xa0 Riesgo Medio: 60%-80% \xa0\xa0\xa0\xa0 Bajo Riesgo:  80%-90% \xa0\xa0\xa0\xa0\xa0\xa0\xa0 Muy Bajo Riesgo: 90%-100%` }
 ]);
 
 
@@ -478,6 +478,11 @@ export default function ColumnGroupingTable({editBoxValue,empleados}) {
                 {loading ? (
                   <div style={{position:'absolute',left: '50%',marginLeft: '-50px',top:'300px'}}>
                     <CircularProgress />
+                  </div>
+                ): dummy.length===0 
+                ? (
+                  <div style={{position:'absolute',left: '50%',marginLeft: '-50px',top:'300px'}}>
+                    No hay Datos
                   </div>
                 ):
                 filtros && filtros !== "" ? filtros.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)

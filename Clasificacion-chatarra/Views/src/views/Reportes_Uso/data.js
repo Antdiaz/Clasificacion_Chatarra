@@ -5,10 +5,6 @@ export const reportes = [
       name: "Riesgo Operación"
     },
     {
-      reporteID: 2,
-      name: "Condiciones Operaciones"
-    },
-    {
       reporteID: 3,
       name: "Reporte de Apego"
     },
@@ -19,6 +15,10 @@ export const reportes = [
     {
       reporteID: 5,
       name: "Reporte Clasificación Cruzada"
+    },
+    {
+      reporteID: 6,
+      name: "Immex"
     }
   ]
 
@@ -28,4 +28,8 @@ export const reportes = [
       reporteID: 2,
       name: "Condiciones Operaciones"
     },
+    {
+      reporteID: 5,
+      name: "Reporte Clasificación Cruzada"
+    }
   ]

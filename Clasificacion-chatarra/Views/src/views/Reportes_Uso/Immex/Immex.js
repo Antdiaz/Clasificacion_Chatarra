@@ -107,23 +107,14 @@ function getStyles(item, loc, theme) {
 
 const columns =([
   {id: 'IdBoleta', label: 'Boleta',minWidth: 170,align: 'center' },
-  {id: 'Placas', label: 'Placas',minWidth: 170,align: 'center',format: (value) => value.toFixed(2), },
-  {id: 'NomChofer', label: 'Nom. Chofer',minWidth: 170,align: 'center',format: (value) => value.toFixed(2), },
-  {id: 'NomProveedor', label: 'Nom. Proveedor',minWidth: 170,align: 'center',format: (value) => value.toFixed(2), },
-  {id: 'NomTransporte', label: 'Nom. Transporte',minWidth: 170,align: 'center',format: (value) => value.toFixed(2), },
-  {id: 'NomTransportista', label: 'Nom. Transportista',minWidth: 170,align: 'center',format: (value) => value.toFixed(2), },
-  {id: 'NomMotivoEntrada', label: 'Motivo Entrada',minWidth: 170,align: 'center',format: (value) => value.toFixed(2), },
-  {id: 'PesoNeto', label: 'Peso Neto',minWidth: 170,align: 'center',format: (value) => `${value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} Kg`, },
-  {id: 'ClaCUP', label: 'CUP',minWidth: 170,align: 'center', },
-  {id: 'Clasificador', label: 'Clasificador',minWidth: 170,align: 'center',format: (value) => `${value.toString().replace(/ *\[[^\]]*]/, '')}` },
-  {id: 'Basculista', label: 'Basculista',minWidth: 170,align: 'center',format: (value) => `${value.toString().replace(/ *\[[^\]]*]/, '')}`},
-  {id: 'FechaGeneracion', label: 'Fecha Generación',minWidth: 170,align: 'center',format: (value) => value.toFixed(2), },
-  {id: 'BasculaAutomatica', label: 'Báscula Automática',minWidth: 170,align: 'center',format: (value) => value.toFixed(2),tooltip:`Despliegue automático de peso por medio de Báscula` },
-  {id: 'EvidenciaFotografica', label: 'Evidencia Fotográfica',minWidth: 170,align: 'center',format: (value) => value.toFixed(2),tooltip:`Fotografía de material Entrada/Salida` },
-  {id: 'CodigoQR', label: 'Codigo QR',minWidth: 170,align: 'center',format: (value) => value.toFixed(2),tooltip:`Ingreso de Camión al patio por medio de CódigoQR` },
-  {id: 'HuellaDigital', label: 'Huella Digital',minWidth: 170,align: 'center',format: (value) => value.toFixed(2),tooltip:`Ingreso a Sistema Báscula por medio de Huella Digital` },
-  {id: 'ClasificacionApp', label: 'Clasificación en Móvil',minWidth: 170,align: 'center',format: (value) => value.toFixed(2),tooltip:`Uso del celular para clasificación`, },
-  {id: 'EnApego', label: 'En Apego',minWidth: 170,align: 'center',tooltip:`Apego a las tecnologías: Verde: 5 \xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0 Amarillo: 3-4 \xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0 Rojo:0-2` }
+  {id: 'Placas', label: 'Cupo',minWidth: 170,align: 'center',format: (value) => value.toFixed(2), },
+  {id: 'NomChofer', label: 'Proveedor',minWidth: 170,align: 'center',format: (value) => value.toFixed(2), },
+  {id: 'NomProveedor', label: 'Nom. Fracción',minWidth: 170,align: 'center',format: (value) => value.toFixed(2), },
+  {id: 'NomTransporte', label: 'Tipo',minWidth: 170,align: 'center',format: (value) => value.toFixed(2), },
+  {id: 'NomTransportista', label: 'Cantidad Original',minWidth: 170,align: 'center',format: (value) => value.toFixed(2), },
+  {id: 'NomMotivoEntrada', label: 'Utilizado',minWidth: 170,align: 'center',format: (value) => value.toFixed(2), },
+  {id: 'PesoNeto', label: 'Saldo',minWidth: 170,align: 'center',format: (value) => `${value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} Kg`, },
+  {id: 'ClaCUP', label: 'Unidad Medida',minWidth: 170,align: 'center', },
 ]);
 
 
@@ -157,23 +148,14 @@ export default function ColumnGroupingTable({editBoxValue,empleados}) {
 const [HeaderTable, setHeaderTable] = useState([
   {key: 'ClaUbicacion', label: 'ClaUbicación'},
   {key: 'IdBoleta', label: 'Boleta'},
-  {key: 'Placas', label: 'Placas'},
-  {key: 'NomChofer', label: 'Nom. Chofer'},
-  {key: 'NomProveedor', label: 'Nom. Proveedor'},
-  {key: 'NomTransporte', label: 'Nom. Transporte'},
-  {key: 'NomTransportista', label: 'Nom. Transportista'},
-  {key: 'NomMotivoEntrada', label: 'Motivo Entrada'},
-  {key: 'PesoNeto', label: 'Peso Neto'},
-  {key: 'ClaCUP', label: 'CUP'},
-  {key: 'Clasificador', label: 'Clasificador'},
-  {key: 'Basculista', label: 'Basculista'},
-  {key: 'FechaGeneracion', label: 'Fecha Generación'},
-  {key: 'BasculaAutomatica', label: 'Báscula Automática'},
-  {key: 'EvidenciaFotografica', label: 'Evidencia Fotográfica'},
-  {key: 'CodigoQR', label: 'Codigo QR'},
-  {key: 'HuellaDigital', label: 'Huella Digital'},
-  {key: 'ClasificacionApp', label: 'Clasificación en Móvil'},
-  {key: 'EnApego', label: 'En Apego'}
+  {key: 'Placas', label: 'Cupo'},
+  {key: 'NomChofer', label: 'Proveedor'},
+  {key: 'NomProveedor', label: 'Nom. Fracción'},
+  {key: 'NomTransporte', label: 'Tipo'},
+  {key: 'NomTransportista', label: 'Cantidad Original'},
+  {key: 'NomMotivoEntrada', label: 'Utilizado'},
+  {key: 'PesoNeto', label: 'Saldo'},
+  {key: 'ClaCUP', label: 'Unidad Medida'},
 ]);
 
   const csvReport = dummy.length>0
@@ -292,7 +274,7 @@ const [HeaderTable, setHeaderTable] = useState([
       <Paper className={classes.paper}>
         <div className={classes.divider}>
           <CustomSelect
-            label="Año: "
+            label="Fecha: "
             data={years}
             currVal={currYear}
             dataid="yearID"
@@ -304,7 +286,7 @@ const [HeaderTable, setHeaderTable] = useState([
         </div>
         <div className={classes.divider}>
           <CustomSelect
-            label="Mes: "
+            label="Proveedor: "
             data={months}
             currVal={currMonth}
             dataid="monthID"
@@ -316,7 +298,7 @@ const [HeaderTable, setHeaderTable] = useState([
         </div>
         <div className={classes.divider}>
           <CustomSelect
-            label="Turno: "
+            label="Fracción: "
             data={turnos}
             currVal={currturno}
             dataid="turnoID"
@@ -328,7 +310,7 @@ const [HeaderTable, setHeaderTable] = useState([
         </div>
         <div className={classes.divider}>
           <CustomSelect
-            label="Empleado: "
+            label="Cupo: "
             data={empleados}
             currVal={currEmpleado}
             dataid="IdUsuario"
@@ -429,12 +411,8 @@ const [HeaderTable, setHeaderTable] = useState([
             <Table stickyHeader aria-label="sticky table">
               <TableHead>
                 <TableRow>
-                  <TableCell align="center" colSpan={1}>
-                  </TableCell>
-                  <TableCell align="center" colSpan={10} style={{backgroundColor:'#f4f3ff',color:'black'}}>
-                    Datos Boleta
-                  </TableCell>
-                  <TableCell align="center" colSpan={12}>
+                  <TableCell align="center" colSpan={12} style={{backgroundColor:'#f4f3ff',color:'black'}}>
+                    Consulta movimientos Saldo
                   </TableCell>
                 </TableRow>
                 <TableRow>

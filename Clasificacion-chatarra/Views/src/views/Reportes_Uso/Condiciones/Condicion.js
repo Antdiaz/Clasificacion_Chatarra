@@ -38,6 +38,7 @@ function Consulta({
   const [Headers, setstate] = useState([
     { label: 'Patio', key: 'Patio' },
     { label: 'Pesaje Blindado Tableta de Registro', key: 'IdBoleta' },
+    { label: 'Kiosko', key: 'Kiosko' },
     { label: 'Entrada Código QR', key: 'Fecha' },
     { label: 'Evidencia Fotográfica', key: 'Proveedor' },
     { label: 'Huella Digital', key: 'Materiales' },
@@ -63,7 +64,13 @@ function Consulta({
     
   }
 
+  dummy && dummy.forEach((e) =>{
+    if (typeof e === "object" ){
+      e.Kiosko = 0
+    }
+  });
 
+  console.log(dummy)
   const useStyles = makeStyles((theme) => ({
     formControl: {
       margin: 0,
@@ -137,7 +144,10 @@ function Consulta({
                       <TableCell className="condicion-header">
                         {Headers[4].label}
                       </TableCell>
-                      <TableCell className="condicion-header">{Headers[5].label}</TableCell>
+                      <TableCell className="condicion-header">
+                        {Headers[5].label}
+                      </TableCell>
+                      <TableCell className="condicion-header">{Headers[6].label}</TableCell>
                     </TableRow>
                   </TableHead>
                 </Table>
@@ -148,11 +158,15 @@ function Consulta({
                         editBoxValue={editBoxValue}
                         Reportes={dummy}
                       />
-                    ):loading && (
+                    ):loading ? (
                       <div style={{position:'absolute',left: '50%',marginLeft: '-50px',top:'300px'}}>
                         <CircularProgress />
                       </div>
-                      )} 
+                      ): (
+                        <div style={{position:'absolute',left: '50%',marginLeft: '-50px',top:'300px'}}>
+                          No hay datos
+                        </div>
+                        )}
                   </TableBody>
                 </Table>
               </TableContainer>
@@ -160,9 +174,9 @@ function Consulta({
           </Card>
           <div style={{display:'flex',justifyContent: 'center'}}>Ultimas 10 boletas</div>
           <ul style={{display:'flex',justifyContent: 'center'}}>
-            <div style={{padding:'10px'}}><i className="fas fa-circle fa-x" style={{color:'red'}} />&nbsp;Bajo</div>
-            <div style={{padding:'10px'}}><i className="fas fa-circle fa-x" style={{color:'yellow'}} />&nbsp;Regular</div>
-            <div style={{padding:'10px'}}><i className="fas fa-circle fa-x" style={{color:'green'}} />&nbsp;Excelente</div>
+            <div style={{padding:'10px'}}><i className="fas fa-circle fa-x" style={{color:'red'}} />&nbsp;Caído</div>
+            <div style={{padding:'10px'}}><i className="fas fa-circle fa-x" style={{color:'yellow'}} />&nbsp;Intermitente</div>
+            <div style={{padding:'10px'}}><i className="fas fa-circle fa-x" style={{color:'green'}} />&nbsp;Funcionando</div>
           </ul>
         </Col>
       </Row>

@@ -151,6 +151,7 @@ function Boleta({
   }
   }
 
+// eslint-disable-next-line
 
   useEffect(() => {
 
@@ -232,7 +233,7 @@ function Boleta({
     setrow(res.Result0);
      /* eslint-disable */
      const urlKrakenBloque = `${config.KrakenService}/${24}/${config.Bloque}`;
-     const data64 = [ `@pnClaUbicacion=${editBoxValue}${config.Separador}@pnIdBoleta=${placadato[0].IdBoleta}${config.Separador}@psPlacas='${placadato[0].Placas}'${config.Separador}@pnIdPlanCarga=${PlanCarga}${config.Separador}@psObservaciones='${(Observacionesno ? Observacionesno.replace('#', '%23'): '')}'${config.Separador}@pnEsRevisionEfectuada=${placadato[0].EsRevisionEfectuada}${config.Separador}@pnEsNoCargoDescargoMaterial=0${config.Separador}@psNombrePcMod='${ipadress}'${config.Separador}@pnClaUsuarioMod=${NumbUsuario}${config.Separador}@psOrigen='WEB'`];
+     const data64 = [ `@pnClaUbicacion=${editBoxValue}${config.Separador}@pnIdBoleta=${placadato[0].IdBoleta}${config.Separador}@psPlacas='${placadato[0].Placas}'${config.Separador}@pnIdPlanCarga=${PlanCarga}${config.Separador}@psObservaciones='${(Observacionesno ? Observacionesno.replace('#', '%23').replace(/\r\n|\n/gi,'').replace(/\\/g,""): '')}'${config.Separador}@pnEsRevisionEfectuada=${placadato[0].EsRevisionEfectuada}${config.Separador}@pnEsNoCargoDescargoMaterial=0${config.Separador}@psNombrePcMod='${ipadress}'${config.Separador}@pnClaUsuarioMod=${NumbUsuario}${config.Separador}@psOrigen='WEB'`];
 
      const data66 =
      [`@pnClaUbicacion=${editBoxValue}${config.Separador}@pnIdBoleta=${placadato[0].IdBoleta}${config.Separador}@pnClaPlanCarga=${PlanCarga}${config.Separador}@psClaVehiculoPorClasificar='${placadato[0].Placas}'${config.Separador}@psPlacas='${placadato[0].Placas}'${config.Separador}@pnEsNoCargoDescargoMaterial=0${config.Separador}@pnPesoAtrilesTarimas=${(placadato[0].PesoAtrilesTarimas !== null ? placadato[0].PesoAtrilesTarimas : 0)}${config.Separador}@psNombrePcMod='${ipadress}'${config.Separador}@pnClaUsuarioMod=${NumbUsuario}`]
@@ -279,7 +280,7 @@ setPrereg(false)
         ',"Parametros":"@pnClaUbicacion=' +
         editBoxValue +
         ''+config.Separador+'@psClaVehiculoPorClasificar=' +
-        placa +
+        (placa.replace(/\t|t/gi,'')) +
         '"}',
       tipoEstructura: 0,
     };
