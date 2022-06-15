@@ -366,8 +366,6 @@ console.log(Referencia)
   
     // usage
     /* eslint-enable */
-
-
     
     async function FuncionData() {
       callApi(urlKrakenBloque, 'POST', data85, (res) => {
