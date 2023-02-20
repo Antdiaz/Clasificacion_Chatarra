@@ -241,10 +241,11 @@ export default function ColumnGroupingTable({editBoxValue}) {
           const data107 = {
             // parameters:`{ClaUbicacion:${props.Patio},ClaServicioJson:90,Parametros:@pnClaUbicacion=${props.Patio}${config.Separador}@pnYear=${currYear}${config.Separador}@pnMonth=${currMonth}}`,
             // tipoEstructura: 0,
-             parameters: '{"ClaUbicacion":'+ editBoxValue + ',"ClaServicioJson":107,"Parametros":"@pnYear='+ currYear + '' +config.Separador+'@pnMonth='+ currMonth +''+config.Separador+'@pnHorarioIn='+ horainicio +''+config.Separador+'@pnHorarioFin='+ horafin +''+config.Separador+'@pnDia='+ currdias +'"}',
+             parameters: '{"ClaUbicacion":'+ editBoxValue + ',"ClaServicioJson":107,"Parametros":"@pnClaUbicacion='+ editBoxValue + '' +config.Separador+ '@pnYear='+ currYear + '' +config.Separador+'@pnMonth='+ currMonth +''+config.Separador+'@pnHorarioIn='+ horainicio +''+config.Separador+'@pnHorarioFin='+ horafin +''+config.Separador+'@pnDia='+ currdias +'"}',
              tipoEstructura: 0,
           };
         /* eslint-enable */
+        console.log(data107)
           callApi(urlKrakenService, 'POST', data107,(res) => {
             setdummy(res.Result0);
             setloading(false);

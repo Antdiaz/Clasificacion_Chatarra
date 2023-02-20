@@ -138,15 +138,26 @@ const terminado = () => {
      const urlKrakenService = `${config.KrakenService}/${24}/${config.Servicio}`;
 
   /* eslint-disable */
-  const data58 = {
-    parameters:
+   const data58 = {
+     parameters:
       '{"ClaUbicacion":' +
-      props.editBoxValue +
-      ',"ClaServicioJson":' +
-      58 +
-      ',"Parametros":"@psValor='+ focusValue.replace('"', '%22') +'"}',
-    tipoEstructura: 0,
-  };
+       props.editBoxValue +
+       ',"ClaServicioJson":' +
+       58 +
+       ',"Parametros":"@psValor='+ focusValue.replace('"', '%22') + '' 
+       + ((idmaterialviaje != 0) ? (''+config.Separador+'@pnClaArticuloRemisionado=' + idmaterialviaje +''): null)+'"}',
+     tipoEstructura: 0,
+   };
+
+  // const data58 = {
+  //   parameters:
+  //     '{"ClaUbicacion":' +
+  //     props.editBoxValue +
+  //     ',"ClaServicioJson":' +
+  //     58 +
+  //     ',"Parametros":"@psValor='+ focusValue.replace('"', '%22') +'"}',
+  //   tipoEstructura: 0,
+  // };
    /* eslint-enable */
 
   if(focusValue!=='' && focusValue.length>2 ){
@@ -163,7 +174,7 @@ const terminado = () => {
 
 };
 
-
+console.log(cantidadr,kilosr)
   // Función que corre servicios antes del render cada que haya un cambio de material
   // Servicio JSON 6 --> SP= AmpSch.AmpClaArticuloDatosSel <Consultar datos Material>
   // Servicio JSON 7 --> SP= AmpSch.AmpClaSubAlmacenArticuloCmb <Consultar listado Subalmacenes>
@@ -266,6 +277,7 @@ const terminado = () => {
       if (idmaterialr > 0) {
         callApi(urlKrakenService, 'POST', data31, (res) => {
           setDatosmaterial(res.Result0);
+          console.log("hola",Datosmaterial)
         });
 
         callApi(urlKrakenService, 'POST', data32, (res) => {
@@ -448,12 +460,12 @@ const terminado = () => {
       /* eslint-disable */
       const data36 = [ `@pnClaUbicacion=${props.editBoxValue}${config.Separador}@pnIdBoleta=${props.placadato[0].IdBoleta}${config.Separador}@pnClaViajeOrigen=${props.ClaViajeOrigen}${config.Separador}@pnClaUbicacionOrigen=${props.ClaUbicacionOrigen}${config.Separador}@pnClaTransporte=${props.placadato[0].ClaTransporte}${config.Separador}@pnClaTransportista=${props.placadato[0].ClaTransportista}${config.Separador}@psNomTransportista='${props.placadato[0].NomTransportista}'${config.Separador}@psNomChofer='${(props.placadato[0].NomChofer !== null ? props.placadato[0].NomChofer: 0)}'${config.Separador}@psPlacas='${props.placadato[0].Placas}'${config.Separador}@pnPesoDocumentado=${(props.placadato[0].PesoDocumentado !== null ? props.placadato[0].PesoDocumentado : 0)}${config.Separador}@psObservaciones='${(props.placadato[0].Observaciones ? props.placadato[0].Observaciones.replace('#', '%23').replace(/\r\n|\n/gi,''): '')}'${config.Separador}@pnEsRevisionEfectuada=${(props.placadato[0].EsRevisionEfectuada ? props.placadato[0].EsRevisionEfectuada : 0)}${config.Separador}@pnClaTipoClasificacion=${props.placadato[0].ClaTipoClasificacion}${config.Separador}@pnEsNoCargoDescargoMaterial=0${config.Separador}@psNombrePcMod='${ipadress}'${config.Separador}@pnClaUsuarioMod=${NumbUsuario}${config.Separador}@psOrigen='WEB'`];
 
-      const data37 = [ `@@TransactionSAMP:@pnClaUbicacion=${props.editBoxValue}${config.Separador}@pnIdBoleta=${props.placadato[0].IdBoleta}${config.Separador}@pnClaViajeOrigen=${props.ClaViajeOrigen}${config.Separador}@pnClaUbicacionOrigen=${props.ClaUbicacionOrigen}${config.Separador}@pnIdRenglonRecepcion=${(props.row.length + 1)}${config.Separador}@pnIdFabricacion=${idFabricacion}${config.Separador}@pnIdFabricacionDet=${IdFabricacionDet}${config.Separador}@pnClaArticuloRemisionado=${(idmaterialviaje ? idmaterialviaje : 0)}${config.Separador}@pnCantRemisionada=${cantremisionada}${config.Separador}@pnClaMaterialRecibeTraspaso=${idmaterialr}${config.Separador}@pnCantRecibida=${(cantidadr === '' ? 0 : kilosr > 0 ? kilosr / Datosmaterial !== 0 ? Datosmaterial[0].PesoTeoricoRecibido : 1 : cantidadr)}${config.Separador}@pnPesoRecibido=${(kilosr === '' ? 0 : cantidadr > 0 ? cantidadr * Datosmaterial !== 0 ? Datosmaterial[0].PesoTeoricoRecibido : 1 : kilosr)}${config.Separador}@pnPorcentajeMaterial=${(porcentajer ==='' ? 0 : pesajeparcial===1 ? 100 : porcentajer)}${config.Separador}@pnPesoTaraRecibido=${kilosTara}${config.Separador}@pnClaAlmacen=${almacen}${config.Separador}@pnClaSubAlmacenTraspaso=${(subalmacen)}${config.Separador}@pnAccionSp=1${config.Separador}@pnClaSeccion=0${config.Separador}@psReferencia1=${Referencia}${config.Separador}@psReferencia2=0${config.Separador}@psReferencia3=0${config.Separador}@psReferencia4=0${config.Separador}@psReferencia5=0${config.Separador}@pnEsPesajeParcial=${pesajeparcial}${config.Separador}@pnKilosReales=0${config.Separador}@pnKilosContaminados=0${config.Separador}@pnClaMotivoContaminacion=0${config.Separador}@pnClaReferenciaTraspaso=${Referencia}${config.Separador}@psClaContaminantes='1|2|3|4|5|6|'${config.Separador}@psValorContaminantes='0|0|0|0|0|0|'${config.Separador}@pnEsNoCargoDescargoMaterial=${props.placadato[0].EsNoCargoDescargoMaterial}${config.Separador}@pnObservaciones='${(observaciones)}'${config.Separador}@psNombrePcMod='${ipadress}'${config.Separador}@pnClaUsuarioMod=${NumbUsuario}`];
+      const data37 = [ `@@TransactionSAMP:@pnClaUbicacion=${props.editBoxValue}${config.Separador}@pnIdBoleta=${props.placadato[0].IdBoleta}${config.Separador}@pnClaViajeOrigen=${props.ClaViajeOrigen}${config.Separador}@pnClaUbicacionOrigen=${props.ClaUbicacionOrigen}${config.Separador}@pnIdRenglonRecepcion=${(props.row.length + 1)}${config.Separador}@pnIdFabricacion=${idFabricacion}${config.Separador}@pnIdFabricacionDet=${IdFabricacionDet}${config.Separador}@pnClaArticuloRemisionado=${(idmaterialviaje ? idmaterialviaje : 0)}${config.Separador}@pnCantRemisionada=${cantremisionada}${config.Separador}@pnClaMaterialRecibeTraspaso=${idmaterialr}${config.Separador}@pnCantRecibida=${(cantidadr === '' ? 0 : kilosr > 0 ? kilosr / (Datosmaterial !== 0 ? Datosmaterial[0].PesoTeoricoRecibido : 1 ): cantidadr)}${config.Separador}@pnPesoRecibido=${(kilosr === '' ? 0 : cantidadr > 0 ? cantidadr * (Datosmaterial !== 0 ? Datosmaterial[0].PesoTeoricoRecibido : 1) : kilosr)}${config.Separador}@pnPorcentajeMaterial=${(porcentajer ==='' ? 0 : pesajeparcial===1 ? 100 : porcentajer)}${config.Separador}@pnPesoTaraRecibido=${kilosTara}${config.Separador}@pnClaAlmacen=${almacen}${config.Separador}@pnClaSubAlmacenTraspaso=${(subalmacen)}${config.Separador}@pnAccionSp=1${config.Separador}@pnClaSeccion=0${config.Separador}@psReferencia1='${Referencia}'${config.Separador}@psReferencia2='0'${config.Separador}@psReferencia3='0'${config.Separador}@psReferencia4='0'${config.Separador}@psReferencia5='0'${config.Separador}@pnEsPesajeParcial=${pesajeparcial}${config.Separador}@pnKilosReales=0${config.Separador}@pnKilosContaminados=0${config.Separador}@pnClaMotivoContaminacion=0${config.Separador}@pnClaReferenciaTraspaso='${Referencia}'${config.Separador}@psClaContaminantes='1|2|3|4|5|6|'${config.Separador}@psValorContaminantes='0|0|0|0|0|0|'${config.Separador}@pnEsNoCargoDescargoMaterial=${props.placadato[0].EsNoCargoDescargoMaterial}${config.Separador}@pnObservaciones='${(observaciones)}'${config.Separador}@psNombrePcMod='${ipadress}'${config.Separador}@pnClaUsuarioMod=${NumbUsuario}`];
    
 
       const data37g= props.row && props.row.map((element,index)=>{
         if(element.ClaMaterialRecibeTraspaso){
-        const data = [ `@@TransactionSAMP:@pnClaUbicacion=${props.editBoxValue}${config.Separador}@pnIdBoleta=${props.placadato[0].IdBoleta}${config.Separador}@pnClaViajeOrigen=${props.ClaViajeOrigen}${config.Separador}@pnClaUbicacionOrigen=${props.ClaUbicacionOrigen}${config.Separador}@pnIdRenglonRecepcion=${(element.IdRenglonRecepcion ? element.IdRenglonRecepcion : '')}${config.Separador}@pnIdFabricacion=${(element.IdFabricacion ? element.IdFabricacion : 0)}${config.Separador}@pnIdFabricacionDet=${(element.IdFabricacionDet ? element.IdFabricacionDet : 0)}${config.Separador}@pnClaArticuloRemisionado=${(element.ClaArticuloRemisionado ? element.ClaArticuloRemisionado : 0)}${config.Separador}@pnCantRemisionada=${(element.CantRemisionada ? element.CantRemisionada : 0)}${config.Separador}@pnClaMaterialRecibeTraspaso=${element.ClaMaterialRecibeTraspaso}${config.Separador}@pnCantRecibida=${element.CantRecibida}${config.Separador}@pnPesoRecibido=${element.PesoRecibido}${config.Separador}@pnPorcentajeMaterial=${element.PorcentajeMaterial}${config.Separador}@pnPesoTaraRecibido=${(element.PesoTaraRecibido !== null ? element.PesoTaraRecibido : 0)}${config.Separador}@pnClaAlmacen=${(element.ClaAlmacen ? element.ClaAlmacen : 1)}${config.Separador}@pnClaSubAlmacenTraspaso=${(element.ClaSubAlmacenTraspaso)}${element.ClaSubSubAlmacen !== null  && element.ClaSubSubAlmacen !== 0  ? (config.Separador+'@pnClaSubSubAlmacen='+element.ClaSubSubAlmacen) : ''}${config.Separador}@pnClaSeccion=${(element.ClaSeccion !== null ? element.ClaSeccion : 0)}${config.Separador}@psReferencia1=${(element.Referencia1 !== null ? element.Referencia1 : 0)}${config.Separador}@psReferencia2=${(element.Referencia2 !== null ? element.Referencia2 : 0)}${config.Separador}@psReferencia3=${(element.Referencia3 !== null ? element.Referencia3 : 0)}${config.Separador}@psReferencia4=${(element.Referencia4 !== null ? element.Referencia4 : 0)}${config.Separador}@psReferencia5=${(element.Referencia5 !== null ? element.Referencia5 : 0)}${config.Separador}@pnEsPesajeParcial=${element.EsPesajeParcial}${config.Separador}@pnKilosReales=${(element.KilosReales ? element.KilosReales : 0)}${config.Separador}@pnKilosContaminados=${(element.KilosContaminados ? element.KilosContaminados : 0)}${config.Separador}@pnClaMotivoContaminacion=${(element.ClaMotivoContaminacion ? element.ClaMotivoContaminacion : 0)}${config.Separador}@pnClaReferenciaTraspaso=${element.ClaReferenciaTraspaso}${config.Separador}@psClaContaminantes='1|2|3|4|5|6|'${config.Separador}@psValorContaminantes='0|0|0|0|0|0|'${config.Separador}@pnEsNoCargoDescargoMaterial=${props.placadato[0].EsNoCargoDescargoMaterial}${config.Separador}@pnObservaciones='${(element.observaciones)}'${config.Separador}@psNombrePcMod='${ipadress}'${config.Separador}@pnClaUsuarioMod=${NumbUsuario}`];
+        const data = [ `@@TransactionSAMP:@pnClaUbicacion=${props.editBoxValue}${config.Separador}@pnIdBoleta=${props.placadato[0].IdBoleta}${config.Separador}@pnClaViajeOrigen=${props.ClaViajeOrigen}${config.Separador}@pnClaUbicacionOrigen=${props.ClaUbicacionOrigen}${config.Separador}@pnIdRenglonRecepcion=${(element.IdRenglonRecepcion ? element.IdRenglonRecepcion : '')}${config.Separador}@pnIdFabricacion=${(element.IdFabricacion ? element.IdFabricacion : 0)}${config.Separador}@pnIdFabricacionDet=${(element.IdFabricacionDet ? element.IdFabricacionDet : 0)}${config.Separador}@pnClaArticuloRemisionado=${(element.ClaArticuloRemisionado ? element.ClaArticuloRemisionado : 0)}${config.Separador}@pnCantRemisionada=${(element.CantRemisionada ? element.CantRemisionada : 0)}${config.Separador}@pnClaMaterialRecibeTraspaso=${element.ClaMaterialRecibeTraspaso}${config.Separador}@pnCantRecibida=${element.CantRecibida}${config.Separador}@pnPesoRecibido=${element.PesoRecibido}${config.Separador}@pnPorcentajeMaterial=${element.PorcentajeMaterial}${config.Separador}@pnPesoTaraRecibido=${(element.PesoTaraRecibido !== null ? element.PesoTaraRecibido : 0)}${config.Separador}@pnClaAlmacen=${(element.ClaAlmacen ? element.ClaAlmacen : 1)}${config.Separador}@pnClaSubAlmacenTraspaso=${(element.ClaSubAlmacenTraspaso)}${element.ClaSubSubAlmacen !== null  && element.ClaSubSubAlmacen !== 0  ? (config.Separador+'@pnClaSubSubAlmacen='+element.ClaSubSubAlmacen) : ''}${config.Separador}@pnClaSeccion=${(element.ClaSeccion !== null ? element.ClaSeccion : 0)}${config.Separador}@psReferencia1='${(element.Referencia1 !== null ? element.Referencia1 : 0)}'${config.Separador}@psReferencia2='${(element.Referencia2 !== null ? element.Referencia2 : 0)}'${config.Separador}@psReferencia3='${(element.Referencia3 !== null ? element.Referencia3 : 0)}'${config.Separador}@psReferencia4='${(element.Referencia4 !== null ? element.Referencia4 : 0)}'${config.Separador}@psReferencia5='${(element.Referencia5 !== null ? element.Referencia5 : 0)}'${config.Separador}@pnEsPesajeParcial=${element.EsPesajeParcial}${config.Separador}@pnKilosReales=${(element.KilosReales ? element.KilosReales : 0)}${config.Separador}@pnKilosContaminados=${(element.KilosContaminados ? element.KilosContaminados : 0)}${config.Separador}@pnClaMotivoContaminacion=${(element.ClaMotivoContaminacion ? element.ClaMotivoContaminacion : 0)}${config.Separador}@pnClaReferenciaTraspaso='${element.ClaReferenciaTraspaso}'${config.Separador}@psClaContaminantes='1|2|3|4|5|6|'${config.Separador}@psValorContaminantes='0|0|0|0|0|0|'${config.Separador}@pnEsNoCargoDescargoMaterial=${props.placadato[0].EsNoCargoDescargoMaterial}${config.Separador}@pnObservaciones='${(element.observaciones)}'${config.Separador}@psNombrePcMod='${ipadress}'${config.Separador}@pnClaUsuarioMod=${NumbUsuario}`];
 
           return data
         }
@@ -467,8 +479,7 @@ const terminado = () => {
 
       const data84 ={ parameters: `{"ClaUbicacion":${props.editBoxValue},"Token":"${Token}","ClaServicioJson":"84","IdBoleta":"${props.placadato[0].IdBoleta}","EnBloque":"${1}","Encabezado":"${data36}","Detalle":"${data37}${data37g ? data37g.join("") : ''}","Validacion":"${(((PorcentajeSum !== null && (PorcentajeSum === 100)) || (PorcentajeSum === 0 && CantidadSum>0) || (props.ValidaCargo===1 && props.row && props.row.length>0 && (props.row[0].CantidadMaterial !==null || props.row[0].KilosMaterial!==null || props.row[0].PorcentajeMaterial!==null)&& (PorcentajeSum !== null && PorcentajeSum === 100) || (PorcentajeSum === 0 && CantidadSum>0))) || pesajeparcial===1) ? data38 : ''}"}`,
     tipoEstructura: 0}
-     
-      console.log(data84)
+      props.setGuardando(true)
           callApi(urlKrakenBloque, 'POST', data84, (res) => {
             res.Mensaje !== undefined &&
         swal('Error', (`${res.Mensaje}`), 'error', {
@@ -484,6 +495,7 @@ const terminado = () => {
       setTimeout(() =>{
       props.setActualizar(false)
         }, 50);
+        props.setGuardando(false)
       })
       }
     
@@ -593,7 +605,7 @@ const terminado = () => {
                     props.placadato[0].EsPesajeParcial === 1 || pesajeparcial === 1
                       ? 0
                       : kilosr > 0 && Datosmaterial
-                      ? kilosr *
+                      ? kilosr /
                         (props.NomMotivoEntrada === 9
                           ? Datosmaterial === 0
                             ? 1
@@ -646,7 +658,7 @@ const terminado = () => {
                     props.placadato[0].EsPesajeParcial === 1 || pesajeparcial === 1
                       ? 0
                       : cantidadr > 0 && Datosmaterial
-                      ? cantidadr /
+                      ? cantidadr *
                         (props.NomMotivoEntrada === 9
                           ? Datosmaterial === 0
                             ? 1
@@ -825,6 +837,7 @@ const terminado = () => {
           <button
             style={{ marginRight: '30px' }}
             type="button"
+            disabled={props.Guardando}
             className="popup-button"
             onClick={
               (PorcentajeSum > 100 && pesajeparcial === 0) ||

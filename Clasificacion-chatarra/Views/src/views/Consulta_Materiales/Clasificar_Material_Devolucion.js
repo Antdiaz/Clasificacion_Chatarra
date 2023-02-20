@@ -351,7 +351,7 @@ console.log(data33)
         props.ro.ClaUnidad +
         ''+config.Separador+'@pnClaAlmacen='+
         almacen +
-        ''+config.Separador+'@pnIdRenglon=1'+config.Separador+'@pnClaSubAlmacenCompra='+ subalmacen +''+config.Separador+'@psClaReferenciaDevTra='+ `${Referencia !==0 && Referencia !==null ? Referencia :Referencia2 }`+''+config.Separador+'@pnCantidadRecibida=' +
+        ''+config.Separador+'@pnIdRenglon=' +props.ro.IdRenglon +config.Separador+'@pnClaSubAlmacenCompra='+ subalmacen +''+config.Separador+'@psClaReferenciaDevTra='+ `${Referencia !==0 && Referencia !==null ? Referencia :Referencia2 }`+''+config.Separador+'@pnCantidadRecibida=' +
         (kilosr > 0 && Datosmaterial
         ? kilosr /Datosmaterial[0].PesoTeoricoKgs
             : cantidadr==='' ? 0 : cantidadr) +
@@ -380,6 +380,7 @@ console.log(data33)
 
     async function FuncionData() {
       props.setrow('');
+      props.setGuardando(true)
       await callApi(urlKrakenService, 'POST', data72, (res) => {
         res.Mensaje !== undefined &&
         swal('Error', (`${res.Mensaje}`), 'error', {
@@ -400,6 +401,7 @@ console.log(data33)
     setTimeout(() => {
       props.setActualizar(false);
     }, 50);
+    props.setGuardando(false)
     }
     if (props.NomMotivoEntrada === 110) {
       FuncionData();
@@ -637,6 +639,7 @@ console.log(data33)
             style={{ marginRight: '30px' }}
             type="button"
             className="popup-button"
+            disabled={props.Guardar}
             onClick={PorcentajeSum>100 ||  subalmacen<1 || Datosmaterial===0 || ((kilosr===0 || kilosr==='')&& (cantidadr===0 || cantidadr==='') && (porcentajer===0 || porcentajer==='') && (pesajeparcial===0)) ? null: almacen !==0 && ((Referencia !==0 && Referencia!==null)||(Referencia2 !==0 && Referencia2!==null) ) ? handleSubmit:handleMensaje} 
           >
             GUARDAR

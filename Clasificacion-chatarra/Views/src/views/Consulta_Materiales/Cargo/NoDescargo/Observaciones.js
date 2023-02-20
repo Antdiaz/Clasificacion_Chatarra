@@ -6,7 +6,7 @@ import {config} from '../../../../utils/config'
 
 
 
-function Observaciones({Observacionesno,row,setObservacionesno,placadato,editBoxValue,NomMotivoEntrada,setActualizar,setrow,Todos,TodosChange,setTodosChange,setValidaCargo}) {
+function Observaciones({Observacionesno,row,setObservacionesno,Guardando,setGuardando,placadato,editBoxValue,NomMotivoEntrada,setActualizar,Actualizar,setrow,Todos,TodosChange,setTodosChange,setValidaCargo}) {
     const ipadress = getSessionItem('Ipaddress');
     const NumbUsuario = getSessionItem('NumUsuario');
     const Token = getSessionItem('Token');
@@ -152,7 +152,7 @@ function Observaciones({Observacionesno,row,setObservacionesno,placadato,editBox
     /* eslint-enable */
     async function FuncionData() {
     if(NomMotivoEntrada===9 ){
-      console.log(data83)
+      console.log('observaciones',data83)
       await callApi(urlKrakenBloque, 'POST', data83, (res) => {
         setActualizar(true);
         setTimeout(() =>{
@@ -291,6 +291,7 @@ function Observaciones({Observacionesno,row,setObservacionesno,placadato,editBox
 
     /* eslint-enable */
     async function FuncionData() {
+      setGuardando(true)
     if(NomMotivoEntrada===9 ){
       console.log(data83)
       await callApi(urlKrakenBloque, 'POST', data83, (res) => {
@@ -298,6 +299,7 @@ function Observaciones({Observacionesno,row,setObservacionesno,placadato,editBox
         setTimeout(() =>{
     setActualizar(false)
         }, 50);
+        setGuardando(false)
       })
     }
     
@@ -311,6 +313,7 @@ function Observaciones({Observacionesno,row,setObservacionesno,placadato,editBox
             setTimeout(() =>{
         setActualizar(false)
             }, 50);
+            setGuardando(false)
         });
       }
 
@@ -323,6 +326,7 @@ function Observaciones({Observacionesno,row,setObservacionesno,placadato,editBox
         setTimeout(() =>{
     setActualizar(false)
         }, 50);
+        setGuardando(false)
       }); 
     }
     
@@ -333,6 +337,7 @@ function Observaciones({Observacionesno,row,setObservacionesno,placadato,editBox
         setTimeout(() =>{
     setActualizar(false)
         }, 50);
+        setGuardando(false)
       });
     }
         }        
@@ -344,12 +349,13 @@ function Observaciones({Observacionesno,row,setObservacionesno,placadato,editBox
 
     return (
       <div className="Observaciones">
+        
         <InputGroup style={{paddingLeft: '1vw',paddingRight: '1vw'}}>
           <InputGroupAddon addonType="prepend">
             Observaciones: &nbsp;
           </InputGroupAddon>
-          <Input className="observaciones_no" aria-label="hola" onKeyPress={handleEnter} defaultValue={Observacionesno} onChange={handleObservaciones} />
-          <i className="fas fa-save fa-lg" onClick={handleClick} style={{cursor: 'pointer',color:'#333b95'}}></i>
+          <Input className="observaciones_no" aria-label="hola" onKeyPress={!Guardando ? handleEnter : null} defaultValue={Observacionesno} onChange={handleObservaciones} />
+          <i className="fas fa-save fa-lg" disabled={Guardando} onClick={handleClick} style={{cursor: 'pointer',color: Guardando ? 'grey':'#333b95'}}></i>
         </InputGroup>
       </div>
     )

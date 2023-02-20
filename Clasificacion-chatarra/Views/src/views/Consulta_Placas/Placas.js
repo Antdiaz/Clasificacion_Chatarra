@@ -15,8 +15,10 @@ const Items = ({
   setClaFabricacionViaje,
   setpesajeparcial,
   editBoxValue,
+  Guardando,
+  setGuardando
 }) => {
-  const Placas = ({lista}) => {
+  const Placas = ({lista,Guardando,setGuardando}) => {
     const [showResults, setshowResults] = useState(false);
     const [showProv, setshowProv] = useState(false)
     const [showObservaciones, setshowObservaciones] = useState(false);
@@ -60,9 +62,9 @@ const Items = ({
                   style={{ color: 'rgb(41, 41, 41)' }}
                   to={`/Clasificacion-Chatarra/Placa:${
                     lista.ClaVehiculoPorClasificar ? lista.ClaVehiculoPorClasificar : 'Sin dato'
-                  }/Boleta:${lista.IdBoleta}`}
+                  }%20/Boleta:${lista.IdBoleta}`}
                 >
-                  {lista.ClaMotivoEntrada !==102 && lista.ClaMotivoEntrada !==111 ? (<i className="fa fa-info-circle fa-2x" title="Más información / Clasificación" onClick={() => {setpoppesaje(false);setrow(0);setNomMotivoEntrada(lista.ClaMotivoEntrada);setClaUbicacionOrigen(lista.ClaUbicacionOrigen);setClaViajeOrigen(lista.ClaViajeOrigen);setpesajeparcial(0);}} aria-hidden="true"></i>):null}
+                  {lista.ClaMotivoEntrada !==102 && lista.ClaMotivoEntrada !==111 ? (<i className="fa fa-info-circle fa-2x" title="Más información / Clasificación" onClick={() => {setpoppesaje(false);setrow(0);setNomMotivoEntrada(lista.ClaMotivoEntrada);setClaUbicacionOrigen(lista.ClaUbicacionOrigen);setClaViajeOrigen(lista.ClaViajeOrigen);setpesajeparcial(0);setGuardando(false)}} aria-hidden="true"></i>):null}
                 </Link>
                 <div className="form" style={{ width: '100%' }}>
                   <div className="dx-fieldset">
@@ -188,7 +190,7 @@ const Items = ({
   };
 
   return (
-    <div>{listas !== undefined && listas.map((lista,index) => <Placas lista={lista} key={index} />)}</div>
+    <div>{listas !== undefined && listas.map((lista,index) => <Placas Guardando={Guardando} setGuardando={setGuardando} lista={lista} key={index} />)}</div>
   );
 };
 

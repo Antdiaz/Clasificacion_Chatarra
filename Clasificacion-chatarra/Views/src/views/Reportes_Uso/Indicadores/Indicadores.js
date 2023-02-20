@@ -200,6 +200,7 @@ const Todos = {BajaLogica: 0,
 
   setdummy([])
   setloading(true)
+  console.log("hola")
   const urlKrakenService = `${config.KrakenService}/${24}/${config.Servicio}`;
   /* eslint-disable */
       const data103 = {

@@ -58,10 +58,12 @@ class Admin extends React.Component {
       FiltroReporte: null,
       FiltroPlacas: null,
       placadato: null,
+      Guardando: false,
     };
     this.timer = null;
   }
 
+  setGuardando=(Val) => this.setState(() =>({Guardando: Val}))
 
   setplacadato=(Val) => this.setState(() =>({placadato: Val}))
 
@@ -300,6 +302,8 @@ class Admin extends React.Component {
               path={prop.layout + prop.path}
               component={() => (
                 <prop.component
+                  Guardando={this.state.Guardando}
+                  setGuardando={this.setGuardando}
                   reValores={this.state.reValores}
                   setreValores={this.setreValores}
                   setValores={this.setValores}
@@ -424,6 +428,7 @@ class Admin extends React.Component {
                 setreValores={this.setreValores}
               />
               <Boleta
+                Guardando={this.state.Guardando}
                 placadato={this.state.placadato}
                 setplacadato={this.setplacadato}
                 warning={this.state.warning}
@@ -448,6 +453,7 @@ class Admin extends React.Component {
                 setcantidadr={this.setcantidadr}
                 setkilosr={this.setkilosr}
                 setobservaciones={this.setobservaciones}
+                setGuardando={this.setGuardando}
                 setalmacen={this.setalmacen}
                 setsubalmacen={this.setsubalmacen}
                 kiloscont={this.state.kiloscont}

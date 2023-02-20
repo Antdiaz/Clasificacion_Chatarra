@@ -32,7 +32,7 @@ const DetalleBoleta= ({Todos,listas,material,placadato,setmaterial,editBoxValue,
         '' + ((placadato[0].IdAcuerdo === 0 || placadato[0].IdAcuerdo === null) ? '' :(''+config.Separador+'@pnIdAcuerdo='+placadato[0].IdAcuerdo+'')) +
         '' + ((placadato[0].IdPedidoImportacion === 0 || placadato[0].IdPedidoImportacion === null) ? '' :(''+config.Separador+'@pnIdPedidoImportacion='+placadato[0].IdPedidoImportacion+'')) +
         ''+config.Separador+'@pnIdBoleta=' +
-        listas[0].IdBoleta +
+        placadato[0].IdBoleta +
         '"}',
       tipoEstructura: 0,
     };
@@ -58,7 +58,7 @@ const DetalleBoleta= ({Todos,listas,material,placadato,setmaterial,editBoxValue,
     /* eslint-enable */
 
     if(NomMotivoEntrada===9 && material === null && Todos !==1){
-      console.log(data5)
+      console.log(data5,"HOLA")
     callApi(urlKrakenService, 'POST', data5, (res) => {
       setmaterial(res.Result0);
     });
@@ -150,7 +150,7 @@ const DetalleBoleta= ({Todos,listas,material,placadato,setmaterial,editBoxValue,
                         (
                           <div className="dx-field">
                             <div className="dx-field-label block">Fecha entrada:</div>
-                            <div className="dx-field-value-static block" style={{width: '60%'}}> {lista.FechaEntrada.replace(/T.*/, '')}</div>
+                            <div className="dx-field-value-static block" style={{width: '60%'}}> {lista.FechaEntrada}</div>
                           </div>
                         )}
                         <div className="dx-field">

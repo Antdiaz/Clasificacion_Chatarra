@@ -66,7 +66,9 @@ function Materiales({
   Nocargo,
   setNocargo,
   ValidaTara,
-  setValidaTara
+  setValidaTara,
+  Guardando,
+  setGuardando
 }) {
   const NumbUsuario = getSessionItem('NumUsuario');
   const ipadress = getSessionItem('Ipaddress');
@@ -182,6 +184,8 @@ function Materiales({
               Actualizar={Actualizar}
               setActualizar={setActualizar}
               PlanCarga={PlanCarga}
+              Guardando={Guardando}
+              setGuardando={setGuardando}
             />
           </Modal>
         </TableRow>

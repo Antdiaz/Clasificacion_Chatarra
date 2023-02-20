@@ -7,6 +7,8 @@ import { callApi} from '../../utils/utils';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
 function Consulta({
+  Guardando,
+  setGuardando,
   reValores,
   setreValores,
   Valores,
@@ -249,6 +251,8 @@ setRefresh(false)
           </div>
         ): (
           <Items
+            Guardando={Guardando}
+            setGuardando={setGuardando}
             editBoxValue={editBoxValue}
             setpesajeparcial={setpesajeparcial}
             setClaUbicacionOrigen={setClaUbicacionOrigen}

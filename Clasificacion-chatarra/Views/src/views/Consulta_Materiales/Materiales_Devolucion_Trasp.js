@@ -64,7 +64,9 @@ function MaterialesDevolucion({
   ValidaCargo,
   setValidaCargo,
   Nocargo,
-  setNocargo
+  setNocargo,
+  Guardando,
+  setGuardando
 }) {
   const NumbUsuario = getSessionItem('NumUsuario');
   const ipadress = getSessionItem('Ipaddress');
@@ -175,6 +177,8 @@ function MaterialesDevolucion({
               ClaUbicacionOrigen={ClaUbicacionOrigen}
               Actualizar={Actualizar}
               setActualizar={setActualizar}
+              Guardando={Guardando}
+              setGuardando={setGuardando}
             />
           </Modal>
         </TableRow>

@@ -150,6 +150,24 @@ render () {
 En la carpeta Views existe un archivo llamado menu.js
 Para agregar o quitar un nuevo componente al menu usamos el sig. ejemplo
 
+### Como correr en pruebas y producción
+
+En la carpeta Views > src > utils > config.js
+Quitar los comentarios de las configuraciones a utilizar y comentar la que no se quiera activa
+
+Producción ->
+UrlLoginServer: 'https://sweetsrv.azurewebsites.net/Login/authenticate'
+KrakenService: 'https://krakenapi.deacero.com/KrakenServices/'
+Servicio:34
+Bloque:48
+
+Pruebas ->
+UrlLoginServer: 'https://sweetsrv.azurewebsites.net/LoginSandbox/authenticate'
+KrakenService: 'https://krakenapi.deacero.com/SandboxServices'
+Servicio:37
+Bloque:50
+
+
 **- Opción no colapsable o anidada:**
 ```javascript
 	

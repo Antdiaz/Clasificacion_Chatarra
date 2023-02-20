@@ -109,6 +109,7 @@ class Patio extends React.Component {
       parameters: '{"idClaUsuarioMod":' + this.state.Usuario + '}',
       tipoEstructura: 0,
     };
+    console.log(data2)
     /* eslint-enable */
     if(this.state.Patio===null && this.state.Usuario!==null)
     await callApi(urlKrakenPlanta, 'POST', data2, (res) => {

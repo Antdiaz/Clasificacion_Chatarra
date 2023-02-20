@@ -858,7 +858,7 @@ table::-webkit-scrollbar-thumb {
 
 .fa-info-circle {
   position: absolute;
-  right: 7vw;
+  right: 5%;
   bottom: 0.7vw;
   margin-top: 32px;
   z-index: 1;

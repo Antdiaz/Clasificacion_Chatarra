@@ -64,7 +64,9 @@ function Materiales({
   Nocargo,
   setNocargo,
   cambioGuardar,
-  setcambioGuardar
+  setcambioGuardar,
+  Guardando,
+  setGuardando
 }) {
   const NumbUsuario = getSessionItem('NumUsuario');
   const ipadress = getSessionItem('Ipaddress');
@@ -137,8 +139,8 @@ function Materiales({
                 <br /><span style={{fontWeight: '400'}}>{ro.NomZonaDescarga}</span>
               </TableCell>
               <TableCell className="table-content">
-                Enviado:&nbsp;{NomMotivoEntrada===9 ? (ro.NomArticuloPreReg ? ro.NomArticuloPreReg.split('-').pop(): 0) : NomMotivoEntrada===3 ? ro.NomArticuloRemisionado ? ro.NomArticuloRemisionado.split('-').pop(): '0' : '0'}{' '}
-                <br /> Recibido:&nbsp;{NomMotivoEntrada===9 ? (ro.NomArticuloCompra ? ro.NomArticuloCompra.split('-').pop() : 0) : NomMotivoEntrada===3 ? ro.NomMaterialRecibeTraspaso ? ro.NomMaterialRecibeTraspaso.split('-').pop(): '0' : '0'}{' '}
+                Enviado:&nbsp;{NomMotivoEntrada===9 ? (ro.NomArticuloPreReg ? ro.NomArticuloPreReg.slice(ro.NomArticuloPreReg.indexOf('-') + 1): 0) : NomMotivoEntrada===3 ? ro.NomArticuloRemisionado ? ro.NomArticuloRemisionado.slice(ro.NomArticuloRemisionado.indexOf(' -') + 1): '0' : '0'}{' '}
+                <br /> Recibido:&nbsp;{NomMotivoEntrada===9 ? (ro.NomArticuloCompra ? ro.NomArticuloCompra.slice(ro.NomArticuloCompra.indexOf('- ') + 1) : 0) : NomMotivoEntrada===3 ? ro.NomMaterialRecibeTraspaso ? ro.NomMaterialRecibeTraspaso.slice(ro.NomMaterialRecibeTraspaso.indexOf(' -') + 1): '0' : '0'}{' '}
                 <br />{ro.Observaciones !== 'null' && ro.Observaciones !=='undefined' && ro.Observaciones !=='' ?'Comentarios:':null}&nbsp;{ro.Observaciones !== 'null' && ro.Observaciones !=='undefined' && ro.Observaciones !=='' ? ro.Observaciones :null}
               </TableCell>
               <TableCell className="table-content" style={{ textAlign: 'center', fontWeight: '600' }}>
@@ -201,6 +203,8 @@ function Materiales({
                 {(NomMotivoEntrada===9 || (NomMotivoEntrada===3 && TipoTraspaso===0) && placadato) ?
                   (
                     <Material
+                      Guardando={Guardando}
+                      setGuardando={setGuardando}
                       setcambio={setcambio}
                       row={row}
                       setrow={setrow}
@@ -242,6 +246,8 @@ function Materiales({
                   ):
                   (
                     <Materialpt
+                      Guardando={Guardando}
+                      setGuardando={setGuardando}
                       row={row}
                       setrow={setrow}
                       seteditOpen={seteditOpen}

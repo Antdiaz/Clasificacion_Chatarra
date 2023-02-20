@@ -62,7 +62,9 @@ function Boleta({
   placadato,
   setplacadato,
   TipoTraspaso,
-  setTipoTraspaso
+  setTipoTraspaso,
+  Guardando,
+  setGuardando
 }) {
    // Valores obtenidos de URL de detalle de boleta
   const { placa, id } = useParams();
@@ -100,6 +102,7 @@ function Boleta({
     },
   };
 
+console.log(Guardando)
 
   useEffect(() => {
     if(placadato && TodosChange===0){
@@ -138,6 +141,7 @@ function Boleta({
 
       
     async function SelectPlanCarga(){
+      console.log(data68);
       await callApi(urlKrakenService, 'POST', data68, (res) => {
         setBoxPlanCarga(res.Result0.length===1 ? res.Result0[0].ClaPlanCarga : '')
       });
@@ -229,6 +233,7 @@ function Boleta({
       const PorcentajeSum = row && row.reduce((acc, val) => acc + val.Porcentaje, 0);
       const CantidadSum=row &&  row.reduce((acc, val) => acc + val.CantEmbarcada, 0)
       const KilosSum=row && row.reduce((acc, val) => acc + val.KilogramosEmbarcados, 0);
+      console.log(data63)
     callApi(urlKrakenService, 'POST', data63, (res) => {
     setrow(res.Result0);
      /* eslint-disable */
@@ -280,7 +285,7 @@ setPrereg(false)
         ',"Parametros":"@pnClaUbicacion=' +
         editBoxValue +
         ''+config.Separador+'@psClaVehiculoPorClasificar=' +
-        (placa.replace(/\t|t/gi,'')) +
+        (placa.replace('%20','')) +
         '"}',
       tipoEstructura: 0,
     };
@@ -303,6 +308,7 @@ setPrereg(false)
 
     async function FuncionData(){
     if(cambionodesc===0 && cambioGuardar===0){
+      console.log(data2)
      await callApi(urlKrakenVal, 'POST', data2, (res) => {
         setplacadato(res.Result0);
         setObservacionesno(res.Result0[0].Observaciones)
@@ -437,6 +443,8 @@ setPrereg(false)
                 {(NomMotivoEntrada===9 || (NomMotivoEntrada===3 && TipoTraspaso===0) && placadato) ?
                   (
                     <NuevoMaterial
+                      Guardando={Guardando}
+                      setGuardando={setGuardando}
                       Materialviaje={Materialviaje}
                       material={material}
                       materialtodos={materialtodos}
@@ -467,6 +475,8 @@ setPrereg(false)
                   ): ((NomMotivoEntrada===3 && TipoTraspaso===1) && placadato) &&
                   (
                     <NuevoMaterialpt
+                      Guardando={Guardando}
+                      setGuardando={setGuardando}
                       Materialviaje={Materialviaje}
                       material={material}
                       materialtodos={materialtodos}
@@ -513,7 +523,7 @@ setPrereg(false)
                   <span style={{ marginLeft: '3vw' }}>Placa:&nbsp;{placa}</span>
                   <span style={{ marginLeft: '3vw' }}>Boleta:&nbsp;{id}</span>
                   {NomMotivoEntrada===1 && placadato &&(<><span style={{marginLeft: '3vw'}}>Plan de carga</span><Input className="plan-carga" onKeyPress={handlePlan} value={PlanCarga} type="number" onChange={handleCarga} style={{display:'inline-flex',marginLeft:'10px'}} /></>)}
-                  {placadato ? (<i className="fas fa-redo" onClick={Refresh} style={{ marginLeft: '3vw',cursor: 'pointer'}} aria-hidden="true"></i>) :null}
+                  {placadato && !Guardando ? (<i className="fas fa-redo" onClick={Refresh} style={{ marginLeft: '3vw',cursor: 'pointer'}} aria-hidden="true"></i>) :null}
                   {/* {(NomMotivoEntrada===9 && row && row.some(roc=>(roc.NomZonaDescarga !==null || roc.NomZonaDescarga !==""))) ? (<span style={{ marginLeft: '3vw' }}>Zonas:{row.filter(rol=>rol.NomZonaDescarga).map((rox,index)=>{return <span>&nbsp;{rox.NomZonaDescarga.substring(rox.NomZonaDescarga.indexOf(" ") + 1)}&nbsp;{index !== (row.length-1) && (<span>&#8594;</span>)}</span>})}</span>):null} */}
                   {placadato && placadato.length>0 && (<CargoNodescargo pesajeparcial={pesajeparcial} row={row} ClaUbicacionOrigen={ClaUbicacionOrigen} cambionodesc={cambionodesc} setcambionodesc={setcambionodesc} setrow={setrow} setBoxPlanCarga={setBoxPlanCarga} placadato={placadato} setplacadato={setplacadato} setActualizar={setActualizar} NomMotivoEntrada={NomMotivoEntrada} editBoxValue={editBoxValue} Todos={Todos} setTodos={setTodos} TodosChange={TodosChange} setTodosChange={setTodosChange} setValidaCargo={setValidaCargo} Nocargo={Nocargo} setNocargo={setNocargo} setPlanCarga={setPlanCarga} />)}
                 </CardTitle>
@@ -531,6 +541,8 @@ setPrereg(false)
                         </div>
                       ) :NomMotivoEntrada===9 || NomMotivoEntrada===3 ? (
                         <Materiales
+                          Guardando={Guardando}
+                          setGuardando={setGuardando}
                           Nocargo={Nocargo}
                           setNocargo={setNocargo}
                           ValidaCargo={ValidaCargo}
@@ -585,6 +597,8 @@ setPrereg(false)
                       ): NomMotivoEntrada===110 ? 
                       (
                         <MaterialesDevolucion 
+                          Guardando={Guardando}
+                          setGuardando={setGuardando}
                           Savemat={Savemat}
                           setSavemat={setSavemat}
                           EsValido={EsValido}
@@ -644,6 +658,8 @@ setPrereg(false)
 
                       ):(
                         <MaterialesXCargar
+                          Guardando={Guardando}
+                          setGuardando={setGuardando}
                           Savemat={Savemat}
                           setSavemat={setSavemat}
                           EsValido={EsValido}
@@ -718,7 +734,14 @@ setPrereg(false)
                   <Col md={{ size: 12, offset: 0 }} style={{padding:"0px"}}>
                     <TableContainer component={Paper}> 
                       {/* Sección de detalles de la boleta/placa */} 
-                      <Observaciones Observacionesno={Observacionesno} row={row} setObservacionesno={setObservacionesno} placadato={placadato} setplacadato={setplacadato} setActualizar={setActualizar} NomMotivoEntrada={NomMotivoEntrada} editBoxValue={editBoxValue} Todos={Todos} />
+                      {!Guardando ? (<Observaciones Observacionesno={Observacionesno} Guardando={Guardando} setGuardando={setGuardando} row={row} setObservacionesno={setObservacionesno} placadato={placadato} setplacadato={setplacadato} setActualizar={setActualizar} NomMotivoEntrada={NomMotivoEntrada} editBoxValue={editBoxValue} Todos={Todos} />): 
+                      (
+                        <div
+                          style={{ textAlign: 'center', paddingTop: '40px', marginBottom: '40px' }}
+                        >
+                          <CircularProgress color="primary" />
+                        </div>
+                      )}
                     </TableContainer>
                   </Col>
                 </Row>

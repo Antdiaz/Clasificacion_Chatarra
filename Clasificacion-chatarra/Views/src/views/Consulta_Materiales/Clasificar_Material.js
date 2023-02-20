@@ -896,8 +896,10 @@ if(ElectBotecheck===1 && ((idmaterial===config.idBote) || (idmaterial===config.i
     /* eslint-enable */
 
     if(props.NomMotivoEntrada===9){
-      console.log(data83)
+      console.log('prueba:',data83)
+      props.setGuardando(true)
       callApi(urlKrakenBloque, 'POST', data83, (res) => {
+        props.setGuardando(false)
       })
     //   console.log(data12)
     // callApi(urlKrakenService, 'POST', data12, (res) => {
@@ -907,9 +909,11 @@ if(ElectBotecheck===1 && ((idmaterial===config.idBote) || (idmaterial===config.i
 
   if(props.NomMotivoEntrada===3){
     console.log(data84)
+    props.setGuardando(true)
     callApi(urlKrakenBloque, 'POST', data84, (res) => {
     console.log(CantidadSum)
       // console.log(res);
+      props.setGuardando(false)
     });
   }
 
@@ -1001,6 +1005,7 @@ props.setActualizar(false)
 
     async function GuardaCompra(){
       console.log(data83)
+      props.setGuardando(true)
       callApi(urlKrakenBloque, 'POST', data83, (res) => {
         res.Mensaje !== undefined &&
         swal('Error', (`${res.Mensaje}`), 'error', {
@@ -1016,6 +1021,7 @@ props.setActualizar(false)
         setTimeout(() =>{
           props.setActualizar(false)
           }, 50);
+          props.setGuardando(false)
       })
 
      
@@ -1024,6 +1030,7 @@ props.setActualizar(false)
 
       async function FuncionData(){
         console.log(data84)
+        props.setGuardando(true)
         callApi(urlKrakenBloque, 'POST', data84, (res) => {
           res.Mensaje !== undefined &&
           swal('Error', (`${res.Mensaje}`), 'error', {
@@ -1039,6 +1046,7 @@ props.setActualizar(false)
                 setTimeout(() =>{
                       props.setActualizar(false)
                     }, 50);
+                    props.setGuardando(false)
               })
       }
       
@@ -1862,6 +1870,7 @@ props.setActualizar(false)
               <button
                 style={{ marginRight: '30px' }}
                 type="button"
+                disabled={props.Guardando}
                 className="popup-button"
                 onClick={(PorcentajeSum > 100 && pesajeparcial===0) || idmaterial < 1 || subalmacen < 1 || Datosmaterial===0 || ((kilos===0 || kilos==='' || kilos==='0') && (cantidad===0 || cantidad==='' || cantidad==='0') && (porcentajer===0 || porcentajer==='' || porcentajer==='0') && (pesajeparcial===0) || ((ElectBotecheck===1) && (idmaterial === config.idElect) && (idmaterial ===config.idBote))) ? null :(Referencia !==0 && Referencia!==null && Referencia !=='0') ? handleClose:handleMensaje}
               >

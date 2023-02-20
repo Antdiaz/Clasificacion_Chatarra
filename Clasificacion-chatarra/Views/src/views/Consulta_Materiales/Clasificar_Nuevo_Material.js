@@ -804,7 +804,8 @@ const NuevoMaterial = (props) => {
       const data83 ={ parameters: `{"ClaUbicacion":${props.editBoxValue},"Token":"${Token}","ClaServicioJson":"83","IdBoleta":"${props.placadato[0].IdBoleta}","EnBloque":"${1}","Encabezado":"${data11}","Detalle":"${data12}${data12g ? data12g.join("") : null}","Validacion":"${(((PorcentajeSum !== null && (PorcentajeSum === 100)) || (PorcentajeSum === 0 && CantidadSum>0) || (props.ValidaCargo===1 && props.row && props.row.length>0 && (props.row[0].CantidadMaterial !==null || props.row[0].KilosMaterial!==null || props.row[0].PorcentajeMaterial!==null)&& (PorcentajeSum !== null && PorcentajeSum === 100) || (PorcentajeSum === 0 && CantidadSum>0)))|| pesajeparcial===1) ? data13 : ''}"}`,
       tipoEstructura: 0}
     async function GuardaCompra(){
-      console.log(data83)
+      console.log('prueba2',data83)
+      props.setGuardando(true)
       callApi(urlKrakenBloque, 'POST', data83, (res) => {
         res.Mensaje !== undefined &&
         swal('Error', (`${res.Mensaje}`), 'error', {
@@ -820,6 +821,7 @@ const NuevoMaterial = (props) => {
         setTimeout(() =>{
         props.setActualizar(false)
         }, 50);
+        props.setGuardando(false)
       })
     }
 
@@ -870,6 +872,7 @@ const NuevoMaterial = (props) => {
 
         async function FuncionData()  {
           console.log(data84)
+          props.setGuardando(true)
           callApi(urlKrakenBloque, 'POST', data84, (res) => {
             res.Mensaje !== undefined &&
         swal('Error', (`${res.Mensaje}`), 'error', {
@@ -885,6 +888,7 @@ const NuevoMaterial = (props) => {
                   setTimeout(() =>{
                         props.setActualizar(false)
                       }, 50);
+                      props.setGuardando(false)
                 })
               }
 
@@ -1714,6 +1718,7 @@ const NuevoMaterial = (props) => {
                 style={{ marginRight: '30px' }}
                 type="button"
                 className="popup-button"
+                disabled={props.Guardando}
                 onClick={(PorcentajeSum > 100 && (pesajeparcial===0)) || idmaterialr < 1 || subalmacen < 1 || (props.NomMotivoEntrada=== 3 && idmaterialviaje < 1) || ((kilosr===0 || kilosr==='' || kilosr==='0' ) && (cantidadr===0 || cantidadr==='' || cantidadr==='0') && (porcentajer===0 || porcentajer==='' || porcentajer==='0') && (pesajeparcial===0)) || ((Datosmaterial=== 0) || (ElectBotecheck===1 && Electcheck===1)) ? null : (Referencia !==0 && Referencia!==null && Referencia !=='0') ? handleSubmit:handleMensaje}
               >
                 Guardar &#43;

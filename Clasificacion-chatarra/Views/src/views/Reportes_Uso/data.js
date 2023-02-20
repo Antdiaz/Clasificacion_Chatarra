@@ -15,10 +15,6 @@ export const reportes = [
     {
       reporteID: 5,
       name: "Reporte Clasificación Cruzada"
-    },
-    {
-      reporteID: 6,
-      name: "Immex"
     }
   ]
 
